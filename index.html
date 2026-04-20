@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MarcanoTech 3D — Workshop Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --accent:#e8ff47;--accent2:#c8d900;
   --teal:#38d9a9;--coral:#ff6b5b;--blue:#4ea8ff;--amber:#f0b429;--purple:#a78bfa;--green:#6fcf97;
-  --font:'Syne',sans-serif;--mono:'DM Mono',monospace;
+  --font:'Inter',sans-serif;--mono:'DM Mono',monospace;
   --r:10px;--r2:14px;--sidebar:220px;
   /* dark defaults (overridden by data-theme) */
   --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#252530;
@@ -349,23 +349,29 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 :root, [data-theme="dark"] {
   --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#252530;
   --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--border3:rgba(255,255,255,0.20);
-  --text:#f0eeea;--text2:#8a8a96;--text3:#55555f;
+  --text:#f0eeea;--text2:#9a9aaa;--text3:#606070;
+  --accent:#e8ff47;--accent2:#c8d900;
+  --teal:#38d9a9;--coral:#ff6b5b;--blue:#4ea8ff;--amber:#f0b429;--purple:#a78bfa;--green:#6fcf97;
   --shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
 /* Light theme */
 [data-theme="light"] {
-  --bg:#f5f5f7;--bg2:#ffffff;--bg3:#f0f0f2;--bg4:#e8e8ec;
-  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--border3:rgba(0,0,0,0.22);
-  --text:#1a1a1e;--text2:#5a5a66;--text3:#9a9aaa;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --bg:#f0f2f5;--bg2:#ffffff;--bg3:#e8eaed;--bg4:#dde0e6;
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);--border3:rgba(0,0,0,0.28);
+  --text:#0f1117;--text2:#3a3a4a;--text3:#6b7080;
+  --accent:#2563eb;--accent2:#1d4ed8;
+  --teal:#0d9488;--coral:#dc2626;--blue:#2563eb;--amber:#d97706;--purple:#7c3aed;--green:#16a34a;
+  --shadow: 0 2px 12px rgba(0,0,0,0.10);
 }
 /* Auto: follow system */
 @media(prefers-color-scheme:light){
   [data-theme="auto"] {
-    --bg:#f5f5f7;--bg2:#ffffff;--bg3:#f0f0f2;--bg4:#e8e8ec;
-    --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--border3:rgba(0,0,0,0.22);
-    --text:#1a1a1e;--text2:#5a5a66;--text3:#9a9aaa;
-    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --bg:#f0f2f5;--bg2:#ffffff;--bg3:#e8eaed;--bg4:#dde0e6;
+    --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);--border3:rgba(0,0,0,0.28);
+    --text:#0f1117;--text2:#3a3a4a;--text3:#6b7080;
+    --accent:#2563eb;--accent2:#1d4ed8;
+    --teal:#0d9488;--coral:#dc2626;--blue:#2563eb;--amber:#d97706;--purple:#7c3aed;--green:#16a34a;
+    --shadow: 0 2px 12px rgba(0,0,0,0.10);
   }
 }
 
@@ -977,14 +983,22 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="modal">
     <div class="modal-title" id="modal-proyecto-title">Nuevo proyecto</div>
     <input type="hidden" id="proyecto-edit-id">
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Nombre del proyecto</label>
-        <input class="form-input" id="proy-nombre" placeholder="ej: Chasis Rally v1.0">
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <label class="form-label">Imagen</label>
+        <div id="proy-img-preview" onclick="document.getElementById('proy-imagen-file').click()" style="width:80px;height:72px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="proy-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'proy-img-preview','proy-imagen')">
+        <input type="hidden" id="proy-imagen">
+        <input type="hidden" id="proy-emoji" value="🖨️">
       </div>
-      <div class="form-group">
-        <label class="form-label">Emoji / ícono</label>
-        <input class="form-input" id="proy-emoji" placeholder="🏎️" maxlength="4">
+      <div style="flex:1">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Nombre del proyecto</label>
+          <input class="form-input" id="proy-nombre" placeholder="ej: Chasis Rally v1.0">
+        </div>
       </div>
     </div>
     <div class="form-row">
@@ -1154,14 +1168,22 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="modal">
     <div class="modal-title">Nuevo producto al catálogo</div>
     <input type="hidden" id="producto-edit-id">
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Nombre del producto</label>
-        <input class="form-input" id="prod-nombre" placeholder="ej: Kit Chasis Touring">
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <label class="form-label">Imagen</label>
+        <div id="prod-img-preview" onclick="document.getElementById('prod-imagen-file').click()" style="width:80px;height:72px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="prod-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'prod-img-preview','prod-imagen')">
+        <input type="hidden" id="prod-imagen">
+        <input type="hidden" id="prod-emoji" value="📦">
       </div>
-      <div class="form-group">
-        <label class="form-label">Emoji</label>
-        <input class="form-input" id="prod-emoji" placeholder="🏎️" maxlength="4">
+      <div style="flex:1">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Nombre del producto</label>
+          <input class="form-input" id="prod-nombre" placeholder="ej: Kit Chasis Touring">
+        </div>
       </div>
     </div>
     <div class="form-row">
@@ -1237,7 +1259,22 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Fabricante</label>
-        <input class="form-input" id="imp-marca" placeholder="ej: Bambu Lab">
+        <select class="form-input" id="imp-marca">
+          <optgroup label="FDM">
+            <option>Bambu Lab</option><option>Prusa Research</option><option>Creality</option>
+            <option>Elegoo (FDM)</option><option>Flashforge</option><option>Anycubic (FDM)</option>
+            <option>Qidi Tech</option><option>Raise3D</option><option>Ultimaker / Makerbot</option>
+            <option>Artillery</option><option>Sovol</option><option>Voron Design</option>
+          </optgroup>
+          <optgroup label="Resina / MSLA">
+            <option>Elegoo (Resina)</option><option>Anycubic (Resina)</option>
+            <option>Phrozen</option><option>Chitubox / CBD Tech</option>
+            <option>Longer</option><option>SparkMaker</option>
+          </optgroup>
+          <optgroup label="Otro">
+            <option>Otro fabricante</option>
+          </optgroup>
+        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Volumen de impresión</label>
@@ -1346,7 +1383,15 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Escala</label>
-        <input class="form-input" id="pieza-escala" placeholder="ej: 1:10" value="1:10">
+        <select class="form-input" id="pieza-escala">
+          <option value="1:8">1:8 — Grande</option>
+          <option value="1:10" selected>1:10 — Estándar RC</option>
+          <option value="1:12">1:12 — Compacto</option>
+          <option value="1:18">1:18 — Mini</option>
+          <option value="1:24">1:24 — Micro</option>
+          <option value="1:32">1:32 — Nano</option>
+          <option value="Otro">Otro</option>
+        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Tiempo estimado</label>
@@ -1550,9 +1595,25 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <label class="form-label">Especificaciones técnicas</label>
       <textarea class="form-input" id="comp-specs" rows="2" placeholder="KV, amperaje, voltaje, torque..."></textarea>
     </div>
-    <div class="form-group">
-      <label class="form-label">Emoji</label>
-      <input class="form-input" id="comp-emoji" placeholder="⚙️" maxlength="4">
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <label class="form-label">Imagen</label>
+        <div id="comp-img-preview" onclick="document.getElementById('comp-imagen-file').click()" style="width:80px;height:72px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="comp-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'comp-img-preview','comp-imagen')">
+        <input type="hidden" id="comp-imagen">
+        <input type="hidden" id="comp-emoji" value="⚙️">
+      </div>
+      <div style="flex:1">
+        <label class="form-label">Código RC</label>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
+          <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="comp-codigo-display">ELC-0001</span>
+          <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
+        </div>
+        <input type="hidden" id="comp-codigo-val">
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-componente')">Cancelar</button>
@@ -1719,24 +1780,23 @@ let DB = {
 // persist: guarda en localStorage siempre; si Firebase está listo, sube también
 function persist(key){
   try{
-    // Siempre guardar en localStorage (incluyendo imágenes)
-    saveLocal(key, DB[key]);
+    const lsKey = KEYS[key] || key;
+    saveLocal(lsKey, DB[key]);
     if(FIREBASE_READY && fbRef){
       const data = DB[key];
-      // Limpiar imágenes base64 antes de enviar a Firebase (evita límite de tamaño)
       let toSave = data;
       if(Array.isArray(data)){
-        toSave = data.map(item=>{
-          if(item && typeof item === 'object' && item.imagen){
-            const {imagen, ...rest} = item;
-            return rest; // imagen se guarda solo en localStorage
+        toSave = data.length === 0 ? null : data.map(item=>{
+          if(item && typeof item === 'object'){
+            const clean = Object.assign({}, item);
+            delete clean.imagen;
+            return clean;
           }
           return item;
         });
-        if(toSave.length === 0) toSave = null; // Firebase no acepta arrays vacíos
       }
       if(toSave !== null){
-        fbRef.child(key).set(toSave).catch(e=>console.warn('Firebase write ['+key+']:', e));
+        fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
       }
     }
   } catch(e){
@@ -1807,27 +1867,28 @@ function firebaseToArray(val){
 
 function subscribeData(){
   fbRef.on('value', snapshot=>{
-    const data = snapshot.val();
-    if(data){
+    const fbData = snapshot.val();
+    if(fbData){
       Object.keys(KEYS).forEach(k=>{
-        if(data[k] !== undefined && data[k] !== null){
-          const fromFirebase = firebaseToArray(data[k]);
-          // Restaurar imágenes desde localStorage (Firebase no las almacena)
-          const fromLocal = loadLocal(KEYS[k]) || [];
+        const lsKey = KEYS[k];
+        if(fbData[k] !== undefined && fbData[k] !== null){
+          const fromFirebase = firebaseToArray(fbData[k]);
+          const fromLocal = loadLocal(lsKey) || [];
           const localMap = {};
           fromLocal.forEach(item=>{ if(item && item.id) localMap[item.id] = item; });
           DB[k] = fromFirebase.map(item=>{
             if(item && item.id && localMap[item.id] && localMap[item.id].imagen){
-              return {...item, imagen: localMap[item.id].imagen};
+              return Object.assign({}, item, {imagen: localMap[item.id].imagen});
             }
             return item;
           });
-          saveLocal(KEYS[k], DB[k]);
+          saveLocal(lsKey, DB[k]);
         }
       });
       updateBadges();
       renderSection(currentSection);
       checkMantPending();
+      updateSidebarPrinterSelect();
     }
     showSyncStatus('online');
   }, err=>{
@@ -1997,6 +2058,21 @@ function populateModalSelects(modalId){
   if(modalId==='modal-componente'){
     const sel=document.getElementById('comp-proyecto');
     if(sel) sel.innerHTML='<option value="">Sin asignar</option>'+proyOpts;
+    const editIdComp=document.getElementById('comp-edit-id').value;
+    if(!editIdComp){
+      const codigo = nextCompCodigo();
+      document.getElementById('comp-codigo-val').value=codigo;
+      document.getElementById('comp-codigo-display').textContent=codigo;
+      resetImgPreview('comp-img-preview','comp-imagen');
+    }
+  }
+  if(modalId==='modal-proyecto'){
+    const editIdP=document.getElementById('proyecto-edit-id').value;
+    if(!editIdP) resetImgPreview('proy-img-preview','proy-imagen');
+  }
+  if(modalId==='modal-producto'){
+    const editIdProd=document.getElementById('producto-edit-id').value;
+    if(!editIdProd) resetImgPreview('prod-img-preview','prod-imagen');
   }
 }
 
@@ -2045,6 +2121,7 @@ function saveProyecto(){
     id: editId||uid(),
     nombre:document.getElementById('proy-nombre').value.trim(),
     emoji:document.getElementById('proy-emoji').value||'🖨️',
+    imagen:document.getElementById('proy-imagen').value||'',
     tipo:document.getElementById('proy-tipo').value,
     estado:document.getElementById('proy-estado').value,
     material:document.getElementById('proy-material').value,
@@ -2060,7 +2137,8 @@ function saveProyecto(){
   persist(KEYS.proyectos);
   updateBadges();
   closeModal('modal-proyecto');
-  clearForm(['proy-nombre','proy-emoji','proy-material','proy-progreso','proy-notas','proy-tiempo','proy-color']);
+  clearForm(['proy-nombre','proy-material','proy-progreso','proy-notas','proy-tiempo','proy-color']);
+  resetImgPreview('proy-img-preview','proy-imagen');
   document.getElementById('proyecto-edit-id').value='';
   document.getElementById('modal-proyecto-title').textContent='Nuevo proyecto';
   renderSection(currentSection);
@@ -2076,7 +2154,7 @@ function renderProyectos(filter='todos'){
         const ec=estadoConfig[p.estado]||{label:p.estado,cls:'badge-gray',color:'var(--text3)'};
         const bg=p.color||'#38d9a9';
         return `<div class="project-card" onclick="editProyecto('${p.id}')">
-          <div class="project-thumb" style="background:linear-gradient(135deg,${bg}22,${bg}08)">${p.emoji||'🖨️'}</div>
+          <div class="project-thumb" style="background:linear-gradient(135deg,${bg}22,${bg}08);overflow:hidden;padding:0">${p.imagen ? `<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:28px">${p.emoji||'🖨️'}</span>`}</div>
           <div class="project-body">
             <div class="project-name">${p.nombre}</div>
             <div class="project-meta">${p.material||'—'} · ${p.tipo||'—'}</div>
@@ -2103,6 +2181,10 @@ function editProyecto(id){
   document.getElementById('proy-notas').value=p.notas;
   document.getElementById('proy-tiempo').value=p.tiempo;
   document.getElementById('proy-color').value=p.color;
+  const imgValP = p.imagen||'';
+  document.getElementById('proy-imagen').value = imgValP;
+  if(imgValP){ document.getElementById('proy-img-preview').innerHTML=`<img src="${imgValP}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
+  else{ resetImgPreview('proy-img-preview','proy-imagen'); }
   openModal('modal-proyecto');
 }
 
@@ -2408,6 +2490,7 @@ function saveProducto(){
     id:editId||uid(),
     nombre:document.getElementById('prod-nombre').value.trim(),
     emoji:document.getElementById('prod-emoji').value||'📦',
+    imagen:document.getElementById('prod-imagen').value||'',
     sku:document.getElementById('prod-sku').value||'—',
     precio:parseFloat(document.getElementById('prod-precio').value)||0,
     stock:parseInt(document.getElementById('prod-stock').value)||0,
@@ -2419,7 +2502,8 @@ function saveProducto(){
   else{ DB.productos.push(obj); logActivity(`Producto <strong>${obj.nombre}</strong> agregado al catálogo`); }
   persist(KEYS.productos); updateBadges(); closeModal('modal-producto');
   document.getElementById('producto-edit-id').value='';
-  clearForm(['prod-nombre','prod-emoji','prod-sku','prod-precio','prod-stock','prod-descripcion']);
+  clearForm(['prod-nombre','prod-sku','prod-precio','prod-stock','prod-descripcion']);
+  resetImgPreview('prod-img-preview','prod-imagen');
   renderSection(currentSection); showToast('Producto guardado ✓');
 }
 
@@ -2436,10 +2520,10 @@ function renderProductos(){
     const sc=p.stock===0?'stock-out':p.stock<=2?'stock-low':'stock-ok';
     const sl=p.stock===0?'agotado':p.stock<=2?`${p.stock} (bajo)`:`${p.stock} en stock`;
     return `<div class="product-card" onclick="editProducto('${p.id}')">
-      <div class="prod-emoji">${p.emoji}</div>
+      <div class="prod-emoji" style="height:50px;display:flex;align-items:center;justify-content:center">${p.imagen ? `<img src="${p.imagen}" style="height:48px;width:72px;object-fit:cover;border-radius:8px">` : `<span style="font-size:28px">${p.emoji||'📦'}</span>`}</div>
       <div class="prod-name">${p.nombre}</div>
       <div class="prod-sku">${p.sku}</div>
-      <div class="prod-price">$${p.precio.toFixed(2)}</div>
+      <div class="prod-price">$${parseFloat(p.precio||0).toFixed(2)}</div>
       <div class="prod-stock ${sc}">● ${sl}</div>
     </div>`;
   }).join('')+`<div class="add-card" onclick="openModal('modal-producto')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo producto</span></div>`;
@@ -2455,6 +2539,10 @@ function editProducto(id){
   document.getElementById('prod-stock').value=p.stock;
   document.getElementById('prod-categoria').value=p.categoria;
   document.getElementById('prod-descripcion').value=p.descripcion;
+  const imgValProd = p.imagen||'';
+  document.getElementById('prod-imagen').value = imgValProd;
+  if(imgValProd){ document.getElementById('prod-img-preview').innerHTML=`<img src="${imgValProd}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
+  else{ resetImgPreview('prod-img-preview','prod-imagen'); }
   openModal('modal-producto');
 }
 
@@ -3065,8 +3153,8 @@ function renderVentas(){
       <td class="mono">${v.fecha||'—'}</td>
       <td><strong>${v.producto}</strong>${v.notas?`<div style="font-size:10px;color:var(--text3)">${v.notas}</div>`:''}</td>
       <td class="mono">${v.cantidad}</td>
-      <td class="mono">$${v.precio.toFixed(2)}</td>
-      <td class="mono" style="color:var(--accent);font-weight:700">$${v.total.toFixed(2)}</td>
+      <td class="mono">$${parseFloat(v.precio||0).toFixed(2)}</td>
+      <td class="mono" style="color:var(--accent);font-weight:700">$${parseFloat(v.total||0).toFixed(2)}</td>
       <td>${v.cliente||'—'}<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${v.canal||''}</div></td>
       <td><span class="badge" style="background:${st.c}22;color:${st.c}">${st.l}</span></td>
       <td><button class="btn btn-danger btn-sm" onclick="deleteVenta('${v.id}')">✕</button></td>
@@ -3094,7 +3182,9 @@ function saveComponente(){
     proyectoId:document.getElementById('comp-proyecto').value,
     estado:document.getElementById('comp-estado').value,
     specs:document.getElementById('comp-specs').value,
-    emoji:document.getElementById('comp-emoji').value||compEmojis[document.getElementById('comp-categoria').value]||'🔩'
+    emoji:document.getElementById('comp-emoji').value||compEmojis[document.getElementById('comp-categoria').value]||'🔩',
+    imagen:document.getElementById('comp-imagen').value||'',
+    codigo:document.getElementById('comp-codigo-val').value||nextCompCodigo()
   };
   if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
   if(editId){ DB.componentes=DB.componentes.map(c=>c.id===editId?obj:c); }
@@ -3125,6 +3215,12 @@ function editComponente(id){
   document.getElementById('comp-emoji').value=c.emoji;
   populateModalSelects('modal-componente');
   document.getElementById('comp-proyecto').value=c.proyectoId||'';
+  const imgValC = c.imagen||'';
+  document.getElementById('comp-imagen').value = imgValC;
+  if(imgValC){ document.getElementById('comp-img-preview').innerHTML=`<img src="${imgValC}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
+  else{ resetImgPreview('comp-img-preview','comp-imagen'); }
+  document.getElementById('comp-codigo-val').value = c.codigo||'';
+  document.getElementById('comp-codigo-display').textContent = c.codigo||'—';
   openModal('modal-componente');
 }
 
@@ -3148,7 +3244,10 @@ function renderComponentes(filter='todos'){
     const st=stMap[c.estado]||{l:c.estado,c:'var(--text3)'};
     const proy=DB.proyectos.find(p=>p.id===c.proyectoId);
     return `<div class="product-card" onclick="editComponente('${c.id}')">
-      <div style="font-size:28px;margin-bottom:6px">${c.emoji||compEmojis[c.categoria]||'🔩'}</div>
+      <div style="height:44px;display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        ${c.imagen ? `<img src="${c.imagen}" style="height:40px;width:56px;object-fit:cover;border-radius:7px">` : `<span style="font-size:26px">${c.emoji||compEmojis[c.categoria]||'🔩'}</span>`}
+        ${c.codigo ? `<span style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);background:rgba(232,255,71,0.08);padding:2px 6px;border-radius:5px">${c.codigo}</span>` : ''}
+      </div>
       <div style="font-size:10px;font-family:var(--mono);color:${col};margin-bottom:4px">${c.categoria.toUpperCase()}</div>
       <div class="prod-name">${c.nombre}</div>
       <div class="prod-sku">${c.marca} ${c.modelo||''}</div>
@@ -3494,6 +3593,47 @@ function renderAccesorios(){
 // ════════════════════════════════
 // IMAGEN IMPRESORA
 // ════════════════════════════════
+// ════════════════════════════════
+// GENERIC IMAGE PREVIEW (proyectos, productos, componentes)
+// ════════════════════════════════
+function previewGenImg(input, previewId, hiddenId){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 300;
+      let w = img.width, h = img.height;
+      if(w > MAX){ h = Math.round(h*(MAX/w)); w = MAX; }
+      if(h > MAX){ w = Math.round(w*(MAX/h)); h = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+      document.getElementById(hiddenId).value = dataUrl;
+      const prev = document.getElementById(previewId);
+      prev.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetImgPreview(previewId, hiddenId){
+  document.getElementById(hiddenId).value = '';
+  document.getElementById(previewId).innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>';
+}
+
+function nextCompCodigo(){
+  if(!DB.componentes || !DB.componentes.length) return 'ELC-0001';
+  const prefixMap = {motor:'MOT',esc:'ESC',servo:'SRV',bateria:'BAT',radio:'RAD',otro:'ELC'};
+  const nums = DB.componentes.map(c => parseInt((c.codigo||'ELC-0000').split('-')[1]||0)).filter(n=>!isNaN(n));
+  const max = nums.length ? Math.max(...nums) : 0;
+  const cat = document.getElementById('comp-categoria') ? document.getElementById('comp-categoria').value : 'otro';
+  const prefix = prefixMap[cat] || 'ELC';
+  return prefix+'-'+String(max+1).padStart(4,'0');
+}
+
 function previewImpImg(input){
   const file = input.files[0];
   if(!file) return;
