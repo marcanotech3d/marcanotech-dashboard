@@ -1105,24 +1105,51 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Impresora -->
 <div class="modal-overlay" id="modal-impresora">
-  <div class="modal">
-    <div class="modal-title">Agregar impresora</div>
+  <div class="modal" style="width:500px">
+    <div class="modal-title" id="imp-modal-title">Agregar impresora</div>
     <input type="hidden" id="impresora-edit-id">
+
+    <!-- IMAGEN + CÓDIGO -->
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Nombre / modelo</label>
-        <input class="form-input" id="imp-nombre" placeholder="ej: Bambu Lab A1">
+      <div class="form-group" style="flex:0 0 100px">
+        <label class="form-label">Imagen</label>
+        <div id="imp-img-preview" onclick="document.getElementById('imp-imagen-file').click()" style="
+          width:100px;height:90px;background:var(--bg3);border:0.5px dashed var(--border2);
+          border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+          cursor:pointer;overflow:hidden;gap:4px;" title="Clic para cargar imagen">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="imp-imagen-file" accept="image/*" style="display:none" onchange="previewImpImg(this)">
+        <input type="hidden" id="imp-imagen">
       </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Código ID</label>
+          <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
+            <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="imp-codigo-display">IMP-001</span>
+            <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
+          </div>
+          <input type="hidden" id="imp-codigo">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Nombre / modelo</label>
+          <input class="form-input" id="imp-nombre" placeholder="ej: Bambu Lab A1">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Fabricante</label>
         <input class="form-input" id="imp-marca" placeholder="ej: Bambu Lab">
       </div>
-    </div>
-    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Volumen de impresión</label>
         <input class="form-input" id="imp-volumen" placeholder="ej: 256x256x256mm">
       </div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Estado</label>
         <select class="form-input" id="imp-estado">
@@ -1132,15 +1159,21 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <option value="inactiva">Inactiva</option>
         </select>
       </div>
+      <div class="form-group">
+        <label class="form-label">Horas impresas</label>
+        <input class="form-input" type="number" id="imp-horas" placeholder="ej: 342">
+      </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Horas totales impresas</label>
-        <input class="form-input" type="number" id="imp-horas" placeholder="ej: 342">
-      </div>
-      <div class="form-group">
         <label class="form-label">Fecha de adquisición</label>
         <input class="form-input" type="date" id="imp-fecha">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tecnología</label>
+        <select class="form-input" id="imp-tecnologia">
+          <option>FDM</option><option>MSLA/Resina</option><option>SLA</option><option>SLS</option><option>Otra</option>
+        </select>
       </div>
     </div>
     <div class="form-group">
@@ -1488,6 +1521,22 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </div>
     </div>
 
+    <!-- UNIDAD DE MEDIDA -->
+    <div class="form-group">
+      <label class="form-label">Unidad de medida</label>
+      <select class="form-input" id="acc-unidad">
+        <option value="Und">Unidad (Und)</option>
+        <option value="Cj">Caja (Cj)</option>
+        <option value="kg">Kilogramos (kg)</option>
+        <option value="gr">Gramos (gr)</option>
+        <option value="m">Metros (m)</option>
+        <option value="cm">Centímetros (cm)</option>
+        <option value="mm">Milímetros (mm)</option>
+        <option value="L">Litros (L)</option>
+        <option value="ml">Mililitros (ml)</option>
+      </select>
+    </div>
+
     <!-- PRECIO -->
     <div class="form-group">
       <label class="form-label">Precio unitario (opcional)</label>
@@ -1577,14 +1626,14 @@ function persist(key){
   try{
     saveLocal(key, DB[key]);
     if(FIREBASE_READY && fbRef){
-      const user = firebase.auth ? firebase.auth().currentUser : null;
-      if(user){
-        fbRef.child(key).set(DB[key]).catch(e=>console.warn('Firebase write error:',e));
-      }
+      // Guardar siempre - no bloquear por auth para escrituras de datos
+      const data = DB[key];
+      // Firebase no acepta arrays vacíos - guardar objeto vacío en ese caso
+      const toSave = (Array.isArray(data) && data.length === 0) ? {} : data;
+      fbRef.child(key).set(toSave).catch(e=>console.warn('Firebase write error:',e));
     }
   } catch(e){
     console.warn('persist error:',e);
-    // Igual guarda local aunque Firebase falle
     saveLocal(key, DB[key]);
   }
 }
@@ -1638,7 +1687,12 @@ function subscribeData(){
     const data = snapshot.val();
     if(data){
       Object.keys(KEYS).forEach(k=>{
-        if(data[k]) { DB[k]=data[k]; saveLocal(k, DB[k]); }
+        if(data[k] !== undefined && data[k] !== null){
+          // Firebase convierte arrays a objetos — reconvertir
+          const val = data[k];
+          DB[k] = Array.isArray(val) ? val : (typeof val === 'object' ? Object.values(val) : val);
+          saveLocal(k, DB[k]);
+        }
       });
       updateBadges();
       renderSection(currentSection);
@@ -1796,6 +1850,18 @@ function populateModalSelects(modalId){
   }
   if(modalId==='modal-venta'){
     document.getElementById('venta-fecha').value=today;
+  }
+  if(modalId==='modal-impresora'){
+    const editIdImp=document.getElementById('impresora-edit-id').value;
+    if(!editIdImp){
+      const nums=DB.impresoras.map(i=>parseInt((i.codigo||'IMP-000').split('-')[1]||0)).filter(n=>!isNaN(n));
+      const nextCode='IMP-'+String((nums.length?Math.max(...nums):0)+1).padStart(3,'0');
+      document.getElementById('imp-codigo').value=nextCode;
+      document.getElementById('imp-codigo-display').textContent=nextCode;
+      document.getElementById('imp-modal-title').textContent='Agregar impresora';
+      document.getElementById('imp-img-preview').innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargar</span>';
+      document.getElementById('imp-imagen').value='';
+    }
   }
   if(modalId==='modal-componente'){
     const sel=document.getElementById('comp-proyecto');
@@ -1993,7 +2059,7 @@ function openMatModal(editId=''){
   document.querySelector('#modal-material .btn-accent').textContent = editId ? 'Guardar cambios' : 'Agregar Filamento';
   selectPeso(1000);
   buildMatDropdowns();
-  openMatModal();
+  openModal('modal-material');
 }
 
 function buildMatDropdowns(){
@@ -2269,14 +2335,22 @@ function saveImpresora(){
     const editId=document.getElementById('impresora-edit-id').value;
     const nombre=document.getElementById('imp-nombre').value.trim();
     if(!nombre){ showToast('Ingresá un nombre para la impresora','error'); return; }
+    const nextCodImp = ()=>{
+      if(!DB.impresoras.length) return 'IMP-001';
+      const nums=DB.impresoras.map(i=>parseInt((i.codigo||'IMP-000').split('-')[1]||0)).filter(n=>!isNaN(n));
+      return 'IMP-'+String((nums.length?Math.max(...nums):0)+1).padStart(3,'0');
+    };
     const obj={
       id:editId||uid(),
+      codigo:editId?(DB.impresoras.find(i=>i.id===editId)||{}).codigo||nextCodImp():nextCodImp(),
       nombre,
       marca:document.getElementById('imp-marca').value||'—',
       volumen:document.getElementById('imp-volumen').value||'—',
+      tecnologia:document.getElementById('imp-tecnologia').value||'FDM',
       estado:document.getElementById('imp-estado').value||'activa',
       horas:parseInt(document.getElementById('imp-horas').value)||0,
       fecha:document.getElementById('imp-fecha').value||'',
+      imagen:document.getElementById('imp-imagen').value||'',
       notas:document.getElementById('imp-notas').value||''
     };
     if(editId){ DB.impresoras=DB.impresoras.map(i=>i.id===editId?obj:i); }
@@ -2286,6 +2360,8 @@ function saveImpresora(){
     closeModal('modal-impresora');
     document.getElementById('impresora-edit-id').value='';
     clearForm(['imp-nombre','imp-marca','imp-volumen','imp-horas','imp-fecha','imp-notas']);
+  document.getElementById('imp-imagen').value='';
+  document.getElementById('imp-img-preview').innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargar</span>';
     renderSection(currentSection);
     showToast('Impresora guardada ✓');
   } catch(e){
@@ -2303,24 +2379,36 @@ function renderImpresoras(){
   const stColors={'activa':'var(--teal)','imprimiendo':'var(--accent)','mantenimiento':'var(--amber)','inactiva':'var(--text3)'};
   grid.innerHTML=DB.impresoras.map(i=>{
     const sc=stColors[i.estado]||'var(--text3)';
-    return `<div class="printer-card">
-      <div class="printer-card-header">
-        <div>
-          <div class="printer-title">${i.nombre}</div>
-          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${i.marca}</div>
+    const imgHtml = i.imagen
+      ? `<img src="${i.imagen}" style="width:100%;height:120px;object-fit:cover;border-radius:10px 10px 0 0;display:block">`
+      : `<div style="width:100%;height:80px;background:var(--bg3);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;border-bottom:0.5px solid var(--border)">
+           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+         </div>`;
+    return `<div class="printer-card" style="padding:0;overflow:hidden">
+      ${imgHtml}
+      <div style="padding:14px">
+        <div class="printer-card-header" style="margin-bottom:10px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+              <span style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);background:rgba(232,255,71,0.1);padding:2px 7px;border-radius:5px">${i.codigo||'—'}</span>
+              <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${i.tecnologia||'FDM'}</span>
+            </div>
+            <div class="printer-title">${i.nombre}</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${i.marca}</div>
+          </div>
+          <span class="badge" style="background:${sc}22;color:${sc};align-self:flex-start">${i.estado}</span>
         </div>
-        <span class="badge" style="background:${sc}22;color:${sc}">${i.estado}</span>
-      </div>
-      <div class="printer-specs">
-        <div class="spec-item"><div class="spec-label">Volumen</div><div class="spec-val">${i.volumen||'—'}</div></div>
-        <div class="spec-item"><div class="spec-label">Horas impresas</div><div class="spec-val">${i.horas}h</div></div>
-        <div class="spec-item"><div class="spec-label">Adquirida</div><div class="spec-val">${i.fecha||'—'}</div></div>
-        <div class="spec-item"><div class="spec-label">Estado</div><div class="spec-val" style="color:${sc}">${i.estado}</div></div>
-      </div>
-      ${i.notas?`<div style="margin-top:10px;font-size:11px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:8px 10px;border-radius:7px">${i.notas}</div>`:''}
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" onclick="editImpresora('${i.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteImpresora('${i.id}')">Eliminar</button>
+        <div class="printer-specs">
+          <div class="spec-item"><div class="spec-label">Volumen</div><div class="spec-val" style="font-size:11px">${i.volumen||'—'}</div></div>
+          <div class="spec-item"><div class="spec-label">Horas impresas</div><div class="spec-val">${i.horas||0}h</div></div>
+          <div class="spec-item"><div class="spec-label">Adquirida</div><div class="spec-val" style="font-size:11px">${i.fecha||'—'}</div></div>
+          <div class="spec-item"><div class="spec-label">Tecnología</div><div class="spec-val" style="font-size:11px">${i.tecnologia||'FDM'}</div></div>
+        </div>
+        ${i.notas?`<div style="margin-top:10px;font-size:11px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:8px 10px;border-radius:7px">${i.notas}</div>`:''}
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="editImpresora('${i.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteImpresora('${i.id}')">Eliminar</button>
+        </div>
       </div>
     </div>`;
   }).join('')+`<div class="add-card" onclick="openModal('modal-impresora')" style="min-height:160px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Agregar impresora</span></div>`;
@@ -2330,12 +2418,20 @@ function editImpresora(id){
   const i=DB.impresoras.find(x=>x.id===id); if(!i) return;
   document.getElementById('impresora-edit-id').value=i.id;
   document.getElementById('imp-nombre').value=i.nombre;
-  document.getElementById('imp-marca').value=i.marca;
-  document.getElementById('imp-volumen').value=i.volumen;
-  document.getElementById('imp-estado').value=i.estado;
-  document.getElementById('imp-horas').value=i.horas;
-  document.getElementById('imp-fecha').value=i.fecha;
-  document.getElementById('imp-notas').value=i.notas;
+  document.getElementById('imp-marca').value=i.marca==='—'?'':i.marca;
+  document.getElementById('imp-volumen').value=i.volumen==='—'?'':i.volumen;
+  document.getElementById('imp-estado').value=i.estado||'activa';
+  document.getElementById('imp-horas').value=i.horas||0;
+  document.getElementById('imp-fecha').value=i.fecha||'';
+  document.getElementById('imp-tecnologia').value=i.tecnologia||'FDM';
+  document.getElementById('imp-notas').value=i.notas||'';
+  document.getElementById('imp-imagen').value=i.imagen||'';
+  document.getElementById('imp-codigo').value=i.codigo||'';
+  document.getElementById('imp-codigo-display').textContent=i.codigo||'IMP-???';
+  if(i.imagen){
+    const prev=document.getElementById('imp-img-preview');
+    prev.innerHTML='<img src="'+i.imagen+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px">';
+  }
   openModal('modal-impresora');
 }
 function deleteImpresora(id){
@@ -3177,6 +3273,7 @@ function saveAccesorio(){
       nombre,
       categoria: document.getElementById('acc-categoria').value,
       marca: document.getElementById('acc-marca').value||'—',
+      unidad: document.getElementById('acc-unidad').value||'Und',
       stock: parseInt(document.getElementById('acc-stock').value)||0,
       stockMin: parseInt(document.getElementById('acc-stock-min').value)||1,
       precio: parseFloat(document.getElementById('acc-precio').value)||0,
@@ -3213,6 +3310,7 @@ function editAccesorio(id){
   document.getElementById('acc-marca').value = a.marca==='—'?'':a.marca;
   document.getElementById('acc-stock').value = a.stock;
   document.getElementById('acc-stock-min').value = a.stockMin||1;
+  document.getElementById('acc-unidad').value = a.unidad||'Und';
   document.getElementById('acc-precio').value = a.precio||'';
   document.getElementById('acc-notas').value = a.notas||'';
   openModal('modal-accesorio');
@@ -3248,8 +3346,8 @@ function renderAccesorios(){
       <td><strong>${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3)">${a.notas}</div>`:''}</td>
       <td><span class="badge" style="background:${cc}22;color:${cc}">${a.categoria}</span></td>
       <td class="mono">${a.marca}</td>
-      <td class="mono" style="color:${stColor};font-weight:700">${a.stock}</td>
-      <td class="mono" style="color:var(--text3)">${a.stockMin||1}</td>
+      <td class="mono" style="color:${stColor};font-weight:700">${a.stock} <span style="color:var(--text3)">${a.unidad||'Und'}</span></td>
+      <td class="mono" style="color:var(--text3)">${a.stockMin||1} ${a.unidad||'Und'}</td>
       <td><span class="badge" style="background:${stColor}22;color:${stColor}">${stLabel}</span></td>
       <td style="white-space:nowrap">
         <button class="btn btn-ghost btn-sm" onclick="editAccesorio('${a.id}')">editar</button>
@@ -3257,6 +3355,34 @@ function renderAccesorios(){
       </td>
     </tr>`;
   }).join('');
+}
+
+// ════════════════════════════════
+// IMAGEN IMPRESORA
+// ════════════════════════════════
+function previewImpImg(input){
+  const file = input.files[0];
+  if(!file) return;
+  // Redimensionar a máx 400px para no sobrecargar Firebase
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 400;
+      let w = img.width, h = img.height;
+      if(w > MAX){ h = Math.round(h*(MAX/w)); w = MAX; }
+      if(h > MAX){ w = Math.round(w*(MAX/h)); h = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('imp-imagen').value = dataUrl;
+      const prev = document.getElementById('imp-img-preview');
+      prev.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 // ════════════════════════════════
