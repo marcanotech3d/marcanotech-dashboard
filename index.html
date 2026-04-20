@@ -1885,7 +1885,8 @@ function initFirebase(){
   const scripts = [
     'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js',
-    'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js'
+    'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js',
+    'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js'
   ];
   let loaded = 0;
   scripts.forEach(src=>{
@@ -1906,6 +1907,7 @@ function connectFirebase(){
     if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
     db_firebase = firebase.database();
     fbRef = db_firebase.ref('marcanotech-dashboard');
+    initStorage();
     showSyncStatus('connecting');
     // Enable login button now that Firebase SDK is loaded
     const loginBtn = document.getElementById('btn-google-login');
@@ -1928,6 +1930,86 @@ function connectFirebase(){
     showSyncStatus('offline');
     // Even if Firebase fails, app works from localStorage
   }
+}
+
+// ════════════════════════════════
+// FIREBASE STORAGE — IMAGE SYNC
+// ════════════════════════════════
+let _storage = null;
+
+function initStorage(){
+  try{ _storage = firebase.storage(); } catch(e){ console.warn('Storage init:', e); }
+}
+
+// Upload image to Firebase Storage and return download URL
+function uploadImageToStorage(dataUrl, path){
+  return new Promise((resolve, reject)=>{
+    if(!_storage || !dataUrl){ resolve(null); return; }
+    try{
+      const ref = _storage.ref(path);
+      ref.putString(dataUrl, 'data_url').then(snap=>{
+        snap.ref.getDownloadURL().then(url=>resolve(url)).catch(reject);
+      }).catch(reject);
+    } catch(e){ reject(e); }
+  });
+}
+
+// Replace local base64 images with Storage URLs before saving
+async function persistWithStorage(key, items){
+  if(!_storage || !Array.isArray(items)){
+    persist(key); return;
+  }
+  const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'anon';
+  const updated = await Promise.all(items.map(async item=>{
+    if(!item || !item.imagen) return item;
+    // Already a URL (not base64) → skip
+    if(item.imagen.startsWith('http')) return item;
+    // Upload base64 to Storage
+    try{
+      const path = `images/${userId}/${key}/${item.id}`;
+      const url = await uploadImageToStorage(item.imagen, path);
+      if(url){
+        // Save URL version to Firebase, keep base64 in localStorage
+        return {...item, imagen: url};
+      }
+    } catch(e){ console.warn('Image upload failed:', e); }
+    return item;
+  }));
+  // Save original (with base64) to localStorage
+  saveLocal(key, items);
+  // Save version with URLs to Firebase
+  if(_firebaseUserReady && fbRef){
+    const toSave = sanitizeForFirebase(updated.map(item=>{
+      const c = Object.assign({}, item);
+      // If imagen is still base64, remove it (too large)
+      if(c.imagen && c.imagen.startsWith('data:')) delete c.imagen;
+      return c;
+    }));
+    fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
+  }
+}
+
+// Download images from Storage URLs and cache in localStorage
+function hydrateImagesFromStorage(items, key){
+  if(!items || !_storage) return items;
+  items.forEach(item=>{
+    if(item && item.imagen && item.imagen.startsWith('http')){
+      // Fetch and cache as base64 in localStorage for offline use
+      fetch(item.imagen).then(r=>r.blob()).then(blob=>{
+        const reader = new FileReader();
+        reader.onload = e=>{
+          const cached = loadLocal(key) || [];
+          const idx = cached.findIndex(c=>c.id===item.id);
+          if(idx>=0){ cached[idx].imagen = e.target.result; saveLocal(key, cached); }
+          // Update in-memory DB
+          const dbIdx = DB[key] ? DB[key].findIndex(c=>c.id===item.id) : -1;
+          if(dbIdx>=0){ DB[key][dbIdx].imagen = e.target.result; renderSection(currentSection); }
+        };
+        reader.readAsDataURL(blob);
+      }).catch(()=>{});
+    }
+  });
+  return items;
 }
 
 function firebaseToArray(val){
@@ -1958,12 +2040,16 @@ function subscribeData(){
           const localMap = {};
           fromLocal.forEach(item=>{ if(item && item.id) localMap[item.id] = item; });
           DB[k] = fromFirebase.map(item=>{
-            if(item && item.id && localMap[item.id] && localMap[item.id].imagen){
+            if(!item) return item;
+            // Prefer locally cached base64 over Storage URL
+            if(item.id && localMap[item.id] && localMap[item.id].imagen){
               return Object.assign({}, item, {imagen: localMap[item.id].imagen});
             }
             return item;
           });
           saveLocal(k, DB[k]);
+          // Hydrate Storage URLs → base64 for offline cache
+          hydrateImagesFromStorage(DB[k], k);
         }
       });
       updateBadges();
@@ -2221,7 +2307,7 @@ function saveProyecto(){
   if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
   if(editId){ DB.proyectos=DB.proyectos.map(p=>p.id===editId?obj:p); }
   else { DB.proyectos.push(obj); logActivity(`Proyecto <strong>${obj.nombre}</strong> creado`,'success'); }
-  persist(KEYS.proyectos);
+  persistWithStorage('proyectos', DB.proyectos);
   updateBadges();
   closeModal('modal-proyecto');
   clearForm(['proy-nombre','proy-material','proy-progreso','proy-notas','proy-tiempo','proy-color']);
@@ -2587,7 +2673,7 @@ function saveProducto(){
   if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
   if(editId){ DB.productos=DB.productos.map(p=>p.id===editId?obj:p); }
   else{ DB.productos.push(obj); logActivity(`Producto <strong>${obj.nombre}</strong> agregado al catálogo`); }
-  persist(KEYS.productos); updateBadges(); closeModal('modal-producto');
+  persistWithStorage('productos', DB.productos); updateBadges(); closeModal('modal-producto');
   document.getElementById('producto-edit-id').value='';
   clearForm(['prod-nombre','prod-sku','prod-precio','prod-stock','prod-descripcion']);
   resetImgPreview('prod-img-preview','prod-imagen');
@@ -2661,7 +2747,7 @@ function saveImpresora(){
     };
     if(editId){ DB.impresoras=DB.impresoras.map(i=>i.id===editId?obj:i); }
     else{ DB.impresoras.push(obj); logActivity(`Impresora <strong>${obj.nombre}</strong> registrada`); }
-    persist(KEYS.impresoras);
+    persistWithStorage('impresoras', DB.impresoras);
     updateBadges();
     closeModal('modal-impresora');
     document.getElementById('impresora-edit-id').value='';
@@ -3045,7 +3131,7 @@ function renderDashboard(){
       const ec=estadoConfig[p.estado]||{label:p.estado,cls:'badge-gray'};
       const bg=p.color||'#38d9a9';
       return `<div class="project-card" onclick="editProyecto('${p.id}')">
-        <div class="project-thumb" style="background:linear-gradient(135deg,${bg}22,${bg}08)">${p.emoji||'🖨️'}</div>
+        <div class="project-thumb" style="background:linear-gradient(135deg,${bg}22,${bg}08);overflow:hidden;padding:0">${p.imagen?`<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:28px">${p.emoji||'🖨️'}</span>`}</div>
         <div class="project-body">
           <div class="project-name">${p.nombre}</div>
           <div class="project-meta">${p.material||'—'}</div>
@@ -3276,7 +3362,7 @@ function saveComponente(){
   if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
   if(editId){ DB.componentes=DB.componentes.map(c=>c.id===editId?obj:c); }
   else{ DB.componentes.push(obj); logActivity(`Componente <strong>${obj.nombre}</strong> agregado`); }
-  persist(KEYS.componentes); updateBadges(); closeModal('modal-componente');
+  persistWithStorage('componentes', DB.componentes); updateBadges(); closeModal('modal-componente');
   document.getElementById('comp-edit-id').value='';
   clearForm(['comp-nombre','comp-marca','comp-modelo','comp-specs','comp-emoji']);
   renderSection(currentSection); showToast('Componente guardado ✓');
