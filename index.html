@@ -1755,34 +1755,47 @@ let fbRef = null;
 // DATA STORE  (localStorage fallback)
 // ════════════════════════════════
 const KEYS = {
-  proyectos:'wl_proyectos', materiales:'wl_materiales', productos:'wl_productos',
-  impresoras:'wl_impresoras', cola:'wl_cola', piezas:'wl_piezas',
-  mantenimiento:'wl_mantenimiento', actividad:'wl_actividad',
-  ventas:'wl_ventas', componentes:'wl_componentes', timerHistorial:'wl_timer_hist',
-  accesorios:'wl_accesorios'
+  proyectos:'proyectos', materiales:'materiales', productos:'productos',
+  impresoras:'impresoras', cola:'cola', piezas:'piezas',
+  mantenimiento:'mantenimiento', actividad:'actividad',
+  ventas:'ventas', componentes:'componentes', timerHistorial:'timerHistorial',
+  accesorios:'accesorios'
 };
 
 function loadLocal(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
 function saveLocal(key,data){ localStorage.setItem(key,JSON.stringify(data)); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
+function loadWithMigration(newKey, oldKey){
+  // Try new key first, fallback to old wl_ key, migrate if found
+  const fromNew = loadLocal(newKey);
+  if(fromNew && fromNew.length > 0) return fromNew;
+  const fromOld = loadLocal(oldKey);
+  if(fromOld && fromOld.length > 0){
+    saveLocal(newKey, fromOld); // migrate to new key
+    return fromOld;
+  }
+  return [];
+}
+
 let DB = {
-  proyectos: loadLocal(KEYS.proyectos),
-  materiales: loadLocal(KEYS.materiales),
-  productos: loadLocal(KEYS.productos),
-  impresoras: loadLocal(KEYS.impresoras),
-  cola: loadLocal(KEYS.cola),
-  piezas: loadLocal(KEYS.piezas),
-  mantenimiento: loadLocal(KEYS.mantenimiento),
-  actividad: loadLocal(KEYS.actividad),
-  ventas: loadLocal(KEYS.ventas),
-  componentes: loadLocal(KEYS.componentes),
-  timerHistorial: loadLocal(KEYS.timerHistorial),
-  accesorios: loadLocal(KEYS.accesorios)
+  proyectos:     loadWithMigration('proyectos',    'wl_proyectos'),
+  materiales:    loadWithMigration('materiales',   'wl_materiales'),
+  productos:     loadWithMigration('productos',    'wl_productos'),
+  impresoras:    loadWithMigration('impresoras',   'wl_impresoras'),
+  cola:          loadWithMigration('cola',         'wl_cola'),
+  piezas:        loadWithMigration('piezas',       'wl_piezas'),
+  mantenimiento: loadWithMigration('mantenimiento','wl_mantenimiento'),
+  actividad:     loadWithMigration('actividad',    'wl_actividad'),
+  ventas:        loadWithMigration('ventas',       'wl_ventas'),
+  componentes:   loadWithMigration('componentes',  'wl_componentes'),
+  timerHistorial:loadWithMigration('timerHistorial','wl_timer_hist'),
+  accesorios:    loadWithMigration('accesorios',   'wl_accesorios')
 };
 
 // ── FIREBASE WRITE HELPERS ──────────────────────────────
-let _pendingWrites = {}; // queue writes until user is authenticated
+let _pendingWrites = {};
+let _firebaseUserReady = false; // true after onAuthStateChanged confirms login
 
 function stripImages(data){
   if(!Array.isArray(data)) return data;
@@ -1814,12 +1827,12 @@ function fbWrite(key, data){
   if(!FIREBASE_READY || !fbRef) return;
   let toSave = stripImages(data);
   if(toSave === null) return;
-  toSave = sanitizeForFirebase(toSave); // remove all undefined values
-  const user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
-  if(user){
+  toSave = sanitizeForFirebase(toSave);
+  // Use onAuthStateChanged result - currentUser may be null during init
+  if(_firebaseUserReady){
     fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
   } else {
-    _pendingWrites[key] = toSave;
+    _pendingWrites[key] = toSave; // queue until auth resolves
   }
 }
 
@@ -1833,12 +1846,17 @@ function flushPendingWrites(){
 }
 
 function persist(key){
+  // key is the DB property name: 'proyectos', 'materiales', etc.
+  // KEYS[key] now equals key (same string used for DB, localStorage, Firebase)
   try{
-    const lsKey = KEYS[key] || key;
-    saveLocal(lsKey, DB[key]);
+    if(DB[key] === undefined){
+      console.warn('persist: DB['+key+'] is undefined, skipping');
+      return;
+    }
+    saveLocal(key, DB[key]);
     fbWrite(key, DB[key]);
   } catch(e){
-    console.warn('persist error:', e);
+    console.warn('persist error ['+key+']:', e);
   }
 }
 
@@ -1934,10 +1952,9 @@ function subscribeData(){
     const fbData = snapshot.val();
     if(fbData){
       Object.keys(KEYS).forEach(k=>{
-        const lsKey = KEYS[k];
         if(fbData[k] !== undefined && fbData[k] !== null){
           const fromFirebase = firebaseToArray(fbData[k]);
-          const fromLocal = loadLocal(lsKey) || [];
+          const fromLocal = loadLocal(k) || [];
           const localMap = {};
           fromLocal.forEach(item=>{ if(item && item.id) localMap[item.id] = item; });
           DB[k] = fromFirebase.map(item=>{
@@ -1946,7 +1963,7 @@ function subscribeData(){
             }
             return item;
           });
-          saveLocal(lsKey, DB[k]);
+          saveLocal(k, DB[k]);
         }
       });
       updateBadges();
@@ -1983,6 +2000,7 @@ function loginWithGoogle(){
 }
 
 function logout(){
+  _firebaseUserReady = false;
   firebase.auth().signOut().then(()=>{ showLogin(); });
 }
 
@@ -1993,6 +2011,7 @@ function showLogin(){
 
 function showApp(user){
   document.getElementById('login-screen').classList.add('hidden');
+  _firebaseUserReady = true;
   flushPendingWrites(); // flush any writes queued before login
   // Mostrar nombre de usuario en sidebar
   const userEl = document.getElementById('sidebar-user');
