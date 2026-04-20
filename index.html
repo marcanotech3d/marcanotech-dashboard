@@ -9,13 +9,15 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#252530;
-  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--border3:rgba(255,255,255,0.20);
-  --text:#f0eeea;--text2:#8a8a96;--text3:#55555f;
   --accent:#e8ff47;--accent2:#c8d900;
   --teal:#38d9a9;--coral:#ff6b5b;--blue:#4ea8ff;--amber:#f0b429;--purple:#a78bfa;--green:#6fcf97;
   --font:'Syne',sans-serif;--mono:'DM Mono',monospace;
   --r:10px;--r2:14px;--sidebar:220px;
+  /* dark defaults (overridden by data-theme) */
+  --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#252530;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--border3:rgba(255,255,255,0.20);
+  --text:#f0eeea;--text2:#8a8a96;--text3:#55555f;
+  --shadow:0 2px 12px rgba(0,0,0,0.4);
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);}
 a{color:inherit;text-decoration:none;}
@@ -342,6 +344,83 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 .login-footer{margin-top:20px;font-size:11px;color:var(--text3);font-family:var(--mono);}
 .login-error{background:rgba(255,107,91,0.1);border:0.5px solid rgba(255,107,91,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--coral);margin-bottom:16px;display:none;font-family:var(--mono);}
 
+/* ─── THEME SYSTEM ─── */
+/* Dark theme (default) */
+:root, [data-theme="dark"] {
+  --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--bg4:#252530;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--border3:rgba(255,255,255,0.20);
+  --text:#f0eeea;--text2:#8a8a96;--text3:#55555f;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+/* Light theme */
+[data-theme="light"] {
+  --bg:#f5f5f7;--bg2:#ffffff;--bg3:#f0f0f2;--bg4:#e8e8ec;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--border3:rgba(0,0,0,0.22);
+  --text:#1a1a1e;--text2:#5a5a66;--text3:#9a9aaa;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+/* Auto: follow system */
+@media(prefers-color-scheme:light){
+  [data-theme="auto"] {
+    --bg:#f5f5f7;--bg2:#ffffff;--bg3:#f0f0f2;--bg4:#e8e8ec;
+    --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--border3:rgba(0,0,0,0.22);
+    --text:#1a1a1e;--text2:#5a5a66;--text3:#9a9aaa;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle{
+  display:flex;gap:4px;padding:3px;background:var(--bg3);
+  border-radius:8px;border:0.5px solid var(--border);margin:10px 10px 0;
+}
+.theme-btn{
+  flex:1;padding:5px 4px;border-radius:6px;font-size:10px;font-weight:600;
+  cursor:pointer;text-align:center;color:var(--text3);transition:all 0.15s;
+  font-family:var(--mono);border:none;background:none;
+}
+.theme-btn.active{background:var(--bg2);color:var(--text);border:0.5px solid var(--border);}
+
+/* ─── PRINTER STATUS CARD IN SIDEBAR ─── */
+.sidebar-printer-select{
+  padding:10px;border-top:0.5px solid var(--border);
+}
+.printer-select-label{
+  font-size:9px;color:var(--text3);font-family:var(--mono);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;padding:0 2px;
+}
+.printer-select-dropdown{
+  width:100%;background:var(--bg3);border:0.5px solid var(--border2);
+  border-radius:7px;padding:6px 8px;color:var(--text);font-size:11px;
+  font-family:var(--mono);outline:none;cursor:pointer;
+}
+
+/* ─── PRINTER CARD REDESIGN ─── */
+.printer-card-v2{
+  background:var(--bg2);border-radius:var(--r2);border:0.5px solid var(--border);
+  overflow:hidden;transition:border-color 0.15s;
+}
+.printer-card-v2:hover{border-color:var(--border2);}
+.printer-card-v2-inner{display:grid;grid-template-columns:160px 1fr;}
+.printer-card-v2-img{
+  position:relative;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  border-right:0.5px solid var(--border);min-height:180px;
+}
+.printer-card-v2-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.printer-card-v2-imginfo{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.7));
+}
+.printer-card-v2-body{padding:16px;}
+
+/* Status badge improved */
+.status-badge-large{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;
+  font-family:var(--mono);letter-spacing:0.3px;
+}
+
 </style>
 </head>
 <body>
@@ -454,22 +533,38 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       Estadísticas
     </button>
   </nav>
-  <div class="sidebar-footer">
-    <div id="sidebar-user" style="border-bottom:0.5px solid var(--border)"></div>
-    <div class="printer-status">
-      <div class="printer-header">
-        <div class="status-dot"></div>
-        <div>
-          <div class="printer-name">Bambu Lab A1</div>
-          <div class="printer-model" id="sidebar-printer-status">Sin trabajo activo</div>
+  <div class="sidebar-footer" style="padding:0">
+    <!-- Selector de impresora -->
+    <div class="sidebar-printer-select">
+      <div class="printer-select-label">Impresora activa</div>
+      <select class="printer-select-dropdown" id="sidebar-imp-select" onchange="setSidebarImpresora(this.value)">
+        <option value="">Sin impresoras</option>
+      </select>
+      <div class="printer-status" style="margin-top:8px" id="sidebar-printer-card">
+        <div class="printer-header">
+          <div class="status-dot" id="sidebar-status-dot"></div>
+          <div style="flex:1;min-width:0">
+            <div class="printer-name" id="sidebar-printer-name">—</div>
+            <div class="printer-model" id="sidebar-printer-status">Sin trabajo activo</div>
+          </div>
+        </div>
+        <div class="printer-progress" style="margin-top:6px"><div class="printer-bar" id="sidebar-bar" style="width:0%"></div></div>
+        <div class="printer-info">
+          <span id="sidebar-layer" style="font-size:10px;color:var(--text3);font-family:var(--mono)">—</span>
+          <span style="color:var(--teal);font-size:10px;font-family:var(--mono)" id="sidebar-pct">—</span>
         </div>
       </div>
-      <div class="printer-progress"><div class="printer-bar" id="sidebar-bar" style="width:0%"></div></div>
-      <div class="printer-info">
-        <span id="sidebar-layer">—</span>
-        <span style="color:var(--teal)" id="sidebar-pct">—</span>
+    </div>
+    <!-- Theme toggle -->
+    <div style="padding:0 10px 6px">
+      <div class="theme-toggle">
+        <button class="theme-btn" id="theme-dark" onclick="setTheme('dark')">🌙 Oscuro</button>
+        <button class="theme-btn active" id="theme-auto" onclick="setTheme('auto')">⚙ Auto</button>
+        <button class="theme-btn" id="theme-light" onclick="setTheme('light')">☀ Claro</button>
       </div>
     </div>
+    <!-- User info -->
+    <div id="sidebar-user" style="border-top:0.5px solid var(--border)"></div>
   </div>
 </aside>
 
@@ -1624,17 +1719,28 @@ let DB = {
 // persist: guarda en localStorage siempre; si Firebase está listo, sube también
 function persist(key){
   try{
+    // Siempre guardar en localStorage (incluyendo imágenes)
     saveLocal(key, DB[key]);
     if(FIREBASE_READY && fbRef){
-      // Guardar siempre - no bloquear por auth para escrituras de datos
       const data = DB[key];
-      // Firebase no acepta arrays vacíos - guardar objeto vacío en ese caso
-      const toSave = (Array.isArray(data) && data.length === 0) ? {} : data;
-      fbRef.child(key).set(toSave).catch(e=>console.warn('Firebase write error:',e));
+      // Limpiar imágenes base64 antes de enviar a Firebase (evita límite de tamaño)
+      let toSave = data;
+      if(Array.isArray(data)){
+        toSave = data.map(item=>{
+          if(item && typeof item === 'object' && item.imagen){
+            const {imagen, ...rest} = item;
+            return rest; // imagen se guarda solo en localStorage
+          }
+          return item;
+        });
+        if(toSave.length === 0) toSave = null; // Firebase no acepta arrays vacíos
+      }
+      if(toSave !== null){
+        fbRef.child(key).set(toSave).catch(e=>console.warn('Firebase write ['+key+']:', e));
+      }
     }
   } catch(e){
-    console.warn('persist error:',e);
-    saveLocal(key, DB[key]);
+    console.warn('persist error:', e);
   }
 }
 
@@ -1682,16 +1788,41 @@ function connectFirebase(){
   }
 }
 
+function firebaseToArray(val){
+  if(!val || val === null) return [];
+  if(Array.isArray(val)) return val;
+  if(typeof val === 'object'){
+    // Firebase guarda arrays como {0: item, 1: item, ...} — restaurar orden
+    const keys = Object.keys(val);
+    const allNumeric = keys.every(k => !isNaN(parseInt(k)));
+    if(allNumeric){
+      const arr = [];
+      keys.sort((a,b)=>parseInt(a)-parseInt(b)).forEach(k=>arr.push(val[k]));
+      return arr;
+    }
+    return Object.values(val);
+  }
+  return [];
+}
+
 function subscribeData(){
   fbRef.on('value', snapshot=>{
     const data = snapshot.val();
     if(data){
       Object.keys(KEYS).forEach(k=>{
         if(data[k] !== undefined && data[k] !== null){
-          // Firebase convierte arrays a objetos — reconvertir
-          const val = data[k];
-          DB[k] = Array.isArray(val) ? val : (typeof val === 'object' ? Object.values(val) : val);
-          saveLocal(k, DB[k]);
+          const fromFirebase = firebaseToArray(data[k]);
+          // Restaurar imágenes desde localStorage (Firebase no las almacena)
+          const fromLocal = loadLocal(KEYS[k]) || [];
+          const localMap = {};
+          fromLocal.forEach(item=>{ if(item && item.id) localMap[item.id] = item; });
+          DB[k] = fromFirebase.map(item=>{
+            if(item && item.id && localMap[item.id] && localMap[item.id].imagen){
+              return {...item, imagen: localMap[item.id].imagen};
+            }
+            return item;
+          });
+          saveLocal(KEYS[k], DB[k]);
         }
       });
       updateBadges();
@@ -2377,42 +2508,43 @@ function renderImpresoras(){
     return;
   }
   const stColors={'activa':'var(--teal)','imprimiendo':'var(--accent)','mantenimiento':'var(--amber)','inactiva':'var(--text3)'};
+  const stLabels={'activa':'● Activa','imprimiendo':'● Imprimiendo','mantenimiento':'⚠ Mantenimiento','inactiva':'○ Inactiva'};
   grid.innerHTML=DB.impresoras.map(i=>{
     const sc=stColors[i.estado]||'var(--text3)';
-    const imgHtml = i.imagen
-      ? `<img src="${i.imagen}" style="width:100%;height:120px;object-fit:cover;border-radius:10px 10px 0 0;display:block">`
-      : `<div style="width:100%;height:80px;background:var(--bg3);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;border-bottom:0.5px solid var(--border)">
-           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-         </div>`;
-    return `<div class="printer-card" style="padding:0;overflow:hidden">
-      ${imgHtml}
-      <div style="padding:14px">
-        <div class="printer-card-header" style="margin-bottom:10px">
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
-              <span style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);background:rgba(232,255,71,0.1);padding:2px 7px;border-radius:5px">${i.codigo||'—'}</span>
-              <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${i.tecnologia||'FDM'}</span>
-            </div>
-            <div class="printer-title">${i.nombre}</div>
-            <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${i.marca}</div>
+    const sl=stLabels[i.estado]||i.estado;
+    const imgContent = i.imagen
+      ? `<img src="${i.imagen}" style="width:100%;height:100%;object-fit:cover;display:block">`
+      : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg3)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1" opacity="0.3"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>`;
+    return `<div class="printer-card-v2">
+      <div class="printer-card-v2-inner">
+        <div class="printer-card-v2-img">
+          ${imgContent}
+          <div class="printer-card-v2-imginfo">
+            <div style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);margin-bottom:3px">${i.codigo||'—'}</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;text-shadow:0 1px 4px rgba(0,0,0,0.6)">${i.nombre}</div>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:var(--mono);background:${sc}44;color:${sc};border:0.5px solid ${sc}88">${sl}</span>
           </div>
-          <span class="badge" style="background:${sc}22;color:${sc};align-self:flex-start">${i.estado}</span>
         </div>
-        <div class="printer-specs">
-          <div class="spec-item"><div class="spec-label">Volumen</div><div class="spec-val" style="font-size:11px">${i.volumen||'—'}</div></div>
-          <div class="spec-item"><div class="spec-label">Horas impresas</div><div class="spec-val">${i.horas||0}h</div></div>
-          <div class="spec-item"><div class="spec-label">Adquirida</div><div class="spec-val" style="font-size:11px">${i.fecha||'—'}</div></div>
-          <div class="spec-item"><div class="spec-label">Tecnología</div><div class="spec-val" style="font-size:11px">${i.tecnologia||'FDM'}</div></div>
-        </div>
-        ${i.notas?`<div style="margin-top:10px;font-size:11px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:8px 10px;border-radius:7px">${i.notas}</div>`:''}
-        <div style="margin-top:12px;display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="editImpresora('${i.id}')">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteImpresora('${i.id}')">Eliminar</button>
+        <div class="printer-card-v2-body">
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:12px">${i.marca} · ${i.tecnologia||'FDM'}</div>
+          <div class="printer-specs" style="gap:8px">
+            <div class="spec-item"><div class="spec-label">Volumen</div><div class="spec-val" style="font-size:11px">${i.volumen||'—'}</div></div>
+            <div class="spec-item"><div class="spec-label">Horas</div><div class="spec-val">${i.horas||0}h</div></div>
+            <div class="spec-item"><div class="spec-label">Adquirida</div><div class="spec-val" style="font-size:10px">${i.fecha||'—'}</div></div>
+            <div class="spec-item"><div class="spec-label">Tipo</div><div class="spec-val" style="font-size:11px">${i.tecnologia||'FDM'}</div></div>
+          </div>
+          ${i.notas?`<div style="margin-top:10px;font-size:10px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:8px 10px;border-radius:7px;line-height:1.5;max-height:56px;overflow:hidden;position:relative">${i.notas}</div>`:''}
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="editImpresora('${i.id}')">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteImpresora('${i.id}')">Eliminar</button>
+          </div>
         </div>
       </div>
     </div>`;
   }).join('')+`<div class="add-card" onclick="openModal('modal-impresora')" style="min-height:160px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Agregar impresora</span></div>`;
+  updateSidebarPrinterSelect();
 }
+
 
 function editImpresora(id){
   const i=DB.impresoras.find(x=>x.id===id); if(!i) return;
@@ -2438,6 +2570,7 @@ function deleteImpresora(id){
   if(!confirm('¿Eliminar esta impresora?')) return;
   DB.impresoras=DB.impresoras.filter(i=>i.id!==id);
   persist(KEYS.impresoras); updateBadges(); renderSection(currentSection);
+  updateSidebarPrinterSelect();
 }
 
 // ════════════════════════════════
@@ -2811,6 +2944,7 @@ function renderDashboard(){
     document.getElementById('sidebar-layer').textContent='sin trabajo activo';
   }
 }
+  updateSidebarPrinterSelect();
 
 // ════════════════════════════════
 // SECTION ROUTER
@@ -3343,7 +3477,7 @@ function renderAccesorios(){
     const cc = catColors[a.categoria]||'var(--text3)';
     return `<tr>
       <td><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:rgba(232,255,71,0.08);padding:3px 8px;border-radius:6px">${a.codigo||'—'}</span></td>
-      <td><strong>${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3)">${a.notas}</div>`:''}</td>
+      <td style="max-width:200px"><strong>${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${a.notas}</div>`:''}</td>
       <td><span class="badge" style="background:${cc}22;color:${cc}">${a.categoria}</span></td>
       <td class="mono">${a.marca}</td>
       <td class="mono" style="color:${stColor};font-weight:700">${a.stock} <span style="color:var(--text3)">${a.unidad||'Und'}</span></td>
@@ -3386,16 +3520,83 @@ function previewImpImg(input){
 }
 
 // ════════════════════════════════
+// THEME SYSTEM
+// ════════════════════════════════
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('wl_theme', theme);
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('theme-'+theme);
+  if(btn) btn.classList.add('active');
+}
+
+function initTheme(){
+  const saved = localStorage.getItem('wl_theme')||'auto';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('theme-'+saved);
+  if(btn) btn.classList.add('active');
+}
+
+// ════════════════════════════════
+// SIDEBAR PRINTER SELECTOR
+// ════════════════════════════════
+let _selectedPrinterId = null;
+
+function updateSidebarPrinterSelect(){
+  const sel = document.getElementById('sidebar-imp-select');
+  if(!sel) return;
+  if(!DB.impresoras.length){
+    sel.innerHTML = '<option value="">Sin impresoras registradas</option>';
+    const card = document.getElementById('sidebar-printer-card');
+    if(card) card.style.display = 'none';
+    return;
+  }
+  sel.innerHTML = DB.impresoras.map(i=>`<option value="${i.id}">${i.codigo||''} ${i.nombre}</option>`).join('');
+  if(!_selectedPrinterId || !DB.impresoras.find(i=>i.id===_selectedPrinterId)){
+    _selectedPrinterId = DB.impresoras[0].id;
+  }
+  sel.value = _selectedPrinterId;
+  setSidebarImpresora(_selectedPrinterId);
+}
+
+function setSidebarImpresora(id){
+  _selectedPrinterId = id;
+  const imp = DB.impresoras.find(i=>i.id===id);
+  const card = document.getElementById('sidebar-printer-card');
+  if(!imp){ if(card) card.style.display='none'; return; }
+  if(card) card.style.display='';
+  const stColors={'activa':'var(--teal)','imprimiendo':'var(--accent)','mantenimiento':'var(--amber)','inactiva':'var(--text3)'};
+  const stStatus={'activa':'Operativa','imprimiendo':'Imprimiendo...','mantenimiento':'En mantenimiento','inactiva':'Inactiva'};
+  const sc = stColors[imp.estado]||'var(--text3)';
+  const dot = document.getElementById('sidebar-status-dot');
+  if(dot){ dot.style.background=sc; dot.style.boxShadow=`0 0 6px ${sc}`; }
+  const nameEl = document.getElementById('sidebar-printer-name');
+  if(nameEl) nameEl.textContent = imp.nombre;
+  const statusEl = document.getElementById('sidebar-printer-status');
+  if(statusEl) statusEl.textContent = stStatus[imp.estado]||imp.estado;
+  const bar = document.getElementById('sidebar-bar');
+  if(bar) bar.style.width = imp.estado==='imprimiendo'?'45%':'0%';
+  const pct = document.getElementById('sidebar-pct');
+  if(pct) pct.textContent = imp.estado==='imprimiendo'?'45%':'—';
+  const layer = document.getElementById('sidebar-layer');
+  if(layer) layer.textContent = `${imp.tecnologia||'FDM'} · ${imp.horas||0}h impresas`;
+}
+
+// ════════════════════════════════
 // HELPERS
 // ════════════════════════════════
 function clearForm(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); }
+
 const d=new Date();
 const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 document.getElementById('topbar-date').textContent=`${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
 document.getElementById('topbar-add-btn').style.display='none';
+initTheme();
 updateBadges();
 renderDashboard();
+updateSidebarPrinterSelect();
 checkMantPending();
 initFirebase();
 </script>
