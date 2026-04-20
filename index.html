@@ -309,7 +309,26 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   .grid-3{grid-template-columns:1fr;}
 }
 
-/* ─── LOGIN SCREEN ─── */
+/* ─── MATERIAL MODAL ─── */
+.mat-peso-btn{
+  padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;
+  background:var(--bg3);color:var(--text2);border:0.5px solid var(--border2);
+  cursor:pointer;font-family:var(--font);transition:all 0.15s;
+}
+.mat-peso-btn:hover{background:var(--bg4);color:var(--text);}
+.mat-peso-btn.active{background:var(--accent);color:#0f0f11;border-color:var(--accent);}
+.mat-dropdown-item{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;
+  font-size:13px;color:var(--text);transition:background 0.1s;border-bottom:0.5px solid var(--border);
+}
+.mat-dropdown-item:last-child{border-bottom:none;}
+.mat-dropdown-item:hover{background:rgba(255,255,255,0.05);}
+.mat-dropdown-item.selected{background:rgba(232,255,71,0.08);color:var(--accent);}
+.mat-dropdown-item .item-name{font-weight:600;}
+.mat-dropdown-item .item-desc{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.mat-color-swatch-item{width:20px;height:20px;border-radius:50%;flex-shrink:0;border:0.5px solid var(--border2);}
+.mat-checkmark{margin-left:auto;color:var(--accent);font-size:14px;}
+
 .login-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;}
 .login-screen.hidden{display:none;}
 .login-card{background:var(--bg2);border:0.5px solid var(--border2);border-radius:20px;padding:48px 40px;text-align:center;width:380px;max-width:92vw;}
@@ -388,6 +407,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       Materiales
       <span class="nav-badge" id="badge-materiales">0</span>
     </button>
+    <button class="nav-item" onclick="showSection('accesorios',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Accesorios
+      <span class="nav-badge" id="badge-accesorios">0</span>
+    </button>
     <button class="nav-item" onclick="showSection('productos',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       Productos
@@ -402,6 +426,24 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <button class="nav-item" onclick="showSection('costos',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Costos & precios
+    </button>
+    <button class="nav-item" onclick="showSection('ventas',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Ventas
+      <span class="nav-badge" id="badge-ventas">0</span>
+    </button>
+    <button class="nav-item" onclick="showSection('componentes',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Componentes RC
+      <span class="nav-badge" id="badge-componentes">0</span>
+    </button>
+    <button class="nav-item" onclick="showSection('timer',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Timer de impresión
+    </button>
+    <button class="nav-item" onclick="showSection('graficos',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="17" x2="7" y2="11"/><line x1="12" y1="17" x2="12" y2="7"/><line x1="17" y1="17" x2="17" y2="13"/></svg>
+      Gráficos & consumo
     </button>
     <button class="nav-item" onclick="showSection('mantenimiento',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
@@ -418,7 +460,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="printer-header">
         <div class="status-dot"></div>
         <div>
-          <div class="printer-name">Bambu Lab P2S</div>
+          <div class="printer-name">Bambu Lab A1</div>
           <div class="printer-model" id="sidebar-printer-status">Sin trabajo activo</div>
         </div>
       </div>
@@ -556,7 +598,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="section" id="sec-materiales">
     <div class="section-row" style="margin-top:0">
       <div class="section-title">Inventario de materiales</div>
-      <button class="btn btn-accent btn-sm" onclick="openModal('modal-material')">+ Agregar material</button>
+      <button class="btn btn-accent btn-sm" onclick="openMatModal()">+ Agregar material</button>
     </div>
     <div class="panel">
       <table class="data-table" id="materiales-table">
@@ -567,6 +609,31 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           </tr>
         </thead>
         <tbody id="materiales-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ACCESORIOS ── -->
+  <div class="section" id="sec-accesorios">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Accesorios & herramientas</div>
+      <button class="btn btn-accent btn-sm" onclick="openModal('modal-accesorio')">+ Agregar accesorio</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterAccesorios('todos',this)">Todos</button>
+      <button class="tab" onclick="filterAccesorios('Adhesivo',this)">Adhesivos</button>
+      <button class="tab" onclick="filterAccesorios('Herramienta',this)">Herramientas</button>
+      <button class="tab" onclick="filterAccesorios('Consumible',this)">Consumibles</button>
+      <button class="tab" onclick="filterAccesorios('Repuesto',this)">Repuestos</button>
+      <button class="tab" onclick="filterAccesorios('Electrónica',this)">Electrónica</button>
+      <button class="tab" onclick="filterAccesorios('Otro',this)">Otros</button>
+    </div>
+    <div class="panel">
+      <table class="data-table" id="accesorios-table">
+        <thead>
+          <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Marca</th><th>Stock</th><th>Mín.</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="accesorios-tbody"></tbody>
       </table>
     </div>
   </div>
@@ -680,6 +747,131 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </table>
     </div>
   </div>
+
+  <!-- ── VENTAS ── -->
+  <div class="section" id="sec-ventas">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Registro de ventas</div>
+      <button class="btn btn-accent btn-sm" onclick="openModal('modal-venta')">+ Nueva venta</button>
+    </div>
+    <div class="stats-row" id="ventas-stats-row" style="margin-bottom:20px"></div>
+    <div class="panel">
+      <table class="data-table">
+        <thead><tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Precio unit.</th><th>Total</th><th>Cliente</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="ventas-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── COMPONENTES RC ── -->
+  <div class="section" id="sec-componentes">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Catálogo de componentes RC</div>
+      <button class="btn btn-accent btn-sm" onclick="openModal('modal-componente')">+ Agregar componente</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterComponentes('todos',this)">Todos</button>
+      <button class="tab" onclick="filterComponentes('motor',this)">Motores</button>
+      <button class="tab" onclick="filterComponentes('esc',this)">ESC</button>
+      <button class="tab" onclick="filterComponentes('servo',this)">Servos</button>
+      <button class="tab" onclick="filterComponentes('bateria',this)">Baterías</button>
+      <button class="tab" onclick="filterComponentes('radio',this)">Radio</button>
+      <button class="tab" onclick="filterComponentes('otro',this)">Otros</button>
+    </div>
+    <div class="grid-4" id="componentes-grid"></div>
+  </div>
+
+  <!-- ── TIMER ── -->
+  <div class="section" id="sec-timer">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Timer de impresión</div>
+    </div>
+    <div class="grid-2">
+      <div class="panel" style="text-align:center;padding:32px 24px">
+        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">TIEMPO TRANSCURRIDO</div>
+        <div id="timer-display" style="font-size:56px;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:2px;margin-bottom:4px">00:00:00</div>
+        <div id="timer-pieza-label" style="font-size:13px;color:var(--text3);margin-bottom:24px">Sin trabajo activo</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px">
+          <button class="btn btn-accent" id="btn-timer-start" onclick="timerStart()">▶ Iniciar</button>
+          <button class="btn btn-ghost" id="btn-timer-pause" onclick="timerPause()" style="display:none">⏸ Pausar</button>
+          <button class="btn btn-ghost" onclick="timerReset()">↺ Reiniciar</button>
+          <button class="btn btn-accent btn-sm" onclick="timerFinish()" id="btn-timer-finish" style="display:none;background:var(--teal);color:#0f0f11">✓ Finalizar</button>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border)">
+          <div class="form-group" style="margin-bottom:10px">
+            <label class="form-label">Pieza / trabajo</label>
+            <input class="form-input" id="timer-nombre" placeholder="ej: Chasis Touring v2.3">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label class="form-label">Proyecto</label>
+            <select class="form-input" id="timer-proyecto"></select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Tiempo estimado (minutos)</label>
+            <input class="form-input" type="number" id="timer-estimado" placeholder="ej: 180">
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="panel" style="margin-bottom:12px">
+          <div class="panel-title">Progreso estimado</div>
+          <div style="margin-top:8px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;color:var(--text2)">Completado</span>
+              <span style="font-size:12px;font-family:var(--mono);color:var(--accent)" id="timer-pct-label">0%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+              <div id="timer-progress-bar" style="height:100%;width:0%;background:var(--accent);border-radius:4px;transition:width 1s"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px">
+              <span style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="timer-eta">Tiempo restante: —</span>
+              <span style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="timer-finish-at">Fin estimado: —</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Historial de impresiones</div>
+          <div id="timer-historial" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GRÁFICOS ── -->
+  <div class="section" id="sec-graficos">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Gráficos & consumo de filamento</div>
+    </div>
+    <div class="stats-row" id="graficos-stats" style="margin-bottom:20px"></div>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div class="panel-title" style="margin:0">Consumo por material</div>
+          <select class="form-input" id="graf-periodo" onchange="renderGraficos()" style="width:auto;font-size:11px;padding:4px 8px">
+            <option value="7">Últimos 7 días</option>
+            <option value="30" selected>Últimos 30 días</option>
+            <option value="90">Últimos 90 días</option>
+          </select>
+        </div>
+        <div id="graf-materiales"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:14px">Estado del inventario</div>
+        <div id="graf-inventario"></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:14px">Ventas por mes</div>
+        <div id="graf-ventas"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:14px">Proyectos por estado</div>
+        <div id="graf-proyectos-estado"></div>
+      </div>
+    </div>
+  </div>
+
 </main>
 </div>
 
@@ -704,9 +896,8 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Body style</label>
         <select class="form-input" id="proy-tipo">
-          <option>Touring/Drift</option><option>Rally</option><option>Iconic Cars</option><option>Super Cars</option>
-          <option>Formula 1</option><option>Crawler</option><option>SUV/Off-Road</option><option>Figures</option>
-          <option>Decoration</option><option>Otro</option>
+          <option>Touring / Drift</option><option>Rally</option><option>Trophy Truck</option>
+          <option>Formula</option><option>Crawler</option><option>SUV / Off-Road</option><option>Otro</option>
         </select>
       </div>
       <div class="form-group">
@@ -751,69 +942,114 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Material -->
 <div class="modal-overlay" id="modal-material">
-  <div class="modal">
-    <div class="modal-title">Registrar material / filamento</div>
+  <div class="modal" style="width:520px;">
+    <div class="modal-title" id="mat-modal-title">Nuevo Filamento</div>
     <input type="hidden" id="material-edit-id">
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Tipo de material</label>
-        <select class="form-input" id="mat-tipo">
-          <option>PETG</option><option>PLA</option><option>ABS</option><option>ASA</option>
-          <option>TPU</option><option>PETG-CF</option><option>PA-CF</option><option>PLA-CF</option><option>Otro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Marca</label>
-        <input class="form-input" id="mat-marca" placeholder="ej: Bambu Lab">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Color</label>
-        <input class="form-input" id="mat-color-nombre" placeholder="ej: Negro mate">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Color (hex)</label>
-        <input class="form-input" id="mat-color-hex" placeholder="#1a1a1a" type="color" value="#1a1a1a">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Stock actual (g)</label>
-        <input class="form-input" type="number" id="mat-stock" placeholder="ej: 750">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Total del carrete (g)</label>
-        <input class="form-input" type="number" id="mat-total" placeholder="ej: 1000">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Precio por kg ($)</label>
-        <input class="form-input" type="number" id="mat-precio" placeholder="ej: 25.00" step="0.01">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Temperatura boquilla (°C)</label>
-        <input class="form-input" type="number" id="mat-temp-boquilla" placeholder="ej: 240">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Temperatura cama (°C)</label>
-        <input class="form-input" type="number" id="mat-temp-cama" placeholder="ej: 70">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Velocidad impresión (mm/s)</label>
-        <input class="form-input" type="number" id="mat-velocidad" placeholder="ej: 150">
-      </div>
-    </div>
+
+    <!-- MATERIAL TYPE -->
     <div class="form-group">
-      <label class="form-label">Notas de impresión</label>
-      <textarea class="form-input" id="mat-notas" rows="2" placeholder="Perfil, configuraciones especiales..."></textarea>
+      <label class="form-label">Material <span style="color:var(--coral)">*</span></label>
+      <div style="position:relative">
+        <div id="mat-tipo-display" onclick="toggleMatDropdown()" style="
+          background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+          padding:10px 36px 10px 12px;cursor:pointer;font-size:13px;color:var(--text);
+          display:flex;align-items:center;justify-content:space-between;user-select:none;">
+          <span id="mat-tipo-label">Seleccionar material...</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="mat-tipo-dropdown" style="
+          display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+          background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+          overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:260px;overflow-y:auto;">
+        </div>
+      </div>
+      <input type="hidden" id="mat-tipo" value="">
     </div>
+
+    <!-- COLOR SELECT -->
+    <div class="form-group">
+      <label class="form-label">Color <span style="color:var(--coral)">*</span></label>
+      <div style="position:relative">
+        <div id="mat-color-display" onclick="toggleColorDropdown()" style="
+          background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+          padding:10px 36px 10px 12px;cursor:pointer;font-size:13px;color:var(--text3);
+          display:flex;align-items:center;gap:10px;user-select:none;">
+          <span id="mat-color-swatch" style="width:18px;height:18px;border-radius:50%;background:transparent;border:0.5px solid var(--border2);flex-shrink:0;display:none"></span>
+          <span id="mat-color-label">Seleccionar color</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="margin-left:auto;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="mat-color-dropdown" style="
+          display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+          background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+          overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:220px;overflow-y:auto;">
+        </div>
+      </div>
+      <input type="hidden" id="mat-color-nombre" value="">
+      <input type="hidden" id="mat-color-hex" value="#888888">
+    </div>
+
+    <!-- MARCA -->
+    <div class="form-group">
+      <label class="form-label">Marca</label>
+      <input class="form-input" id="mat-marca" placeholder="Ej: 3D Fila, Sunlu, Overture...">
+    </div>
+
+    <!-- PESO TOTAL -->
+    <div class="form-group">
+      <label class="form-label">Peso total</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="mat-peso-btns">
+        <button type="button" class="mat-peso-btn" data-g="250" onclick="selectPeso(250)">250g</button>
+        <button type="button" class="mat-peso-btn" data-g="500" onclick="selectPeso(500)">500g</button>
+        <button type="button" class="mat-peso-btn" data-g="750" onclick="selectPeso(750)">750g</button>
+        <button type="button" class="mat-peso-btn active" data-g="1000" onclick="selectPeso(1000)">1kg</button>
+        <button type="button" class="mat-peso-btn" data-g="2000" onclick="selectPeso(2000)">2kg</button>
+        <button type="button" class="mat-peso-btn" data-g="3000" onclick="selectPeso(3000)">3kg</button>
+        <button type="button" class="mat-peso-btn" data-g="custom" onclick="selectPeso('custom')">Otro (g)</button>
+      </div>
+      <input class="form-input" type="number" id="mat-total" value="1000" style="display:none;margin-top:8px" placeholder="Ingresá el peso en gramos">
+      <input type="hidden" id="mat-total-val" value="1000">
+    </div>
+
+    <!-- RESTANTE SLIDER -->
+    <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <label class="form-label" style="margin:0">Restante</label>
+        <span id="mat-stock-label" style="font-size:12px;font-weight:600;color:var(--teal);font-family:var(--mono)">100% (1000g)</span>
+      </div>
+      <input type="range" id="mat-stock-slider" min="0" max="100" value="100" step="1"
+        oninput="updateStockSlider(this.value)"
+        style="width:100%;accent-color:var(--teal)">
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">0%</span>
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">50%</span>
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">100%</span>
+      </div>
+      <input type="hidden" id="mat-stock" value="1000">
+    </div>
+
+    <!-- PRECIO -->
+    <div class="form-group">
+      <label class="form-label">Precio por kg (opcional)</label>
+      <div style="position:relative">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:13px">$</span>
+        <input class="form-input" type="number" id="mat-precio" placeholder="0" step="0.01" style="padding-left:28px">
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Notas (opcional)</label>
+      <textarea class="form-input" id="mat-notas" rows="2" placeholder="Observaciones, temperatura recomendada, etc."></textarea>
+    </div>
+
+    <!-- CAMPOS OCULTOS para compatibilidad -->
+    <input type="hidden" id="mat-temp-boquilla">
+    <input type="hidden" id="mat-temp-cama">
+    <input type="hidden" id="mat-velocidad">
+
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-material')">Cancelar</button>
-      <button class="btn btn-accent" onclick="saveMaterial()">Guardar material</button>
+      <button class="btn btn-accent" style="width:100%;padding:13px;" onclick="saveMaterial()">Agregar Filamento</button>
     </div>
   </div>
 </div>
@@ -851,9 +1087,8 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Categoría</label>
         <select class="form-input" id="prod-categoria">
-          <option>Kit Completo</option><option>Body / Carrocería</option><option>Suspensión</option>
-          <option>Ruedas / Neumáticos</option><option>Hardware RC</option><option>Tools</option>
-          <option>Decoration Home</option><option>Figures / Accesorios</option><option>Otro</option>
+          <option>Kit completo</option><option>Body / carrocería</option><option>Suspensión</option>
+          <option>Ruedas / neumáticos</option><option>Hardware</option><option>Accesorios</option><option>Otro</option>
         </select>
       </div>
     </div>
@@ -1063,6 +1298,218 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   </div>
 </div>
 
+<!-- Venta -->
+<div class="modal-overlay" id="modal-venta">
+  <div class="modal">
+    <div class="modal-title">Registrar venta</div>
+    <input type="hidden" id="venta-edit-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Producto / descripción</label>
+        <input class="form-input" id="venta-producto" placeholder="ej: Kit Chasis Touring">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cantidad</label>
+        <input class="form-input" type="number" id="venta-cantidad" value="1" min="1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Precio unitario ($)</label>
+        <input class="form-input" type="number" id="venta-precio" placeholder="ej: 45.00" step="0.01" oninput="calcVentaTotal()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Total ($)</label>
+        <input class="form-input" id="venta-total" readonly style="color:var(--accent);font-weight:700" placeholder="0.00">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Cliente</label>
+        <input class="form-input" id="venta-cliente" placeholder="ej: Juan García">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" type="date" id="venta-fecha">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Canal de venta</label>
+        <select class="form-input" id="venta-canal">
+          <option>Directo</option><option>MercadoLibre</option><option>Instagram</option>
+          <option>WhatsApp</option><option>Facebook</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select class="form-input" id="venta-estado">
+          <option value="cobrado">Cobrado</option>
+          <option value="pendiente">Pendiente de cobro</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas</label>
+      <textarea class="form-input" id="venta-notas" rows="2" placeholder="Observaciones, detalles del pedido..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-venta')">Cancelar</button>
+      <button class="btn btn-accent" onclick="saveVenta()">Guardar venta</button>
+    </div>
+  </div>
+</div>
+
+<!-- Componente RC -->
+<div class="modal-overlay" id="modal-componente">
+  <div class="modal">
+    <div class="modal-title">Agregar componente RC</div>
+    <input type="hidden" id="comp-edit-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <input class="form-input" id="comp-nombre" placeholder="ej: Brushless 540 3650KV">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <select class="form-input" id="comp-categoria">
+          <option value="motor">Motor brushless</option>
+          <option value="esc">ESC / Variador</option>
+          <option value="servo">Servo</option>
+          <option value="bateria">Batería LiPo</option>
+          <option value="radio">Radio / Receptor</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Marca</label>
+        <input class="form-input" id="comp-marca" placeholder="ej: Hobbywing">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Modelo / SKU</label>
+        <input class="form-input" id="comp-modelo" placeholder="ej: QuicRun 10BL60">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Stock disponible</label>
+        <input class="form-input" type="number" id="comp-stock" placeholder="ej: 2" value="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Precio ($)</label>
+        <input class="form-input" type="number" id="comp-precio" placeholder="ej: 35.00" step="0.01">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Proyecto asignado</label>
+        <select class="form-input" id="comp-proyecto"><option value="">Sin asignar</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select class="form-input" id="comp-estado">
+          <option value="disponible">Disponible</option>
+          <option value="instalado">Instalado</option>
+          <option value="dañado">Dañado</option>
+          <option value="pedido">En pedido</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Especificaciones técnicas</label>
+      <textarea class="form-input" id="comp-specs" rows="2" placeholder="KV, amperaje, voltaje, torque..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input class="form-input" id="comp-emoji" placeholder="⚙️" maxlength="4">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-componente')">Cancelar</button>
+      <button class="btn btn-accent" onclick="saveComponente()">Guardar componente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Accesorio -->
+<div class="modal-overlay" id="modal-accesorio">
+  <div class="modal" style="width:480px">
+    <div class="modal-title" id="acc-modal-title">Agregar Accesorio</div>
+    <input type="hidden" id="accesorio-edit-id">
+
+    <!-- CÓDIGO AUTO -->
+    <div class="form-group">
+      <label class="form-label">Código de referencia</label>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600" id="acc-codigo-display">MT3-0001</span>
+        <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">(auto-generado)</span>
+      </div>
+      <input type="hidden" id="acc-codigo">
+    </div>
+
+    <!-- NOMBRE -->
+    <div class="form-group">
+      <label class="form-label">Nombre <span style="color:var(--coral)">*</span></label>
+      <input class="form-input" id="acc-nombre" placeholder="Ej: Laca para cama, Espátula...">
+    </div>
+
+    <!-- CATEGORIA + MARCA -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <select class="form-input" id="acc-categoria">
+          <option value="Adhesivo">Adhesivo</option>
+          <option value="Herramienta">Herramienta</option>
+          <option value="Consumible" selected>Consumible</option>
+          <option value="Repuesto">Repuesto</option>
+          <option value="Electrónica">Electrónica</option>
+          <option value="Limpieza">Limpieza</option>
+          <option value="Seguridad">Seguridad</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Marca</label>
+        <input class="form-input" id="acc-marca" placeholder="Opcional">
+      </div>
+    </div>
+
+    <!-- STOCK + MINIMO -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Cantidad en stock</label>
+        <input class="form-input" type="number" id="acc-stock" value="1" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Stock mínimo</label>
+        <input class="form-input" type="number" id="acc-stock-min" value="1" min="0">
+      </div>
+    </div>
+
+    <!-- PRECIO -->
+    <div class="form-group">
+      <label class="form-label">Precio unitario (opcional)</label>
+      <div style="position:relative">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:13px">$</span>
+        <input class="form-input" type="number" id="acc-precio" placeholder="0" step="0.01" style="padding-left:28px">
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Notas</label>
+      <textarea class="form-input" id="acc-notas" rows="2" placeholder="Notas adicionales..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-accesorio')">Cancelar</button>
+      <button class="btn btn-accent" id="acc-save-btn" style="width:100%;padding:13px" onclick="saveAccesorio()">Agregar Accesorio</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════ TOAST ════ -->
 <div class="toast" id="toast">
   <div class="toast-icon" id="toast-icon"></div>
@@ -1101,7 +1548,9 @@ let fbRef = null;
 const KEYS = {
   proyectos:'wl_proyectos', materiales:'wl_materiales', productos:'wl_productos',
   impresoras:'wl_impresoras', cola:'wl_cola', piezas:'wl_piezas',
-  mantenimiento:'wl_mantenimiento', actividad:'wl_actividad'
+  mantenimiento:'wl_mantenimiento', actividad:'wl_actividad',
+  ventas:'wl_ventas', componentes:'wl_componentes', timerHistorial:'wl_timer_hist',
+  accesorios:'wl_accesorios'
 };
 
 function loadLocal(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
@@ -1116,35 +1565,28 @@ let DB = {
   cola: loadLocal(KEYS.cola),
   piezas: loadLocal(KEYS.piezas),
   mantenimiento: loadLocal(KEYS.mantenimiento),
-  actividad: loadLocal(KEYS.actividad)
+  actividad: loadLocal(KEYS.actividad),
+  ventas: loadLocal(KEYS.ventas),
+  componentes: loadLocal(KEYS.componentes),
+  timerHistorial: loadLocal(KEYS.timerHistorial),
+  accesorios: loadLocal(KEYS.accesorios)
 };
 
 // persist: guarda en localStorage siempre; si Firebase está listo, sube también
 function persist(key){
-  saveLocal(key, DB[key]);
-  if(FIREBASE_READY && fbRef){
-    fbRef.child(key).set(DB[key]).catch(e=>console.warn('Firebase write error:',e));
+  try{
+    saveLocal(key, DB[key]);
+    if(FIREBASE_READY && fbRef){
+      const user = firebase.auth ? firebase.auth().currentUser : null;
+      if(user){
+        fbRef.child(key).set(DB[key]).catch(e=>console.warn('Firebase write error:',e));
+      }
+    }
+  } catch(e){
+    console.warn('persist error:',e);
+    // Igual guarda local aunque Firebase falle
+    saveLocal(key, DB[key]);
   }
-}
-
-// ════════════════════════════════
-// FIREBASE INIT + SYNC
-// ════════════════════════════════
-function initFirebase(){
-  if(!FIREBASE_READY) return showSyncStatus('offline');
-  // Cargar Firebase SDK dinámicamente
-  const scripts = [
-    'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
-    'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js'
-  ];
-  let loaded = 0;
-  scripts.forEach(src=>{
-    const s = document.createElement('script');
-    s.src = src;
-    s.onload = ()=>{ loaded++; if(loaded===scripts.length) connectFirebase(); };
-    s.onerror = ()=>showSyncStatus('error');
-    document.head.appendChild(s);
-  });
 }
 
 // ════════════════════════════════
@@ -1277,19 +1719,24 @@ const sectionTitles = {
   impresoras:'Mis Impresoras', cola:'Cola de Impresión',
   materiales:'Materiales & Filamentos', productos:'Catálogo de Productos',
   piezas:'Piezas & Archivos STL', costos:'Costos & Precios',
-  mantenimiento:'Mantenimiento', estadisticas:'Estadísticas'
+  mantenimiento:'Mantenimiento', estadisticas:'Estadísticas',
+  ventas:'Registro de Ventas', componentes:'Componentes RC',
+  timer:'Timer de Impresión', graficos:'Gráficos & Consumo',
+  accesorios:'Accesorios & Herramientas'
 };
 const addBtnLabels = {
   proyectos:'+ Nuevo proyecto', impresoras:'+ Agregar impresora',
   cola:'+ Agregar a cola', materiales:'+ Agregar material',
   productos:'+ Nuevo producto', piezas:'+ Registrar pieza',
-  mantenimiento:'+ Registrar tarea'
+  mantenimiento:'+ Registrar tarea', ventas:'+ Nueva venta',
+  componentes:'+ Agregar componente', accesorios:'+ Agregar accesorio'
 };
 const addBtnModals = {
   proyectos:'modal-proyecto', impresoras:'modal-impresora',
   cola:'modal-cola', materiales:'modal-material',
   productos:'modal-producto', piezas:'modal-pieza',
-  mantenimiento:'modal-mantenimiento'
+  mantenimiento:'modal-mantenimiento', ventas:'modal-venta',
+  componentes:'modal-componente', accesorios:'modal-accesorio'
 };
 let currentSection = 'dashboard';
 
@@ -1311,7 +1758,11 @@ function showSection(id, navEl){
   renderSection(id);
 }
 
-function openAddModal(){ if(addBtnModals[currentSection]) openModal(addBtnModals[currentSection]); }
+function openAddModal(){
+  if(currentSection==='materiales') { openMatModal(); return; }
+  if(currentSection==='accesorios') { openAccesorioModal(); return; }
+  if(addBtnModals[currentSection]) openModal(addBtnModals[currentSection]);
+}
 
 // ════════════════════════════════
 // MODALS
@@ -1330,6 +1781,7 @@ function populateModalSelects(modalId){
   const proyOpts = DB.proyectos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('') || '<option value="">Sin proyectos</option>';
   const matOpts = DB.materiales.map(m=>`<option value="${m.id}">${m.tipo} ${m.color} (${m.marca})</option>`).join('') || '<option value="">Sin materiales</option>';
   const impOpts = DB.impresoras.map(i=>`<option value="${i.id}">${i.nombre}</option>`).join('') || '<option value="">Sin impresoras</option>';
+  const today=new Date().toISOString().split('T')[0];
   if(modalId==='modal-cola'){
     document.getElementById('cola-proyecto').innerHTML=proyOpts;
     document.getElementById('cola-material-select').innerHTML=matOpts;
@@ -1340,8 +1792,14 @@ function populateModalSelects(modalId){
   }
   if(modalId==='modal-mantenimiento'){
     document.getElementById('mant-impresora').innerHTML=impOpts;
-    const today=new Date().toISOString().split('T')[0];
     document.getElementById('mant-fecha').value=today;
+  }
+  if(modalId==='modal-venta'){
+    document.getElementById('venta-fecha').value=today;
+  }
+  if(modalId==='modal-componente'){
+    const sel=document.getElementById('comp-proyecto');
+    if(sel) sel.innerHTML='<option value="">Sin asignar</option>'+proyOpts;
   }
 }
 
@@ -1462,32 +1920,226 @@ function filterProyectos(f,btn){
 // ════════════════════════════════
 // MATERIALES
 // ════════════════════════════════
+// ════════════════════════════════
+// MATERIAL MODAL — DATA
+// ════════════════════════════════
+const MAT_TIPOS = [
+  {id:'PLA',         name:'PLA',              desc:'Fácil de imprimir, biodegradable'},
+  {id:'PLA+',        name:'PLA+ / PLA Pro',   desc:'Mayor resistencia que PLA estándar'},
+  {id:'PLA Matte',   name:'PLA Matte',         desc:'Acabado mate sin brillo'},
+  {id:'PLA Silk',    name:'Seda / Silk',       desc:'Acabado brillante sedoso'},
+  {id:'PLA CF',      name:'PLA Fibra Carbono', desc:'Compuesto reforzado con CF'},
+  {id:'ABS',         name:'ABS',               desc:'Resistente, requiere ventilación'},
+  {id:'PETG',        name:'PETG',              desc:'Resistente y fácil de imprimir'},
+  {id:'PETG CF',     name:'PETG Fibra Carbono',desc:'PETG reforzado con fibra de carbono'},
+  {id:'TPU',         name:'TPU / Flexible',    desc:'Material elástico y flexible'},
+  {id:'ASA',         name:'ASA',               desc:'Resistente a rayos UV'},
+  {id:'Nylon',       name:'Nylon (PA)',        desc:'Alta resistencia mecánica'},
+  {id:'PC',          name:'Policarbonato (PC)',desc:'Ultra resistente al impacto'},
+  {id:'HIPS',        name:'HIPS',              desc:'Material de soporte para ABS'},
+  {id:'PVA',         name:'PVA',               desc:'Soporte soluble en agua'},
+  {id:'Madera',      name:'Madera',            desc:'PLA con partículas de madera'},
+  {id:'Metal Fill',  name:'Metal Fill',        desc:'Con partículas metálicas'},
+  {id:'Fosforescente',name:'Fosforescente',    desc:'Brilla en la oscuridad'},
+  {id:'Otro',        name:'Otro',              desc:'Material personalizado'},
+];
+
+const MAT_COLORES = [
+  {id:'Negro',        hex:'#1a1a1a', label:'Negro'},
+  {id:'Blanco',       hex:'#f5f5f0', label:'Blanco'},
+  {id:'Gris',         hex:'#888888', label:'Gris'},
+  {id:'Gris Oscuro',  hex:'#444444', label:'Gris Oscuro'},
+  {id:'Rojo',         hex:'#d32f2f', label:'Rojo'},
+  {id:'Naranja',      hex:'#e65100', label:'Naranja'},
+  {id:'Amarillo',     hex:'#f9a825', label:'Amarillo'},
+  {id:'Verde',        hex:'#2e7d32', label:'Verde'},
+  {id:'Verde Lima',   hex:'#7cb342', label:'Verde Lima'},
+  {id:'Azul',         hex:'#1565c0', label:'Azul'},
+  {id:'Azul Claro',   hex:'#0288d1', label:'Azul Claro'},
+  {id:'Celeste',      hex:'#80d8ff', label:'Celeste'},
+  {id:'Morado',       hex:'#6a1b9a', label:'Morado'},
+  {id:'Violeta',      hex:'#ab47bc', label:'Violeta'},
+  {id:'Rosa',         hex:'#e91e63', label:'Rosa'},
+  {id:'Rosa Claro',   hex:'#f8bbd0', label:'Rosa Claro'},
+  {id:'Marrón',       hex:'#5d4037', label:'Marrón'},
+  {id:'Beige',        hex:'#d7ccc8', label:'Beige'},
+  {id:'Dorado',       hex:'#d4a017', label:'Dorado'},
+  {id:'Plateado',     hex:'#9e9e9e', label:'Plateado'},
+  {id:'Bronce',       hex:'#8d6e63', label:'Bronce'},
+  {id:'Cobre',        hex:'#bf7c2a', label:'Cobre'},
+  {id:'Translúcido / Clear', hex:'transparent-clear', label:'Translúcido / Clear', special:'clear'},
+  {id:'Translúcido Azul',    hex:'#90caf9',            label:'Translúcido Azul',   special:'transp'},
+  {id:'Translúcido Rojo',    hex:'#ef9a9a',            label:'Translúcido Rojo',   special:'transp'},
+  {id:'Translúcido Verde',   hex:'#a5d6a7',            label:'Translúcido Verde',  special:'transp'},
+  {id:'Natural',      hex:'#f0e6c8', label:'Natural / Marfil'},
+  {id:'Multicolor',   hex:'multicolor', label:'Multicolor / Rainbow', special:'multi'},
+  {id:'Otro',         hex:'#888888', label:'Otro'},
+];
+
+let _matTipoSelected = '';
+let _matColorSelected = null;
+
+function openMatModal(editId=''){
+  _matTipoSelected = '';
+  _matColorSelected = null;
+  // Reset UI
+  document.getElementById('mat-tipo-label').textContent = 'Seleccionar material...';
+  document.getElementById('mat-tipo').value = '';
+  document.getElementById('mat-color-label').textContent = 'Seleccionar color';
+  document.getElementById('mat-color-swatch').style.display = 'none';
+  document.getElementById('mat-color-nombre').value = '';
+  document.getElementById('mat-color-hex').value = '#888888';
+  document.getElementById('mat-modal-title').textContent = editId ? 'Editar Filamento' : 'Nuevo Filamento';
+  document.querySelector('#modal-material .btn-accent').textContent = editId ? 'Guardar cambios' : 'Agregar Filamento';
+  selectPeso(1000);
+  buildMatDropdowns();
+  openMatModal();
+}
+
+function buildMatDropdowns(){
+  // Tipos
+  const dd = document.getElementById('mat-tipo-dropdown');
+  dd.innerHTML = MAT_TIPOS.map(t=>`
+    <div class="mat-dropdown-item ${_matTipoSelected===t.id?'selected':''}" onclick="selectMatTipo('${t.id}','${t.name}')">
+      <div><div class="item-name">${t.name}</div><div class="item-desc">${t.desc}</div></div>
+      ${_matTipoSelected===t.id?'<span class="mat-checkmark">✓</span>':''}
+    </div>`).join('');
+
+  // Colores
+  const cd = document.getElementById('mat-color-dropdown');
+  cd.innerHTML = MAT_COLORES.map(c=>{
+    const swatchStyle = c.special==='clear'
+      ? 'background:linear-gradient(135deg,#fff 50%,#e0e0e0 50%);border:1px solid #ccc'
+      : c.special==='multi'
+      ? 'background:linear-gradient(135deg,#f44336,#ff9800,#ffeb3b,#4caf50,#2196f3,#9c27b0)'
+      : c.special==='transp'
+      ? `background:${c.hex};opacity:0.7`
+      : `background:${c.hex}`;
+    return `<div class="mat-dropdown-item ${_matColorSelected&&_matColorSelected.id===c.id?'selected':''}" onclick="selectMatColor('${c.id}')">
+      <span class="mat-color-swatch-item" style="${swatchStyle}"></span>
+      <span class="item-name">${c.label}</span>
+      ${_matColorSelected&&_matColorSelected.id===c.id?'<span class="mat-checkmark">✓</span>':''}
+    </div>`;
+  }).join('');
+}
+
+function toggleMatDropdown(){
+  const dd=document.getElementById('mat-tipo-dropdown');
+  const cd=document.getElementById('mat-color-dropdown');
+  cd.style.display='none';
+  dd.style.display = dd.style.display==='none' ? 'block' : 'none';
+}
+
+function toggleColorDropdown(){
+  const dd=document.getElementById('mat-tipo-dropdown');
+  const cd=document.getElementById('mat-color-dropdown');
+  dd.style.display='none';
+  cd.style.display = cd.style.display==='none' ? 'block' : 'none';
+}
+
+function selectMatTipo(id, name){
+  _matTipoSelected = id;
+  document.getElementById('mat-tipo').value = id;
+  document.getElementById('mat-tipo-label').textContent = name;
+  document.getElementById('mat-tipo-display').style.color = 'var(--text)';
+  document.getElementById('mat-tipo-dropdown').style.display = 'none';
+  buildMatDropdowns();
+}
+
+function selectMatColor(id){
+  const c = MAT_COLORES.find(x=>x.id===id);
+  if(!c) return;
+  _matColorSelected = c;
+  document.getElementById('mat-color-nombre').value = c.id;
+  document.getElementById('mat-color-hex').value = c.special==='clear'?'#f0f0f0': c.special==='multi'?'#ff9800':c.hex;
+  document.getElementById('mat-color-label').textContent = c.label;
+  document.getElementById('mat-color-label').style.color = 'var(--text)';
+  const sw = document.getElementById('mat-color-swatch');
+  sw.style.display = 'inline-block';
+  if(c.special==='clear') sw.style.background='linear-gradient(135deg,#fff 50%,#e0e0e0 50%)';
+  else if(c.special==='multi') sw.style.background='linear-gradient(135deg,#f44336,#ff9800,#ffeb3b,#4caf50,#2196f3,#9c27b0)';
+  else sw.style.background=c.hex;
+  document.getElementById('mat-color-dropdown').style.display='none';
+  buildMatDropdowns();
+}
+
+function selectPeso(g){
+  document.querySelectorAll('.mat-peso-btn').forEach(b=>b.classList.remove('active'));
+  const customInput = document.getElementById('mat-total');
+  if(g==='custom'){
+    document.querySelector('[data-g="custom"]').classList.add('active');
+    customInput.style.display='block';
+    customInput.focus();
+    customInput.oninput=()=>{ document.getElementById('mat-total-val').value=customInput.value||0; updateStockSlider(document.getElementById('mat-stock-slider').value); };
+  } else {
+    document.querySelector(`[data-g="${g}"]`).classList.add('active');
+    customInput.style.display='none';
+    document.getElementById('mat-total-val').value=g;
+    updateStockSlider(document.getElementById('mat-stock-slider').value);
+  }
+}
+
+function updateStockSlider(pct){
+  const total = parseInt(document.getElementById('mat-total-val').value)||1000;
+  const grams = Math.round(total * pct / 100);
+  document.getElementById('mat-stock').value = grams;
+  const label = document.getElementById('mat-stock-label');
+  const color = pct<20?'var(--coral)':pct<40?'var(--amber)':'var(--teal)';
+  label.style.color = color;
+  label.textContent = `${pct}% (${grams}g)`;
+  document.getElementById('mat-stock-slider').style.accentColor = color;
+}
+
+// Cerrar dropdowns al hacer clic fuera
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#modal-material')) return;
+  if(!e.target.closest('#mat-tipo-display') && !e.target.closest('#mat-tipo-dropdown'))
+    document.getElementById('mat-tipo-dropdown').style.display='none';
+  if(!e.target.closest('#mat-color-display') && !e.target.closest('#mat-color-dropdown'))
+    document.getElementById('mat-color-dropdown').style.display='none';
+});
+
 function saveMaterial(){
-  const editId=document.getElementById('material-edit-id').value;
-  const obj={
-    id:editId||uid(),
-    tipo:document.getElementById('mat-tipo').value,
-    marca:document.getElementById('mat-marca').value||'—',
-    color:document.getElementById('mat-color-nombre').value||'—',
-    colorHex:document.getElementById('mat-color-hex').value||'#888',
-    stock:parseInt(document.getElementById('mat-stock').value)||0,
-    total:parseInt(document.getElementById('mat-total').value)||1000,
-    precio:parseFloat(document.getElementById('mat-precio').value)||0,
-    tempBoquilla:document.getElementById('mat-temp-boquilla').value||'—',
-    tempCama:document.getElementById('mat-temp-cama').value||'—',
-    velocidad:document.getElementById('mat-velocidad').value||'—',
-    notas:document.getElementById('mat-notas').value
-  };
-  if(!obj.stock&&obj.stock!==0){ showToast('Ingresá el stock','error'); return; }
-  if(editId){ DB.materiales=DB.materiales.map(m=>m.id===editId?obj:m); }
-  else{ DB.materiales.push(obj); logActivity(`Material <strong>${obj.tipo} ${obj.color}</strong> registrado`,'success'); }
-  persist(KEYS.materiales);
-  updateBadges();
-  closeModal('modal-material');
-  document.getElementById('material-edit-id').value='';
-  clearForm(['mat-marca','mat-color-nombre','mat-stock','mat-total','mat-precio','mat-temp-boquilla','mat-temp-cama','mat-velocidad','mat-notas']);
-  renderSection(currentSection);
-  showToast('Material guardado ✓');
+  try{
+    const editId = document.getElementById('material-edit-id').value;
+    const tipo = document.getElementById('mat-tipo').value;
+    const colorNombre = document.getElementById('mat-color-nombre').value;
+    if(!tipo){ showToast('Seleccioná un tipo de material','error'); return; }
+    if(!colorNombre){ showToast('Seleccioná un color','error'); return; }
+    const total = parseInt(document.getElementById('mat-total-val').value)||1000;
+    const stock = parseInt(document.getElementById('mat-stock').value)||0;
+    const obj = {
+      id: editId||uid(),
+      tipo,
+      marca: document.getElementById('mat-marca').value||'—',
+      color: colorNombre,
+      colorHex: document.getElementById('mat-color-hex').value||'#888888',
+      stock,
+      total,
+      precio: parseFloat(document.getElementById('mat-precio').value)||0,
+      tempBoquilla: '—', tempCama: '—', velocidad: '—',
+      notas: document.getElementById('mat-notas').value||''
+    };
+    if(editId){ DB.materiales=DB.materiales.map(m=>m.id===editId?obj:m); }
+    else{ DB.materiales.push(obj); logActivity(`Material <strong>${obj.tipo} ${obj.color}</strong> registrado`,'success'); }
+    persist(KEYS.materiales);
+    updateBadges();
+    closeModal('modal-material');
+    document.getElementById('material-edit-id').value='';
+    clearForm(['mat-marca','mat-precio','mat-notas']);
+    document.getElementById('mat-tipo-label').textContent='Seleccionar material...';
+    document.getElementById('mat-color-label').textContent='Seleccionar color';
+    document.getElementById('mat-color-swatch').style.display='none';
+    _matTipoSelected=''; _matColorSelected=null;
+    selectPeso(1000);
+    document.getElementById('mat-stock-slider').value=100;
+    updateStockSlider(100);
+    renderSection(currentSection);
+    showToast('Material guardado ✓');
+  } catch(e){
+    console.error('saveMaterial error:',e);
+    showToast('Error: '+e.message,'error');
+  }
 }
 
 function deleteMaterial(id){
@@ -1496,14 +2148,49 @@ function deleteMaterial(id){
   persist(KEYS.materiales); updateBadges(); renderSection(currentSection); showToast('Material eliminado','error');
 }
 
+function editMaterial(id){
+  const m=DB.materiales.find(x=>x.id===id); if(!m) return;
+  openMatModal(id);
+  document.getElementById('material-edit-id').value=m.id;
+  // Tipo
+  const tipoObj=MAT_TIPOS.find(t=>t.id===m.tipo);
+  _matTipoSelected=m.tipo;
+  document.getElementById('mat-tipo').value=m.tipo;
+  document.getElementById('mat-tipo-label').textContent=tipoObj?tipoObj.name:m.tipo;
+  // Color
+  const colorObj=MAT_COLORES.find(c=>c.id===m.color);
+  _matColorSelected=colorObj||{id:m.color,hex:m.colorHex,label:m.color};
+  document.getElementById('mat-color-nombre').value=m.color;
+  document.getElementById('mat-color-hex').value=m.colorHex;
+  document.getElementById('mat-color-label').textContent=m.color;
+  document.getElementById('mat-color-label').style.color='var(--text)';
+  const sw=document.getElementById('mat-color-swatch');
+  sw.style.display='inline-block'; sw.style.background=m.colorHex;
+  // Peso
+  const pesoMap={250:250,500:500,750:750,1000:1000,2000:2000,3000:3000};
+  if(pesoMap[m.total]) selectPeso(m.total);
+  else{ selectPeso('custom'); document.getElementById('mat-total').value=m.total; document.getElementById('mat-total-val').value=m.total; }
+  // Slider
+  const pct=Math.round((m.stock/m.total)*100);
+  document.getElementById('mat-stock-slider').value=pct;
+  document.getElementById('mat-stock').value=m.stock;
+  updateStockSlider(pct);
+  // Resto
+  document.getElementById('mat-marca').value=m.marca==='—'?'':m.marca;
+  document.getElementById('mat-precio').value=m.precio||'';
+  document.getElementById('mat-notas').value=m.notas||'';
+  buildMatDropdowns();
+}
+
 function renderMaterialesTable(){
   const tbody=document.getElementById('materiales-tbody');
+  if(!tbody) return;
   if(!DB.materiales.length){ tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px;">Sin materiales registrados</td></tr>`; return; }
   tbody.innerHTML=DB.materiales.map(m=>{
     const pct=Math.round((m.stock/m.total)*100);
     const color=pct<20?'var(--coral)':pct<40?'var(--amber)':'var(--teal)';
     return `<tr>
-      <td><strong>${m.tipo}</strong></td>
+      <td><strong>${m.tipo}</strong>${m.codigo?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${m.codigo}</div>`:''}</td>
       <td class="mono">${m.tipo}</td>
       <td>${m.marca}</td>
       <td><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:${m.colorHex};display:inline-block;border:0.5px solid var(--border2)"></span>${m.color}</span></td>
@@ -1513,23 +2200,6 @@ function renderMaterialesTable(){
       <td><button class="btn btn-ghost btn-sm" onclick="editMaterial('${m.id}')">editar</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial('${m.id}')">✕</button></td>
     </tr>`;
   }).join('');
-}
-
-function editMaterial(id){
-  const m=DB.materiales.find(x=>x.id===id); if(!m) return;
-  document.getElementById('material-edit-id').value=m.id;
-  document.getElementById('mat-tipo').value=m.tipo;
-  document.getElementById('mat-marca').value=m.marca;
-  document.getElementById('mat-color-nombre').value=m.color;
-  document.getElementById('mat-color-hex').value=m.colorHex;
-  document.getElementById('mat-stock').value=m.stock;
-  document.getElementById('mat-total').value=m.total;
-  document.getElementById('mat-precio').value=m.precio;
-  document.getElementById('mat-temp-boquilla').value=m.tempBoquilla;
-  document.getElementById('mat-temp-cama').value=m.tempCama;
-  document.getElementById('mat-velocidad').value=m.velocidad;
-  document.getElementById('mat-notas').value=m.notas;
-  openModal('modal-material');
 }
 
 // ════════════════════════════════
@@ -1595,24 +2265,33 @@ function editProducto(id){
 // IMPRESORAS
 // ════════════════════════════════
 function saveImpresora(){
-  const editId=document.getElementById('impresora-edit-id').value;
-  const obj={
-    id:editId||uid(),
-    nombre:document.getElementById('imp-nombre').value.trim(),
-    marca:document.getElementById('imp-marca').value,
-    volumen:document.getElementById('imp-volumen').value,
-    estado:document.getElementById('imp-estado').value,
-    horas:parseInt(document.getElementById('imp-horas').value)||0,
-    fecha:document.getElementById('imp-fecha').value,
-    notas:document.getElementById('imp-notas').value
-  };
-  if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
-  if(editId){ DB.impresoras=DB.impresoras.map(i=>i.id===editId?obj:i); }
-  else{ DB.impresoras.push(obj); logActivity(`Impresora <strong>${obj.nombre}</strong> registrada`); }
-  persist(KEYS.impresoras); updateBadges(); closeModal('modal-impresora');
-  document.getElementById('impresora-edit-id').value='';
-  clearForm(['imp-nombre','imp-marca','imp-volumen','imp-horas','imp-fecha','imp-notas']);
-  renderSection(currentSection); showToast('Impresora guardada ✓');
+  try{
+    const editId=document.getElementById('impresora-edit-id').value;
+    const nombre=document.getElementById('imp-nombre').value.trim();
+    if(!nombre){ showToast('Ingresá un nombre para la impresora','error'); return; }
+    const obj={
+      id:editId||uid(),
+      nombre,
+      marca:document.getElementById('imp-marca').value||'—',
+      volumen:document.getElementById('imp-volumen').value||'—',
+      estado:document.getElementById('imp-estado').value||'activa',
+      horas:parseInt(document.getElementById('imp-horas').value)||0,
+      fecha:document.getElementById('imp-fecha').value||'',
+      notas:document.getElementById('imp-notas').value||''
+    };
+    if(editId){ DB.impresoras=DB.impresoras.map(i=>i.id===editId?obj:i); }
+    else{ DB.impresoras.push(obj); logActivity(`Impresora <strong>${obj.nombre}</strong> registrada`); }
+    persist(KEYS.impresoras);
+    updateBadges();
+    closeModal('modal-impresora');
+    document.getElementById('impresora-edit-id').value='';
+    clearForm(['imp-nombre','imp-marca','imp-volumen','imp-horas','imp-fecha','imp-notas']);
+    renderSection(currentSection);
+    showToast('Impresora guardada ✓');
+  } catch(e){
+    console.error('saveImpresora error:',e);
+    showToast('Error al guardar: '+e.message,'error');
+  }
 }
 
 function renderImpresoras(){
@@ -2046,11 +2725,16 @@ function renderSection(id){
   else if(id==='impresoras') renderImpresoras();
   else if(id==='cola') renderCola();
   else if(id==='materiales') renderMaterialesTable();
+  else if(id==='accesorios') renderAccesorios();
   else if(id==='productos') renderProductos();
   else if(id==='piezas') renderPiezas();
   else if(id==='costos') renderCostos();
   else if(id==='mantenimiento') renderMantenimiento();
   else if(id==='estadisticas') renderEstadisticas();
+  else if(id==='ventas') renderVentas();
+  else if(id==='componentes') renderComponentes(_filtroComponentes);
+  else if(id==='timer') renderTimer();
+  else if(id==='graficos') renderGraficos();
 }
 
 // ════════════════════════════════
@@ -2063,16 +2747,522 @@ function updateBadges(){
   document.getElementById('badge-materiales').textContent=DB.materiales.length;
   document.getElementById('badge-productos').textContent=DB.productos.length;
   document.getElementById('badge-piezas').textContent=DB.piezas.length;
+  document.getElementById('badge-ventas').textContent=DB.ventas.length;
+  document.getElementById('badge-componentes').textContent=DB.componentes.length;
+  document.getElementById('badge-accesorios').textContent=DB.accesorios.length;
+  const bajos=DB.materiales.filter(m=>(m.stock/m.total)<0.2);
+  const bajosAcc=DB.accesorios.filter(a=>a.stock<=(a.stockMin||1));
+  const nd=document.getElementById('notif-dot');
+  if(nd) nd.style.display=(bajos.length>0||bajosAcc.length>0)?'':'none';
+  if(bajos.length>0) checkStockAlerts(bajos);
+}
+
+// ════════════════════════════════
+// STOCK ALERTS
+// ════════════════════════════════
+let _alertsShown = {};
+function checkStockAlerts(bajos){
+  bajos.forEach(m=>{
+    const key = m.id+'_alert';
+    if(!_alertsShown[key]){
+      _alertsShown[key] = true;
+      showToast(`⚠ Stock bajo: ${m.tipo} ${m.color} (${m.stock}g restantes)`, 'warning');
+    }
+  });
+}
+
+// ════════════════════════════════
+// VENTAS
+// ════════════════════════════════
+function calcVentaTotal(){
+  const cant=parseInt(document.getElementById('venta-cantidad').value)||1;
+  const precio=parseFloat(document.getElementById('venta-precio').value)||0;
+  document.getElementById('venta-total').value=(cant*precio).toFixed(2);
+}
+
+function saveVenta(){
+  const editId=document.getElementById('venta-edit-id').value;
+  const cant=parseInt(document.getElementById('venta-cantidad').value)||1;
+  const precio=parseFloat(document.getElementById('venta-precio').value)||0;
+  const obj={
+    id:editId||uid(),
+    producto:document.getElementById('venta-producto').value.trim(),
+    cantidad:cant,
+    precio,
+    total:cant*precio,
+    cliente:document.getElementById('venta-cliente').value,
+    fecha:document.getElementById('venta-fecha').value,
+    canal:document.getElementById('venta-canal').value,
+    estado:document.getElementById('venta-estado').value,
+    notas:document.getElementById('venta-notas').value,
+    ts:Date.now()
+  };
+  if(!obj.producto){ showToast('Ingresá un producto','error'); return; }
+  if(editId){ DB.ventas=DB.ventas.map(v=>v.id===editId?obj:v); }
+  else{ DB.ventas.push(obj); logActivity(`Venta registrada: <strong>${obj.producto}</strong> — $${obj.total.toFixed(2)}`,'success'); }
+  persist(KEYS.ventas); updateBadges(); closeModal('modal-venta');
+  document.getElementById('venta-edit-id').value='';
+  clearForm(['venta-producto','venta-cantidad','venta-precio','venta-total','venta-cliente','venta-notas']);
+  renderSection(currentSection); showToast('Venta guardada ✓');
+}
+
+function deleteVenta(id){
+  if(!confirm('¿Eliminar esta venta?')) return;
+  DB.ventas=DB.ventas.filter(v=>v.id!==id);
+  persist(KEYS.ventas); updateBadges(); renderSection(currentSection);
+}
+
+function renderVentas(){
+  // Stats
+  const sr=document.getElementById('ventas-stats-row');
+  const totalCobrado=DB.ventas.filter(v=>v.estado==='cobrado').reduce((a,v)=>a+v.total,0);
+  const totalPendiente=DB.ventas.filter(v=>v.estado==='pendiente').reduce((a,v)=>a+v.total,0);
+  const thisMonth=new Date().toISOString().slice(0,7);
+  const ventasMes=DB.ventas.filter(v=>v.fecha&&v.fecha.startsWith(thisMonth));
+  const totalMes=ventasMes.reduce((a,v)=>a+v.total,0);
+  if(sr) sr.innerHTML=`
+    <div class="stat-card"><div class="stat-label">Total cobrado</div><div class="stat-value">$${totalCobrado.toFixed(0)}</div><div class="stat-delta up">${DB.ventas.filter(v=>v.estado==='cobrado').length} ventas</div></div>
+    <div class="stat-card"><div class="stat-label">Pendiente cobro</div><div class="stat-value" style="color:var(--amber)">$${totalPendiente.toFixed(0)}</div><div class="stat-delta neutral">${DB.ventas.filter(v=>v.estado==='pendiente').length} pendientes</div></div>
+    <div class="stat-card"><div class="stat-label">Este mes</div><div class="stat-value">$${totalMes.toFixed(0)}</div><div class="stat-delta neutral">${ventasMes.length} ventas</div></div>
+    <div class="stat-card"><div class="stat-label">Total ventas</div><div class="stat-value">${DB.ventas.length}</div><div class="stat-delta neutral">historial completo</div></div>`;
+
+  const tbody=document.getElementById('ventas-tbody'); if(!tbody) return;
+  if(!DB.ventas.length){ tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px">Sin ventas registradas</td></tr>`; return; }
+  const stMap={cobrado:{l:'cobrado',c:'var(--teal)'},pendiente:{l:'pendiente',c:'var(--amber)'},cancelado:{l:'cancelado',c:'var(--coral)'}};
+  tbody.innerHTML=[...DB.ventas].reverse().map(v=>{
+    const st=stMap[v.estado]||{l:v.estado,c:'var(--text3)'};
+    return `<tr>
+      <td class="mono">${v.fecha||'—'}</td>
+      <td><strong>${v.producto}</strong>${v.notas?`<div style="font-size:10px;color:var(--text3)">${v.notas}</div>`:''}</td>
+      <td class="mono">${v.cantidad}</td>
+      <td class="mono">$${v.precio.toFixed(2)}</td>
+      <td class="mono" style="color:var(--accent);font-weight:700">$${v.total.toFixed(2)}</td>
+      <td>${v.cliente||'—'}<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${v.canal||''}</div></td>
+      <td><span class="badge" style="background:${st.c}22;color:${st.c}">${st.l}</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteVenta('${v.id}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════
+// COMPONENTES RC
+// ════════════════════════════════
+const compEmojis={motor:'⚡',esc:'🎛️',servo:'🔧',bateria:'🔋',radio:'📡',otro:'🔩'};
+const compColors={motor:'var(--amber)',esc:'var(--blue)',servo:'var(--teal)',bateria:'var(--green)',radio:'var(--purple)',otro:'var(--text2)'};
+let _filtroComponentes='todos';
+
+function saveComponente(){
+  const editId=document.getElementById('comp-edit-id').value;
+  const obj={
+    id:editId||uid(),
+    nombre:document.getElementById('comp-nombre').value.trim(),
+    categoria:document.getElementById('comp-categoria').value,
+    marca:document.getElementById('comp-marca').value,
+    modelo:document.getElementById('comp-modelo').value,
+    stock:parseInt(document.getElementById('comp-stock').value)||1,
+    precio:parseFloat(document.getElementById('comp-precio').value)||0,
+    proyectoId:document.getElementById('comp-proyecto').value,
+    estado:document.getElementById('comp-estado').value,
+    specs:document.getElementById('comp-specs').value,
+    emoji:document.getElementById('comp-emoji').value||compEmojis[document.getElementById('comp-categoria').value]||'🔩'
+  };
+  if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
+  if(editId){ DB.componentes=DB.componentes.map(c=>c.id===editId?obj:c); }
+  else{ DB.componentes.push(obj); logActivity(`Componente <strong>${obj.nombre}</strong> agregado`); }
+  persist(KEYS.componentes); updateBadges(); closeModal('modal-componente');
+  document.getElementById('comp-edit-id').value='';
+  clearForm(['comp-nombre','comp-marca','comp-modelo','comp-specs','comp-emoji']);
+  renderSection(currentSection); showToast('Componente guardado ✓');
+}
+
+function deleteComponente(id){
+  if(!confirm('¿Eliminar este componente?')) return;
+  DB.componentes=DB.componentes.filter(c=>c.id!==id);
+  persist(KEYS.componentes); updateBadges(); renderSection(currentSection);
+}
+
+function editComponente(id){
+  const c=DB.componentes.find(x=>x.id===id); if(!c) return;
+  document.getElementById('comp-edit-id').value=c.id;
+  document.getElementById('comp-nombre').value=c.nombre;
+  document.getElementById('comp-categoria').value=c.categoria;
+  document.getElementById('comp-marca').value=c.marca;
+  document.getElementById('comp-modelo').value=c.modelo;
+  document.getElementById('comp-stock').value=c.stock;
+  document.getElementById('comp-precio').value=c.precio;
+  document.getElementById('comp-estado').value=c.estado;
+  document.getElementById('comp-specs').value=c.specs;
+  document.getElementById('comp-emoji').value=c.emoji;
+  populateModalSelects('modal-componente');
+  document.getElementById('comp-proyecto').value=c.proyectoId||'';
+  openModal('modal-componente');
+}
+
+function filterComponentes(f,btn){
+  _filtroComponentes=f;
+  document.querySelectorAll('#sec-componentes .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderComponentes(f);
+}
+
+function renderComponentes(filter='todos'){
+  const grid=document.getElementById('componentes-grid'); if(!grid) return;
+  const list=filter==='todos'?DB.componentes:DB.componentes.filter(c=>c.categoria===filter);
+  if(!list.length){
+    grid.innerHTML=`<div class="add-card" style="grid-column:1/-1" onclick="openModal('modal-componente')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Agregar componente</span></div>`;
+    return;
+  }
+  const stMap={disponible:{l:'disponible',c:'var(--teal)'},instalado:{l:'instalado',c:'var(--blue)'},dañado:{l:'dañado',c:'var(--coral)'},pedido:{l:'en pedido',c:'var(--amber)'}};
+  grid.innerHTML=list.map(c=>{
+    const col=compColors[c.categoria]||'var(--text2)';
+    const st=stMap[c.estado]||{l:c.estado,c:'var(--text3)'};
+    const proy=DB.proyectos.find(p=>p.id===c.proyectoId);
+    return `<div class="product-card" onclick="editComponente('${c.id}')">
+      <div style="font-size:28px;margin-bottom:6px">${c.emoji||compEmojis[c.categoria]||'🔩'}</div>
+      <div style="font-size:10px;font-family:var(--mono);color:${col};margin-bottom:4px">${c.categoria.toUpperCase()}</div>
+      <div class="prod-name">${c.nombre}</div>
+      <div class="prod-sku">${c.marca} ${c.modelo||''}</div>
+      ${c.specs?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px">${c.specs}</div>`:''}
+      ${c.precio?`<div class="prod-price">$${c.precio.toFixed(2)}</div>`:''}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <span class="badge" style="background:${st.c}22;color:${st.c}">${st.l}</span>
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">×${c.stock}</span>
+      </div>
+      ${proy?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px">${proy.emoji||''} ${proy.nombre}</div>`:''}
+    </div>`;
+  }).join('')+`<div class="add-card" onclick="openModal('modal-componente')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo componente</span></div>`;
+}
+
+// ════════════════════════════════
+// TIMER DE IMPRESIÓN
+// ════════════════════════════════
+let _timerInterval=null, _timerSeconds=0, _timerRunning=false, _timerPaused=false;
+
+function timerStart(){
+  const nombre=document.getElementById('timer-nombre').value.trim()||'Sin nombre';
+  document.getElementById('timer-pieza-label').textContent=nombre;
+  _timerRunning=true; _timerPaused=false;
+  document.getElementById('btn-timer-start').style.display='none';
+  document.getElementById('btn-timer-pause').style.display='';
+  document.getElementById('btn-timer-finish').style.display='';
+  _timerInterval=setInterval(()=>{
+    _timerSeconds++;
+    updateTimerDisplay();
+  },1000);
+  // Populate proyecto select
+  const sel=document.getElementById('timer-proyecto');
+  sel.innerHTML='<option value="">Sin proyecto</option>'+DB.proyectos.map(p=>`<option value="${p.id}">${p.emoji||''} ${p.nombre}</option>`).join('');
+}
+
+function timerPause(){
+  if(_timerPaused){
+    _timerPaused=false;
+    document.getElementById('btn-timer-pause').textContent='⏸ Pausar';
+    _timerInterval=setInterval(()=>{ _timerSeconds++; updateTimerDisplay(); },1000);
+  } else {
+    _timerPaused=true;
+    clearInterval(_timerInterval);
+    document.getElementById('btn-timer-pause').textContent='▶ Reanudar';
+  }
+}
+
+function timerReset(){
+  clearInterval(_timerInterval); _timerSeconds=0; _timerRunning=false; _timerPaused=false;
+  document.getElementById('timer-display').textContent='00:00:00';
+  document.getElementById('timer-pieza-label').textContent='Sin trabajo activo';
+  document.getElementById('btn-timer-start').style.display='';
+  document.getElementById('btn-timer-pause').style.display='none';
+  document.getElementById('btn-timer-finish').style.display='none';
+  document.getElementById('timer-progress-bar').style.width='0%';
+  document.getElementById('timer-pct-label').textContent='0%';
+  document.getElementById('timer-eta').textContent='Tiempo restante: —';
+  document.getElementById('timer-finish-at').textContent='Fin estimado: —';
+}
+
+function timerFinish(){
+  clearInterval(_timerInterval);
+  const nombre=document.getElementById('timer-nombre').value.trim()||'Sin nombre';
+  const proyId=document.getElementById('timer-proyecto').value;
+  const proy=DB.proyectos.find(p=>p.id===proyId);
+  const entry={
+    id:uid(), nombre, proyectoNombre:proy?proy.nombre:'—',
+    duracion:_timerSeconds,
+    duracionLabel:formatTime(_timerSeconds),
+    fecha:new Date().toLocaleDateString('es-AR'),
+    ts:Date.now()
+  };
+  DB.timerHistorial.unshift(entry);
+  if(DB.timerHistorial.length>50) DB.timerHistorial=DB.timerHistorial.slice(0,50);
+  persist(KEYS.timerHistorial);
+  logActivity(`Impresión finalizada: <strong>${nombre}</strong> — ${entry.duracionLabel}`);
+  showToast(`✓ Impresión finalizada: ${entry.duracionLabel}`);
+  timerReset();
+  renderTimer();
+}
+
+function updateTimerDisplay(){
+  document.getElementById('timer-display').textContent=formatTime(_timerSeconds);
+  const est=parseInt(document.getElementById('timer-estimado').value)||0;
+  if(est>0){
+    const estSec=est*60;
+    const pct=Math.min(100,Math.round((_timerSeconds/estSec)*100));
+    document.getElementById('timer-progress-bar').style.width=pct+'%';
+    document.getElementById('timer-pct-label').textContent=pct+'%';
+    const restSec=Math.max(0,estSec-_timerSeconds);
+    document.getElementById('timer-eta').textContent='Restante: '+formatTime(restSec);
+    const finAt=new Date(Date.now()+restSec*1000);
+    document.getElementById('timer-finish-at').textContent='Fin: '+finAt.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+  }
+}
+
+function formatTime(s){
+  const h=Math.floor(s/3600).toString().padStart(2,'0');
+  const m=Math.floor((s%3600)/60).toString().padStart(2,'0');
+  const sec=(s%60).toString().padStart(2,'0');
+  return `${h}:${m}:${sec}`;
+}
+
+function renderTimer(){
+  const hist=document.getElementById('timer-historial'); if(!hist) return;
+  const sel=document.getElementById('timer-proyecto');
+  if(sel) sel.innerHTML='<option value="">Sin proyecto</option>'+DB.proyectos.map(p=>`<option value="${p.id}">${p.emoji||''} ${p.nombre}</option>`).join('');
+  if(!DB.timerHistorial.length){
+    hist.innerHTML=`<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:12px 0;text-align:center">Sin impresiones registradas</div>`;
+    return;
+  }
+  hist.innerHTML=DB.timerHistorial.slice(0,10).map(h=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${h.nombre}</div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${h.proyectoNombre} · ${h.fecha}</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--accent);font-family:var(--mono)">${h.duracionLabel}</div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════
+// GRÁFICOS & CONSUMO
+// ════════════════════════════════
+function renderGraficos(){
+  // Stats row
+  const sr=document.getElementById('graficos-stats');
+  const totalGr=DB.materiales.reduce((a,m)=>a+m.stock,0);
+  const totalVal=DB.materiales.reduce((a,m)=>a+(m.stock/1000)*m.precio,0);
+  const ventasTotales=DB.ventas.reduce((a,v)=>a+v.total,0);
+  const compTotal=DB.componentes.reduce((a,c)=>a+c.precio*c.stock,0);
+  if(sr) sr.innerHTML=`
+    <div class="stat-card"><div class="stat-label">Filamento total</div><div class="stat-value">${(totalGr/1000).toFixed(2)}kg</div><div class="stat-delta neutral">${DB.materiales.length} materiales</div></div>
+    <div class="stat-card"><div class="stat-label">Valor filamentos</div><div class="stat-value">$${totalVal.toFixed(0)}</div><div class="stat-delta neutral">en stock</div></div>
+    <div class="stat-card"><div class="stat-label">Ventas totales</div><div class="stat-value">$${ventasTotales.toFixed(0)}</div><div class="stat-delta up">${DB.ventas.length} ventas</div></div>
+    <div class="stat-card"><div class="stat-label">Valor componentes</div><div class="stat-value">$${compTotal.toFixed(0)}</div><div class="stat-delta neutral">${DB.componentes.length} items</div></div>`;
+
+  // Consumo por material
+  const gm=document.getElementById('graf-materiales');
+  if(gm){
+    if(!DB.materiales.length){ gm.innerHTML=`<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:20px">Sin materiales</div>`; }
+    else{
+      const max=Math.max(...DB.materiales.map(m=>m.total-m.stock));
+      gm.innerHTML=`<div style="display:flex;flex-direction:column;gap:10px">`+
+        DB.materiales.map(m=>{
+          const usado=m.total-m.stock;
+          const pct=max>0?Math.round((usado/max)*100):0;
+          const c=pct>70?'var(--coral)':pct>40?'var(--amber)':'var(--teal)';
+          return `<div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${m.colorHex};display:inline-block"></span>${m.tipo} ${m.color}</span>
+              <span style="font-size:11px;font-family:var(--mono);color:var(--text2)">${usado}g usados / ${m.total}g</span>
+            </div>
+            <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${c};border-radius:3px;transition:width 0.5s"></div>
+            </div>
+          </div>`;
+        }).join('')+'</div>';
+    }
+  }
+
+  // Inventario actual
+  const gi=document.getElementById('graf-inventario');
+  if(gi){
+    if(!DB.materiales.length){ gi.innerHTML=`<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:20px">Sin materiales</div>`; }
+    else{
+      gi.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">`+
+        DB.materiales.map(m=>{
+          const pct=Math.round((m.stock/m.total)*100);
+          const c=pct<20?'var(--coral)':pct<40?'var(--amber)':'var(--teal)';
+          return `<div style="display:flex;align-items:center;gap:10px">
+            <div style="width:8px;height:8px;border-radius:50%;background:${m.colorHex};flex-shrink:0"></div>
+            <div style="font-size:11px;color:var(--text2);font-family:var(--mono);flex:1">${m.tipo} ${m.color}</div>
+            <div style="width:100px;height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${c};border-radius:3px"></div></div>
+            <div style="font-size:10px;color:${c};font-family:var(--mono);width:36px;text-align:right">${pct}%</div>
+          </div>`;
+        }).join('')+'</div>';
+    }
+  }
+
+  // Ventas por mes
+  const gv=document.getElementById('graf-ventas');
+  if(gv){
+    if(!DB.ventas.length){ gv.innerHTML=`<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:20px">Sin ventas registradas</div>`; }
+    else{
+      const byMonth={};
+      DB.ventas.forEach(v=>{
+        if(v.fecha){ const m=v.fecha.slice(0,7); byMonth[m]=(byMonth[m]||0)+v.total; }
+      });
+      const months=Object.keys(byMonth).sort().slice(-6);
+      const maxV=Math.max(...months.map(m=>byMonth[m]));
+      gv.innerHTML=`<div style="display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:8px">`+
+        months.map(m=>{
+          const pct=maxV>0?Math.round((byMonth[m]/maxV)*100):0;
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="font-size:9px;color:var(--accent);font-family:var(--mono)">$${Math.round(byMonth[m])}</div>
+            <div style="width:100%;border-radius:3px 3px 0 0;background:var(--accent);height:${pct}%;min-height:4px;opacity:0.8"></div>
+          </div>`;
+        }).join('')+'</div>'+
+        `<div style="display:flex;gap:8px">`+months.map(m=>`<div style="flex:1;font-size:9px;color:var(--text3);font-family:var(--mono);text-align:center">${m.slice(5)}</div>`).join('')+'</div>';
+    }
+  }
+
+  // Proyectos por estado
+  const gpe=document.getElementById('graf-proyectos-estado');
+  if(gpe){
+    const estados=Object.entries(DB.proyectos.reduce((a,p)=>{a[p.estado]=(a[p.estado]||0)+1;return a},{}));
+    if(!estados.length){ gpe.innerHTML=`<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:20px">Sin proyectos</div>`; return; }
+    const max=Math.max(...estados.map(e=>e[1]));
+    const ecColors={imprimiendo:'var(--teal)',diseño:'var(--blue)',pausa:'var(--amber)',completado:'var(--purple)',prueba:'var(--coral)'};
+    gpe.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">`+
+      estados.map(([st,n])=>`<div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:11px;color:var(--text2);font-family:var(--mono);width:90px">${st}</div>
+        <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:${(n/max)*100}%;background:${ecColors[st]||'var(--text3)'};border-radius:4px"></div></div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);width:16px;text-align:right">${n}</div>
+      </div>`).join('')+'</div>';
+  }
+}
+
+// ════════════════════════════════
+// ACCESORIOS
+// ════════════════════════════════
+let _filtroAccesorios = 'todos';
+
+function nextCodigoAccesorio(){
+  if(!DB.accesorios||!DB.accesorios.length) return 'MT3-0001';
+  const nums = DB.accesorios
+    .map(a => parseInt((a.codigo||'MT3-0000').split('-')[1]||0))
+    .filter(n=>!isNaN(n));
+  const max = nums.length ? Math.max(...nums) : 0;
+  return 'MT3-' + String(max+1).padStart(4,'0');
+}
+
+function openAccesorioModal(editId=''){
+  document.getElementById('accesorio-edit-id').value = '';
+  document.getElementById('acc-modal-title').textContent = 'Agregar Accesorio';
+  document.getElementById('acc-save-btn').textContent = 'Agregar Accesorio';
+  clearForm(['acc-nombre','acc-marca','acc-notas','acc-precio']);
+  document.getElementById('acc-stock').value = 1;
+  document.getElementById('acc-stock-min').value = 1;
+  document.getElementById('acc-categoria').value = 'Consumible';
+  const codigo = nextCodigoAccesorio();
+  document.getElementById('acc-codigo').value = codigo;
+  document.getElementById('acc-codigo-display').textContent = codigo;
+  openModal('modal-accesorio');
+}
+
+function saveAccesorio(){
+  try{
+    const editId = document.getElementById('accesorio-edit-id').value;
+    const nombre = document.getElementById('acc-nombre').value.trim();
+    if(!nombre){ showToast('Ingresá un nombre','error'); return; }
+    const obj = {
+      id: editId||uid(),
+      codigo: document.getElementById('acc-codigo').value || nextCodigoAccesorio(),
+      nombre,
+      categoria: document.getElementById('acc-categoria').value,
+      marca: document.getElementById('acc-marca').value||'—',
+      stock: parseInt(document.getElementById('acc-stock').value)||0,
+      stockMin: parseInt(document.getElementById('acc-stock-min').value)||1,
+      precio: parseFloat(document.getElementById('acc-precio').value)||0,
+      notas: document.getElementById('acc-notas').value||''
+    };
+    if(editId){ DB.accesorios = DB.accesorios.map(a=>a.id===editId?obj:a); }
+    else{ DB.accesorios.push(obj); logActivity(`Accesorio <strong>${obj.nombre}</strong> registrado [${obj.codigo}]`); }
+    persist(KEYS.accesorios);
+    updateBadges();
+    closeModal('modal-accesorio');
+    renderSection(currentSection);
+    showToast('Accesorio guardado ✓');
+  } catch(e){
+    console.error('saveAccesorio:',e);
+    showToast('Error: '+e.message,'error');
+  }
+}
+
+function deleteAccesorio(id){
+  if(!confirm('¿Eliminar este accesorio?')) return;
+  DB.accesorios = DB.accesorios.filter(a=>a.id!==id);
+  persist(KEYS.accesorios); updateBadges(); renderSection(currentSection);
+}
+
+function editAccesorio(id){
+  const a = DB.accesorios.find(x=>x.id===id); if(!a) return;
+  document.getElementById('accesorio-edit-id').value = a.id;
+  document.getElementById('acc-modal-title').textContent = 'Editar Accesorio';
+  document.getElementById('acc-save-btn').textContent = 'Guardar cambios';
+  document.getElementById('acc-codigo').value = a.codigo;
+  document.getElementById('acc-codigo-display').textContent = a.codigo;
+  document.getElementById('acc-nombre').value = a.nombre;
+  document.getElementById('acc-categoria').value = a.categoria;
+  document.getElementById('acc-marca').value = a.marca==='—'?'':a.marca;
+  document.getElementById('acc-stock').value = a.stock;
+  document.getElementById('acc-stock-min').value = a.stockMin||1;
+  document.getElementById('acc-precio').value = a.precio||'';
+  document.getElementById('acc-notas').value = a.notas||'';
+  openModal('modal-accesorio');
+}
+
+function filterAccesorios(f, btn){
+  _filtroAccesorios = f;
+  document.querySelectorAll('#sec-accesorios .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderAccesorios();
+}
+
+function renderAccesorios(){
+  const tbody = document.getElementById('accesorios-tbody'); if(!tbody) return;
+  const list = _filtroAccesorios==='todos' ? DB.accesorios : DB.accesorios.filter(a=>a.categoria===_filtroAccesorios);
+  if(!list.length){
+    tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px">Sin accesorios${_filtroAccesorios!=='todos'?' en esta categoría':''}</td></tr>`;
+    return;
+  }
+  const catColors={
+    Adhesivo:'var(--amber)',Herramienta:'var(--blue)',Consumible:'var(--teal)',
+    Repuesto:'var(--purple)',Electrónica:'var(--coral)',Limpieza:'var(--green)',
+    Seguridad:'var(--amber)',Otro:'var(--text3)'
+  };
+  tbody.innerHTML = list.map(a=>{
+    const bajo = a.stock <= (a.stockMin||1);
+    const agotado = a.stock === 0;
+    const stColor = agotado?'var(--coral)':bajo?'var(--amber)':'var(--teal)';
+    const stLabel = agotado?'Agotado':bajo?'Stock bajo':'OK';
+    const cc = catColors[a.categoria]||'var(--text3)';
+    return `<tr>
+      <td><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:rgba(232,255,71,0.08);padding:3px 8px;border-radius:6px">${a.codigo||'—'}</span></td>
+      <td><strong>${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3)">${a.notas}</div>`:''}</td>
+      <td><span class="badge" style="background:${cc}22;color:${cc}">${a.categoria}</span></td>
+      <td class="mono">${a.marca}</td>
+      <td class="mono" style="color:${stColor};font-weight:700">${a.stock}</td>
+      <td class="mono" style="color:var(--text3)">${a.stockMin||1}</td>
+      <td><span class="badge" style="background:${stColor}22;color:${stColor}">${stLabel}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="editAccesorio('${a.id}')">editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAccesorio('${a.id}')">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
 }
 
 // ════════════════════════════════
 // HELPERS
 // ════════════════════════════════
 function clearForm(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); }
-
-// ════════════════════════════════
-// INIT
-// ════════════════════════════════
 const d=new Date();
 const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
