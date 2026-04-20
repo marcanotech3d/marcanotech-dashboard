@@ -72,11 +72,15 @@ input,select,textarea{font-family:var(--font);}
 .topbar{
   padding:16px 24px;border-bottom:0.5px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:rgba(15,15,17,0.95);backdrop-filter:blur(8px);z-index:10;
+  position:sticky;top:0;background:var(--bg2);backdrop-filter:blur(8px);z-index:10;
 }
 .topbar-left{display:flex;flex-direction:column;gap:2px;}
-.page-title{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;}
-.page-date{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.page-title{
+  font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;
+  background:var(--bg3);display:inline-block;padding:4px 12px;
+  border-radius:8px;border:0.5px solid var(--border2);
+}
+.page-date{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;}
 .topbar-actions{display:flex;align-items:center;gap:8px;}
 .btn{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;transition:all 0.15s;border:none;}
 .btn-ghost{background:var(--bg3);color:var(--text2);border:0.5px solid var(--border2);}
@@ -1777,31 +1781,62 @@ let DB = {
   accesorios: loadLocal(KEYS.accesorios)
 };
 
-// persist: guarda en localStorage siempre; si Firebase está listo, sube también
+// ── FIREBASE WRITE HELPERS ──────────────────────────────
+let _pendingWrites = {}; // queue writes until user is authenticated
+
+function stripImages(data){
+  if(!Array.isArray(data)) return data;
+  if(data.length === 0) return null;
+  return data.map(item=>{
+    if(item && typeof item === 'object'){
+      const c = Object.assign({}, item);
+      delete c.imagen;
+      return c;
+    }
+    return item;
+  });
+}
+
+function fbWrite(key, data){
+  if(!FIREBASE_READY || !fbRef) return;
+  const toSave = stripImages(data);
+  if(toSave === null) return; // skip empty arrays
+  const user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+  if(user){
+    fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
+  } else {
+    // Queue for when user logs in
+    _pendingWrites[key] = toSave;
+  }
+}
+
+function flushPendingWrites(){
+  const keys = Object.keys(_pendingWrites);
+  if(!keys.length) return;
+  keys.forEach(key=>{
+    fbRef.child(key).set(_pendingWrites[key]).catch(e=>console.warn('FB flush ['+key+']:', e));
+  });
+  _pendingWrites = {};
+}
+
 function persist(key){
   try{
     const lsKey = KEYS[key] || key;
     saveLocal(lsKey, DB[key]);
-    if(FIREBASE_READY && fbRef){
-      const data = DB[key];
-      let toSave = data;
-      if(Array.isArray(data)){
-        toSave = data.length === 0 ? null : data.map(item=>{
-          if(item && typeof item === 'object'){
-            const clean = Object.assign({}, item);
-            delete clean.imagen;
-            return clean;
-          }
-          return item;
-        });
-      }
-      if(toSave !== null){
-        fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
-      }
-    }
+    fbWrite(key, DB[key]);
   } catch(e){
     console.warn('persist error:', e);
   }
+}
+
+// Full push of all data to Firebase (called after login)
+function pushAllToFirebase(){
+  Object.keys(KEYS).forEach(key=>{
+    if(DB[key] && (Array.isArray(DB[key]) ? DB[key].length > 0 : true)){
+      fbWrite(key, DB[key]);
+    }
+  });
+  flushPendingWrites();
 }
 
 // ════════════════════════════════
@@ -1926,6 +1961,7 @@ function showLogin(){
 function showApp(user){
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('main-app').style.display = '';
+  flushPendingWrites(); // write anything queued before login
   // Mostrar nombre de usuario en sidebar
   const userEl = document.getElementById('sidebar-user');
   if(userEl && user){
