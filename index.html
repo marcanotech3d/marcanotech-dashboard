@@ -436,7 +436,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 <body>
 
 <!-- ════ LOGIN ════ -->
-<div class="login-screen" id="login-screen">
+<div class="login-screen" id="login-screen"><!-- shown by default until Firebase auth resolves -->
   <div class="login-card">
     <div class="login-logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5">
@@ -454,7 +454,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   </div>
 </div>
 
-<div class="app" id="main-app" style="display:none">
+<div class="app" id="main-app">
 
 <!-- ════ SIDEBAR ════ -->
 <aside class="sidebar">
@@ -1843,7 +1843,14 @@ function pushAllToFirebase(){
 // FIREBASE INIT + AUTH + SYNC
 // ════════════════════════════════
 function initFirebase(){
-  if(!FIREBASE_READY) return showSyncStatus('offline');
+  if(!FIREBASE_READY){
+    // No Firebase config → work offline from localStorage, hide login
+    document.getElementById('login-screen').classList.add('hidden');
+    showSyncStatus('offline');
+    return;
+  }
+  // Show login screen while Firebase loads
+  document.getElementById('login-screen').classList.remove('hidden');
   const scripts = [
     'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js',
@@ -1854,7 +1861,11 @@ function initFirebase(){
     const s = document.createElement('script');
     s.src = src;
     s.onload = ()=>{ loaded++; if(loaded===scripts.length) connectFirebase(); };
-    s.onerror = ()=>showSyncStatus('error');
+    s.onerror = ()=>{
+      // Firebase failed to load → work offline
+      document.getElementById('login-screen').classList.add('hidden');
+      showSyncStatus('error');
+    };
     document.head.appendChild(s);
   });
 }
@@ -1866,20 +1877,18 @@ function connectFirebase(){
     fbRef = db_firebase.ref('marcanotech-dashboard');
     showSyncStatus('connecting');
 
-    // Escuchar estado de autenticación
     firebase.auth().onAuthStateChanged(user=>{
       if(user){
-        // Usuario logueado → mostrar app
         showApp(user);
         subscribeData();
       } else {
-        // No logueado → mostrar pantalla de login
         showLogin();
       }
     });
   } catch(e){
     console.warn('Firebase init error:', e);
-    showSyncStatus('error');
+    showSyncStatus('offline');
+    // Even if Firebase fails, app works from localStorage
   }
 }
 
@@ -1924,6 +1933,10 @@ function subscribeData(){
       renderSection(currentSection);
       checkMantPending();
       updateSidebarPrinterSelect();
+    } else {
+      // Firebase is empty — push our localStorage data up
+      console.log('Firebase empty, pushing localStorage data...');
+      pushAllToFirebase();
     }
     showSyncStatus('online');
   }, err=>{
@@ -1955,13 +1968,12 @@ function logout(){
 
 function showLogin(){
   document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('main-app').style.display = 'none';
+  // Keep app visible underneath - login is an overlay
 }
 
 function showApp(user){
   document.getElementById('login-screen').classList.add('hidden');
-  document.getElementById('main-app').style.display = '';
-  flushPendingWrites(); // write anything queued before login
+  flushPendingWrites(); // flush any writes queued before login
   // Mostrar nombre de usuario en sidebar
   const userEl = document.getElementById('sidebar-user');
   if(userEl && user){
