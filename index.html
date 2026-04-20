@@ -1797,15 +1797,28 @@ function stripImages(data){
   });
 }
 
+function sanitizeForFirebase(obj){
+  // Firebase rejects undefined values — replace with null recursively
+  if(obj === undefined) return null;
+  if(obj === null || typeof obj !== 'object') return obj;
+  if(Array.isArray(obj)) return obj.map(sanitizeForFirebase);
+  const clean = {};
+  Object.keys(obj).forEach(k=>{
+    const v = obj[k];
+    clean[k] = (v === undefined) ? null : sanitizeForFirebase(v);
+  });
+  return clean;
+}
+
 function fbWrite(key, data){
   if(!FIREBASE_READY || !fbRef) return;
-  const toSave = stripImages(data);
-  if(toSave === null) return; // skip empty arrays
+  let toSave = stripImages(data);
+  if(toSave === null) return;
+  toSave = sanitizeForFirebase(toSave); // remove all undefined values
   const user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
   if(user){
     fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
   } else {
-    // Queue for when user logs in
     _pendingWrites[key] = toSave;
   }
 }
