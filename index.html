@@ -1432,56 +1432,87 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Material -->
 <div class="modal-overlay" id="modal-material">
-  <div class="modal" style="width:520px;">
+  <div class="modal" style="width:540px;">
     <div class="modal-title" id="mat-modal-title">Nuevo Filamento</div>
     <input type="hidden" id="material-edit-id">
 
-    <!-- MATERIAL TYPE -->
-    <div class="form-group">
-      <label class="form-label">Material <span style="color:var(--coral)">*</span></label>
-      <div style="position:relative">
-        <div id="mat-tipo-display" onclick="toggleMatDropdown()" style="
-          background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
-          padding:10px 36px 10px 12px;cursor:pointer;font-size:13px;color:var(--text);
-          display:flex;align-items:center;justify-content:space-between;user-select:none;">
-          <span id="mat-tipo-label">Seleccionar material...</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    <!-- FILA 1: Material + Color + Imagen -->
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
+      <!-- Material -->
+      <div style="flex:1;min-width:0">
+        <label class="form-label">Material <span style="color:var(--coral)">*</span></label>
+        <div style="position:relative">
+          <div id="mat-tipo-display" onclick="toggleMatDropdown()" style="
+            background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+            padding:10px 30px 10px 10px;cursor:pointer;font-size:13px;color:var(--text);
+            display:flex;align-items:center;justify-content:space-between;user-select:none;">
+            <span id="mat-tipo-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Seleccionar...</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div id="mat-tipo-dropdown" style="
+            display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+            background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+            overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:260px;overflow-y:auto;">
+          </div>
         </div>
-        <div id="mat-tipo-dropdown" style="
-          display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
-          background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
-          overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:260px;overflow-y:auto;">
-        </div>
+        <input type="hidden" id="mat-tipo" value="">
       </div>
-      <input type="hidden" id="mat-tipo" value="">
+
+      <!-- Color -->
+      <div style="flex:1;min-width:0">
+        <label class="form-label">Color <span style="color:var(--coral)">*</span></label>
+        <div style="position:relative">
+          <div id="mat-color-display" onclick="toggleColorDropdown()" style="
+            background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+            padding:10px 30px 10px 10px;cursor:pointer;font-size:13px;color:var(--text3);
+            display:flex;align-items:center;gap:8px;user-select:none;">
+            <span id="mat-color-swatch" style="width:14px;height:14px;border-radius:50%;background:transparent;border:0.5px solid var(--border2);flex-shrink:0;display:none"></span>
+            <span id="mat-color-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Color</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="margin-left:auto;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div id="mat-color-dropdown" style="
+            display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+            background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+            overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:220px;overflow-y:auto;">
+          </div>
+        </div>
+        <input type="hidden" id="mat-color-nombre" value="">
+        <input type="hidden" id="mat-color-hex" value="#888888">
+      </div>
+
+      <!-- Imagen del filamento -->
+      <div style="flex-shrink:0">
+        <label class="form-label">Imagen</label>
+        <div id="mat-img-preview" onclick="document.getElementById('mat-imagen-file').click()" style="width:72px;height:66px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="mat-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'mat-img-preview','mat-imagen')">
+        <input type="hidden" id="mat-imagen">
+      </div>
     </div>
 
-    <!-- COLOR SELECT -->
-    <div class="form-group">
-      <label class="form-label">Color <span style="color:var(--coral)">*</span></label>
-      <div style="position:relative">
-        <div id="mat-color-display" onclick="toggleColorDropdown()" style="
-          background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
-          padding:10px 36px 10px 12px;cursor:pointer;font-size:13px;color:var(--text3);
-          display:flex;align-items:center;gap:10px;user-select:none;">
-          <span id="mat-color-swatch" style="width:18px;height:18px;border-radius:50%;background:transparent;border:0.5px solid var(--border2);flex-shrink:0;display:none"></span>
-          <span id="mat-color-label">Seleccionar color</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="margin-left:auto;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div id="mat-color-dropdown" style="
-          display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
-          background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
-          overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:220px;overflow-y:auto;">
-        </div>
-      </div>
-      <input type="hidden" id="mat-color-nombre" value="">
-      <input type="hidden" id="mat-color-hex" value="#888888">
-    </div>
-
-    <!-- MARCA -->
+    <!-- MARCA (select + opción manual) -->
     <div class="form-group">
       <label class="form-label">Marca</label>
-      <input class="form-input" id="mat-marca" placeholder="Ej: 3D Fila, Sunlu, Overture...">
+      <div style="display:flex;gap:8px">
+        <select class="form-input" id="mat-marca-select" onchange="onMatMarcaSelect(this.value)" style="flex:1">
+          <option value="">Seleccionar marca...</option>
+          <option value="Polymaker">Polymaker</option>
+          <option value="eSun">eSun</option>
+          <option value="Sunlu">Sunlu</option>
+          <option value="Bambu Lab">Bambu Lab</option>
+          <option value="Elegoo">Elegoo</option>
+          <option value="Printalot">Printalot</option>
+          <option value="Grilon3">Grilon3</option>
+          <option value="Plast.ar">Plast.ar</option>
+          <option value="GST3D">GST3D</option>
+          <option value="3N3">3N3</option>
+          <option value="3NMax">3NMax</option>
+          <option value="otra">Otra marca...</option>
+        </select>
+        <input class="form-input" id="mat-marca" placeholder="Ingresar marca" style="flex:1;display:none">
+      </div>
     </div>
 
     <!-- PESO TOTAL -->
@@ -1517,14 +1548,32 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <input type="hidden" id="mat-stock" value="1000">
     </div>
 
-    <!-- PRECIO -->
+    <!-- PRECIO ARS + USD en la misma fila -->
     <div class="form-group">
-      <label class="form-label">Precio por kg USD (opcional)</label>
-      <div style="position:relative">
-        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:13px">$</span>
-        <input class="form-input" type="number" id="mat-precio" placeholder="0" step="0.01" style="padding-left:28px" oninput="updatePriceHint('mat-precio','mat-precio-hint')">
+      <label class="form-label">Precio por kg</label>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <!-- ARS -->
+        <div style="flex:1">
+          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;display:block">ARS $</label>
+          <div style="position:relative">
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:12px">$</span>
+            <input class="form-input" type="number" id="mat-precio-ars" placeholder="0" step="1" min="0"
+              style="padding-left:24px;font-size:13px"
+              oninput="onMatPrecioARS(this.value)">
+          </div>
+        </div>
+        <!-- USD -->
+        <div style="flex:1">
+          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;display:block">USD $</label>
+          <div style="position:relative">
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:12px">$</span>
+            <input class="form-input" type="number" id="mat-precio" placeholder="0" step="0.01" min="0"
+              style="padding-left:24px;font-size:13px;background:var(--bg3);color:var(--text2)"
+              oninput="onMatPrecioUSD(this.value)" readonly>
+          </div>
+          <div id="mat-dolar-rate-hint" style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:3px"></div>
+        </div>
       </div>
-      <div id="mat-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
     </div>
 
     <!-- NOTAS -->
@@ -3217,10 +3266,14 @@ const MAT_TIPOS = [
   {id:'PLA Silk',    name:'Seda / Silk',       desc:'Acabado brillante sedoso'},
   {id:'PLA CF',      name:'PLA Fibra Carbono', desc:'Compuesto reforzado con CF'},
   {id:'ABS',         name:'ABS',               desc:'Resistente, requiere ventilación'},
+  {id:'ASA',         name:'ASA',               desc:'Resistente a rayos UV'},
   {id:'PETG',        name:'PETG',              desc:'Resistente y fácil de imprimir'},
   {id:'PETG CF',     name:'PETG Fibra Carbono',desc:'PETG reforzado con fibra de carbono'},
-  {id:'TPU',         name:'TPU / Flexible',    desc:'Material elástico y flexible'},
-  {id:'ASA',         name:'ASA',               desc:'Resistente a rayos UV'},
+  {id:'TPU 95A',     name:'TPU 95A',           desc:'Rígido-Flexible — uso general RC'},
+  {id:'TPU 98A',     name:'TPU 98A',           desc:'Rígido-Flexible — casi rígido'},
+  {id:'TPU 90A',     name:'TPU 90A',           desc:'Blando — buena absorción de impactos'},
+  {id:'TPU 85A',     name:'TPU 85A',           desc:'Blando — muy flexible y suave'},
+  {id:'TPU',         name:'TPU / Flexible',    desc:'Flexible genérico'},
   {id:'Nylon',       name:'Nylon (PA)',        desc:'Alta resistencia mecánica'},
   {id:'PC',          name:'Policarbonato (PC)',desc:'Ultra resistente al impacto'},
   {id:'HIPS',        name:'HIPS',              desc:'Material de soporte para ABS'},
@@ -3265,6 +3318,44 @@ const MAT_COLORES = [
 
 let _matTipoSelected = '';
 let _matColorSelected = null;
+
+// ── Marca select handler ──
+function onMatMarcaSelect(val){
+  const input = document.getElementById('mat-marca');
+  const sel = document.getElementById('mat-marca-select');
+  if(val === 'otra'){
+    input.style.display = '';
+    input.value = '';
+    input.focus();
+  } else {
+    input.style.display = 'none';
+    input.value = val; // store actual brand value in the text input
+  }
+}
+
+// ── Price ARS → USD auto-calc ──
+function onMatPrecioARS(arsVal){
+  const ars = parseFloat(arsVal)||0;
+  const usdEl = document.getElementById('mat-precio');
+  const hint = document.getElementById('mat-dolar-rate-hint');
+  if(_dolarRate && ars > 0){
+    const usd = ars / _dolarRate;
+    usdEl.value = usd.toFixed(2);
+    if(hint) hint.textContent = `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
+  } else {
+    usdEl.value = '';
+    if(hint) hint.textContent = _dolarRate ? `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS` : 'Sin cotización';
+  }
+}
+
+function onMatPrecioUSD(usdVal){
+  // Allow manual USD edit → recalc ARS
+  const usd = parseFloat(usdVal)||0;
+  const arsEl = document.getElementById('mat-precio-ars');
+  if(_dolarRate && usd > 0){
+    arsEl.value = Math.round(usd * _dolarRate);
+  }
+}
 
 function openMatModal(editId=''){
   _matTipoSelected = '';
@@ -3404,6 +3495,9 @@ function saveMaterial(){
       stock,
       total,
       precio: parseFloat(document.getElementById('mat-precio').value)||0,
+      precioARS: parseFloat(document.getElementById('mat-precio-ars').value)||0,
+      imagen: document.getElementById('mat-imagen').value||'',
+      dolarRateAlta: _dolarRate||null,
       tempBoquilla: '—', tempCama: '—', velocidad: '—',
       notas: document.getElementById('mat-notas').value||''
     };
@@ -3413,7 +3507,15 @@ function saveMaterial(){
     updateBadges();
     closeModal('modal-material');
     document.getElementById('material-edit-id').value='';
-    clearForm(['mat-marca','mat-precio','mat-notas']);
+    clearForm(['mat-notas']);
+    document.getElementById('mat-precio').value='';
+    document.getElementById('mat-precio-ars').value='';
+    document.getElementById('mat-marca').value='';
+    document.getElementById('mat-marca').style.display='none';
+    document.getElementById('mat-marca-select').value='';
+    resetImgPreview('mat-img-preview','mat-imagen');
+    const hint = document.getElementById('mat-dolar-rate-hint');
+    if(hint && _dolarRate) hint.textContent = `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
     document.getElementById('mat-tipo-label').textContent='Seleccionar material...';
     document.getElementById('mat-color-label').textContent='Seleccionar color';
     document.getElementById('mat-color-swatch').style.display='none';
@@ -3463,8 +3565,32 @@ function editMaterial(id){
   document.getElementById('mat-stock').value=m.stock;
   updateStockSlider(pct);
   // Resto
-  document.getElementById('mat-marca').value=m.marca==='—'?'':m.marca;
+  // Restore marca
+  const marcaSelect = document.getElementById('mat-marca-select');
+  const marcaInput = document.getElementById('mat-marca');
+  const knownBrands = ['Polymaker','eSun','Sunlu','Bambu Lab','Elegoo','Printalot','Grilon3','Plast.ar','GST3D','3N3','3NMax'];
+  const marca = m.marca==='—'?'':m.marca;
+  if(marca && knownBrands.includes(marca)){
+    marcaSelect.value = marca;
+    marcaInput.value = marca;
+    marcaInput.style.display = 'none';
+  } else if(marca){
+    marcaSelect.value = 'otra';
+    marcaInput.value = marca;
+    marcaInput.style.display = '';
+  } else {
+    marcaSelect.value = '';
+    marcaInput.value = '';
+    marcaInput.style.display = 'none';
+  }
   document.getElementById('mat-precio').value=m.precio||'';
+  document.getElementById('mat-precio-ars').value=m.precioARS||'';
+  const imgValMat = m.imagen||'';
+  document.getElementById('mat-imagen').value=imgValMat;
+  if(imgValMat){ document.getElementById('mat-img-preview').innerHTML=`<img src="${imgValMat}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
+  else{ resetImgPreview('mat-img-preview','mat-imagen'); }
+  const hint2 = document.getElementById('mat-dolar-rate-hint');
+  if(hint2 && _dolarRate) hint2.textContent = `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
   document.getElementById('mat-notas').value=m.notas||'';
   buildMatDropdowns();
 }
