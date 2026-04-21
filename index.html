@@ -1446,8 +1446,14 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Body style</label>
         <select class="form-input" id="proy-tipo">
-          <option>Touring / Drift</option><option>Rally</option><option>Trophy Truck</option>
-          <option>Formula</option><option>Crawler</option><option>SUV / Off-Road</option><option>Otro</option>
+          <option>Touring / Drift</option>
+          <option>Rally / Crawler</option>
+          <option>Formula 1 / Nascar</option>
+          <option>SUV / Offroad</option>
+          <option>Trophy Truck</option>
+          <option>SuperCars / Iconic Cars</option>
+          <option>Decoración / Home</option>
+          <option>Otro</option>
         </select>
       </div>
       <div class="form-group">
@@ -1709,8 +1715,15 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Categoría</label>
         <select class="form-input" id="prod-categoria">
-          <option>Kit completo</option><option>Body / carrocería</option><option>Suspensión</option>
-          <option>Ruedas / neumáticos</option><option>Hardware</option><option>Accesorios</option><option>Otro</option>
+          <option>Kit completo</option>
+          <option>Body / Carrocería</option>
+          <option>Suspensión</option>
+          <option>Ruedas / Neumáticos</option>
+          <option>Hardware / Tech</option>
+          <option>Accesorios</option>
+          <option>Personalizado / Premium</option>
+          <option>Decoración / Home</option>
+          <option>Otro</option>
         </select>
       </div>
     </div>
@@ -3821,28 +3834,38 @@ function filterProyectos(f,btn){
 // MATERIAL MODAL — DATA
 // ════════════════════════════════
 const MAT_TIPOS = [
-  {id:'PLA',         name:'PLA',              desc:'Fácil de imprimir, biodegradable'},
-  {id:'PLA+',        name:'PLA+ / PLA Pro',   desc:'Mayor resistencia que PLA estándar'},
-  {id:'PLA Matte',   name:'PLA Matte',         desc:'Acabado mate sin brillo'},
-  {id:'PLA Silk',    name:'Seda / Silk',       desc:'Acabado brillante sedoso'},
-  {id:'PLA CF',      name:'PLA Fibra Carbono', desc:'Compuesto reforzado con CF'},
-  {id:'ABS',         name:'ABS',               desc:'Resistente, requiere ventilación'},
-  {id:'ASA',         name:'ASA',               desc:'Resistente a rayos UV'},
-  {id:'PETG',        name:'PETG',              desc:'Resistente y fácil de imprimir'},
-  {id:'PETG CF',     name:'PETG Fibra Carbono',desc:'PETG reforzado con fibra de carbono'},
-  {id:'TPU 95A',     name:'TPU 95A',           desc:'Rígido-Flexible — uso general RC'},
-  {id:'TPU 98A',     name:'TPU 98A',           desc:'Rígido-Flexible — casi rígido'},
-  {id:'TPU 90A',     name:'TPU 90A',           desc:'Blando — buena absorción de impactos'},
-  {id:'TPU 85A',     name:'TPU 85A',           desc:'Blando — muy flexible y suave'},
-  {id:'TPU',         name:'TPU / Flexible',    desc:'Flexible genérico'},
-  {id:'Nylon',       name:'Nylon (PA)',        desc:'Alta resistencia mecánica'},
-  {id:'PC',          name:'Policarbonato (PC)',desc:'Ultra resistente al impacto'},
-  {id:'HIPS',        name:'HIPS',              desc:'Material de soporte para ABS'},
-  {id:'PVA',         name:'PVA',               desc:'Soporte soluble en agua'},
-  {id:'Madera',      name:'Madera',            desc:'PLA con partículas de madera'},
-  {id:'Metal Fill',  name:'Metal Fill',        desc:'Con partículas metálicas'},
-  {id:'Fosforescente',name:'Fosforescente',    desc:'Brilla en la oscuridad'},
-  {id:'Otro',        name:'Otro',              desc:'Material personalizado'},
+  // ── PLA ──
+  {id:'PLA',              name:'PLA Basic',              desc:'Uso general, fácil de imprimir y estable'},
+  {id:'PLA Pro',          name:'PLA Pro',                desc:'Mayor resistencia y durabilidad, similar al ABS'},
+  {id:'PLA+',             name:'PLA+ / Rapid PLA+',      desc:'Alta velocidad, mayor tenacidad que PLA básico'},
+  {id:'PLA Matte',        name:'PLA Matte',              desc:'Acabado opaco y suave, oculta líneas de capa'},
+  {id:'PLA Silk',         name:'PLA Silk / Seda',        desc:'Acabado brillante, satinado y efecto metálico'},
+  {id:'PLA Marble',       name:'PLA Marble',             desc:'Efecto mármol para acabados estéticos únicos'},
+  {id:'PLA Wood',         name:'PLA Wood',               desc:'Efecto madera con partículas orgánicas'},
+  {id:'PLA CF',           name:'PLA-CF Fibra Carbono',   desc:'Reforzado con fibra de carbono, mayor rigidez'},
+  // ── PETG ──
+  {id:'PETG',             name:'PETG',                   desc:'Resistente y fácil de imprimir'},
+  {id:'PETG Rapid',       name:'Rapid PETG',             desc:'Alta velocidad hasta 600 mm/s, fuerza del PETG'},
+  {id:'PETG Pro',         name:'PETG Pro',               desc:'Mayor resistencia a impactos, agua y humedad'},
+  {id:'PETG CF',          name:'PETG-CF Fibra Carbono',  desc:'PETG reforzado con fibra de carbono'},
+  // ── ABS / ASA ──
+  {id:'ABS',              name:'ABS',                    desc:'Resistente, requiere ventilación'},
+  {id:'ASA',              name:'ASA',                    desc:'Resistente a rayos UV y exterior'},
+  // ── TPU ──
+  {id:'TPU 95A',          name:'TPU 95A',                desc:'Rígido-Flexible — uso general RC'},
+  {id:'TPU 98A',          name:'TPU 98A',                desc:'Rígido-Flexible — casi rígido'},
+  {id:'TPU 90A',          name:'TPU 90A',                desc:'Blando — buena absorción de impactos'},
+  {id:'TPU 85A',          name:'TPU 85A',                desc:'Blando — muy flexible y suave'},
+  {id:'TPU',              name:'TPU / Flexible',         desc:'Flexible genérico'},
+  // ── Técnicos ──
+  {id:'Nylon',            name:'Nylon (PA)',              desc:'Alta resistencia mecánica'},
+  {id:'PC',               name:'Policarbonato (PC)',      desc:'Ultra resistente al impacto'},
+  {id:'HIPS',             name:'HIPS',                   desc:'Material de soporte para ABS'},
+  {id:'PVA',              name:'PVA',                    desc:'Soporte soluble en agua'},
+  // ── Especiales ──
+  {id:'Metal Fill',       name:'Metal Fill',             desc:'Con partículas metálicas'},
+  {id:'Fosforescente',    name:'Fosforescente',          desc:'Brilla en la oscuridad'},
+  {id:'Otro',             name:'Otro',                   desc:'Material personalizado'},
 ];
 
 const MAT_COLORES = [
@@ -3874,6 +3897,7 @@ const MAT_COLORES = [
   {id:'Translúcido Verde',   hex:'#a5d6a7',            label:'Translúcido Verde',  special:'transp'},
   {id:'Translúcido Naranja', hex:'#ffcc80',            label:'Translúcido Naranja',special:'transp'},
   {id:'Translúcido Amarillo',hex:'#fff176',            label:'Translúcido Amarillo',special:'transp'},
+  {id:'Translúcido Natural',hex:'rgba(220,210,190,0.5)', label:'Translúcido Natural', special:'transp'},
   {id:'Gris Claro',          hex:'#bdbdbd',            label:'Gris Claro'},
   {id:'Natural',      hex:'#f0e6c8', label:'Natural / Marfil'},
   {id:'Multicolor',   hex:'multicolor', label:'Multicolor / Rainbow', special:'multi'},
