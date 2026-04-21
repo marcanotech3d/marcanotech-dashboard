@@ -871,7 +871,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="panel" style="overflow-x:auto">
       <table class="data-table" id="accesorios-table">
         <thead>
-          <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Marca</th><th>Stock</th><th>Mín.</th><th>Precio</th><th>Acciones</th></tr>
+          <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Mín.</th><th>Precio</th><th>Acciones</th></tr>
         </thead>
         <tbody id="accesorios-tbody"></tbody>
       </table>
@@ -4042,12 +4042,28 @@ function saveMaterial(){
     updateBadges();
     closeModal('modal-material');
     document.getElementById('material-edit-id').value='';
-    clearForm(['mat-notas']);
+    clearForm(['mat-notas','mat-url']);
     document.getElementById('mat-precio').value='';
     document.getElementById('mat-precio-ars').value='';
     document.getElementById('mat-marca').value='';
     document.getElementById('mat-marca').style.display='none';
     document.getElementById('mat-marca-select').value='';
+    // Reset material and color dropdowns
+    document.getElementById('mat-tipo').value='';
+    document.getElementById('mat-tipo-label').textContent='Seleccionar material...';
+    document.getElementById('mat-color-nombre').value='';
+    document.getElementById('mat-color-hex').value='#888888';
+    document.getElementById('mat-color-label').textContent='Color';
+    const sw=document.getElementById('mat-color-swatch'); if(sw){sw.style.display='none';}
+    // Reset peso buttons
+    document.querySelectorAll('.mat-peso-btn').forEach(b=>b.classList.remove('active'));
+    const btn1kg=document.querySelector('.mat-peso-btn[data-g="1000"]'); if(btn1kg) btn1kg.classList.add('active');
+    document.getElementById('mat-total-val').value='1000';
+    document.getElementById('mat-total').style.display='none';
+    document.getElementById('mat-total').value='1000';
+    document.getElementById('mat-stock-slider').value=100;
+    document.getElementById('mat-stock').value=1000;
+    document.getElementById('mat-stock-label').textContent='100% (1000g)';
     resetImgPreview('mat-img-preview','mat-imagen');
     const hint = document.getElementById('mat-dolar-rate-hint');
     if(hint && _dolarRate) hint.textContent = `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
@@ -4134,7 +4150,7 @@ function editMaterial(id){
 function renderMaterialesTable(){
   const tbody=document.getElementById('materiales-tbody');
   if(!tbody) return;
-  if(!DB.materiales.length){ tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px;">Sin materiales registrados</td></tr>`; return; }
+  if(!DB.materiales.length){ tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px;">Sin materiales registrados</td></tr>`; return; }
   tbody.innerHTML=DB.materiales.map(m=>{
     const pct=Math.round((m.stock/m.total)*100);
     const color=pct<20?'var(--coral)':pct<40?'var(--amber)':'var(--teal)';
@@ -5081,6 +5097,354 @@ function renderMateriales(){
 }
 
 // ════════════════════════════════
+// ACCESORIOS — CRUD
+// ════════════════════════════════
+function nextCodigoAccesorio(){
+  if(!DB.accesorios||!DB.accesorios.length) return 'MT3-0001';
+  const nums = DB.accesorios.map(a=>parseInt((a.codigo||'MT3-0000').split('-')[1]||0)).filter(n=>!isNaN(n));
+  return 'MT3-'+String((nums.length?Math.max(...nums):0)+1).padStart(4,'0');
+}
+
+function openAccesorioModal(editId=''){
+  document.getElementById('accesorio-edit-id').value='';
+  document.getElementById('acc-modal-title').textContent='Agregar Accesorio';
+  document.getElementById('acc-save-btn').textContent='Agregar Accesorio';
+  clearForm(['acc-nombre','acc-marca','acc-notas','acc-url']);
+  document.getElementById('acc-stock').value=1;
+  document.getElementById('acc-stock-min').value=1;
+  document.getElementById('acc-categoria').value='Consumible';
+  document.getElementById('acc-unidad').value='Und';
+  if(document.getElementById('acc-precio')) document.getElementById('acc-precio').value='';
+  if(document.getElementById('acc-precio-ars')) document.getElementById('acc-precio-ars').value='';
+  const hint=document.getElementById('acc-precio-hint');
+  if(hint&&_dolarRate) hint.textContent=`USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
+  const codigo=nextCodigoAccesorio();
+  document.getElementById('acc-codigo').value=codigo;
+  document.getElementById('acc-codigo-display').textContent=codigo;
+  resetImgPreview('acc-img-preview','acc-imagen');
+  openModal('modal-accesorio');
+}
+
+function saveAccesorio(){
+  const editId=document.getElementById('accesorio-edit-id').value;
+  const nombre=document.getElementById('acc-nombre').value.trim();
+  if(!nombre){ showToast('Ingresá el nombre','error'); return; }
+  const obj={
+    id:editId||uid(),
+    codigo:document.getElementById('acc-codigo').value||nextCodigoAccesorio(),
+    nombre,
+    categoria:document.getElementById('acc-categoria').value||'Consumible',
+    marca:document.getElementById('acc-marca').value||'—',
+    unidad:document.getElementById('acc-unidad').value||'Und',
+    stock:parseInt(document.getElementById('acc-stock').value)||0,
+    stockMin:parseInt(document.getElementById('acc-stock-min').value)||1,
+    precio:parseFloat(document.getElementById('acc-precio')?.value)||0,
+    precioARS:parseFloat(document.getElementById('acc-precio-ars')?.value)||0,
+    notas:document.getElementById('acc-notas').value||'',
+    imagen:document.getElementById('acc-imagen').value||'',
+    url:document.getElementById('acc-url')?.value||''
+  };
+  if(editId){ DB.accesorios=DB.accesorios.map(a=>a.id===editId?obj:a); }
+  else{ DB.accesorios.push(obj); logActivity(`Accesorio <strong>${obj.nombre}</strong> agregado`); }
+  persistWithStorage('accesorios', DB.accesorios);
+  updateBadges(); closeModal('modal-accesorio'); renderSection(currentSection);
+  showToast('Accesorio guardado ✓');
+}
+
+function deleteAccesorio(id){
+  if(!confirm('¿Eliminar este accesorio?')) return;
+  DB.accesorios=DB.accesorios.filter(a=>a.id!==id);
+  persist('accesorios'); updateBadges(); renderSection(currentSection);
+}
+
+function editAccesorio(id){
+  const a=DB.accesorios.find(x=>x.id===id); if(!a) return;
+  openAccesorioModal(id);
+  document.getElementById('accesorio-edit-id').value=a.id;
+  document.getElementById('acc-modal-title').textContent='Editar Accesorio';
+  document.getElementById('acc-save-btn').textContent='Guardar cambios';
+  document.getElementById('acc-nombre').value=a.nombre||'';
+  document.getElementById('acc-categoria').value=a.categoria||'Consumible';
+  document.getElementById('acc-marca').value=a.marca==='—'?'':a.marca||'';
+  document.getElementById('acc-unidad').value=a.unidad||'Und';
+  document.getElementById('acc-stock').value=a.stock||0;
+  document.getElementById('acc-stock-min').value=a.stockMin||1;
+  if(document.getElementById('acc-precio')) document.getElementById('acc-precio').value=a.precio||'';
+  if(document.getElementById('acc-precio-ars')) document.getElementById('acc-precio-ars').value=a.precioARS||'';
+  if(document.getElementById('acc-notas')) document.getElementById('acc-notas').value=a.notas||'';
+  if(document.getElementById('acc-url')) document.getElementById('acc-url').value=a.url||'';
+  document.getElementById('acc-codigo').value=a.codigo||'';
+  document.getElementById('acc-codigo-display').textContent=a.codigo||'—';
+  const imgVal=a.imagen||'';
+  document.getElementById('acc-imagen').value=imgVal;
+  if(imgVal){ document.getElementById('acc-img-preview').innerHTML=`<img src="${imgVal}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
+  else{ resetImgPreview('acc-img-preview','acc-imagen'); }
+}
+
+// ════════════════════════════════
+// PRESUPUESTOS — CRUD
+// ════════════════════════════════
+let _filtroPresupuestos = 'todos';
+let _presupItems = [];
+let _presupExtras = [];
+
+function nextPresupNumero(){
+  if(!DB.presupuestos||!DB.presupuestos.length) return 'PRES-0001';
+  const nums=DB.presupuestos.map(p=>parseInt((p.numero||'PRES-0000').split('-')[1]||0)).filter(n=>!isNaN(n));
+  return 'PRES-'+String((nums.length?Math.max(...nums):0)+1).padStart(4,'0');
+}
+
+function openPresupuestoModal(editId=''){
+  document.getElementById('presupuesto-edit-id').value='';
+  document.getElementById('presup-modal-title').textContent='Nuevo Presupuesto';
+  clearForm(['presup-destinatario','presup-contacto','presup-negocio','presup-notas','presup-descuento','presup-validez']);
+  document.getElementById('presup-moneda').value='USD';
+  document.getElementById('presup-cliente-tipo').value='manual';
+  document.getElementById('presup-cliente-manual').style.display='';
+  const extToggle=document.getElementById('presup-extras-toggle');
+  if(extToggle) extToggle.checked=false;
+  const extCont=document.getElementById('presup-extras-container');
+  if(extCont) extCont.style.display='none';
+  const desglosar=document.getElementById('presup-desglosar');
+  if(desglosar) desglosar.checked=false;
+  document.getElementById('presup-negocio').value='MarcanoTech 3D';
+  document.getElementById('presup-fecha').value=new Date().toISOString().split('T')[0];
+  const num=nextPresupNumero();
+  document.getElementById('presup-numero').value=num;
+  document.getElementById('presup-num-display').textContent=num;
+  _presupItems=[{id:uid(),desc:'',cant:1,precio:0}];
+  _presupExtras=[];
+  renderPresupItems();
+  updatePresupTotal();
+  openModal('modal-presupuesto');
+}
+
+function savePresupuesto(estado='borrador'){
+  const editId=document.getElementById('presupuesto-edit-id').value;
+  const items=_presupItems.filter(i=>i.desc&&i.desc.trim());
+  if(!items.length){ showToast('Agregá al menos un ítem','error'); return; }
+  const destinatario=document.getElementById('presup-destinatario').value.trim();
+  if(!destinatario){ showToast('Ingresá el destinatario','error'); return; }
+  const subtotal=_presupItems.reduce((a,i)=>a+(i.cant||1)*(i.precio||0),0);
+  const desc=parseFloat(document.getElementById('presup-descuento').value)||0;
+  const total=subtotal*(1-desc/100);
+  const obj={
+    id:editId||uid(),
+    numero:document.getElementById('presup-numero').value,
+    fecha:document.getElementById('presup-fecha').value,
+    estado, items:_presupItems.map(i=>({...i})), extras:_presupExtras.map(i=>({...i})),
+    moneda:document.getElementById('presup-moneda').value, descuento:desc,
+    subtotal, total, destinatario,
+    contacto:document.getElementById('presup-contacto').value,
+    negocio:document.getElementById('presup-negocio').value||'MarcanoTech 3D',
+    validez:document.getElementById('presup-validez').value||'',
+    notas:document.getElementById('presup-notas').value,
+    desglosar:document.getElementById('presup-desglosar')?.checked||false,
+    dolarRate:_dolarRate||null, ts:Date.now()
+  };
+  if(editId){ DB.presupuestos=DB.presupuestos.map(p=>p.id===editId?obj:p); }
+  else{ DB.presupuestos.push(obj); logActivity(`Presupuesto <strong>${obj.numero}</strong> creado`); }
+  persist('presupuestos'); updateBadges(); closeModal('modal-presupuesto');
+  renderSection(currentSection);
+  showToast(`Presupuesto ${estado==='borrador'?'guardado como borrador':'guardado ✓'}`);
+}
+
+function deletePresupuesto(id){
+  if(!confirm('¿Eliminar este presupuesto?')) return;
+  DB.presupuestos=DB.presupuestos.filter(p=>p.id!==id);
+  persist('presupuestos'); updateBadges(); renderSection(currentSection);
+}
+
+function editPresupuesto(id){
+  const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
+  openPresupuestoModal(id);
+  document.getElementById('presupuesto-edit-id').value=p.id;
+  document.getElementById('presup-modal-title').textContent='Editar Presupuesto';
+  document.getElementById('presup-numero').value=p.numero;
+  document.getElementById('presup-num-display').textContent=p.numero;
+  document.getElementById('presup-fecha').value=p.fecha||'';
+  document.getElementById('presup-moneda').value=p.moneda||'USD';
+  document.getElementById('presup-descuento').value=p.descuento||'';
+  document.getElementById('presup-destinatario').value=p.destinatario||'';
+  document.getElementById('presup-contacto').value=p.contacto||'';
+  document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech 3D';
+  document.getElementById('presup-validez').value=p.validez||'';
+  document.getElementById('presup-notas').value=p.notas||'';
+  _presupItems=p.items&&p.items.length?p.items.map(i=>({...i})):[{id:uid(),desc:'',cant:1,precio:0}];
+  _presupExtras=p.extras?p.extras.map(i=>({...i})):[];
+  renderPresupItems(); updatePresupTotal();
+}
+
+function cambiarEstadoPresupuesto(id, nuevoEstado){
+  DB.presupuestos=DB.presupuestos.map(p=>p.id===id?{...p,estado:nuevoEstado}:p);
+  persist('presupuestos'); renderSection(currentSection);
+  showToast(`Estado: ${nuevoEstado}`);
+}
+
+function filterPresupuestos(f, btn){
+  _filtroPresupuestos=f;
+  document.querySelectorAll('#sec-presupuestos .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderPresupuestos(f);
+}
+
+function renderPresupuestos(filter){
+  filter=filter||_filtroPresupuestos||'todos';
+  const sr=document.getElementById('presup-stats-row');
+  if(sr){
+    const total=DB.presupuestos.length;
+    const aceptados=DB.presupuestos.filter(p=>p.estado==='aceptado');
+    const pendientes=DB.presupuestos.filter(p=>p.estado==='enviado');
+    const totalAcept=aceptados.reduce((a,p)=>a+(p.moneda==='USD'?p.total:(p.total/(_dolarRate||1))),0);
+    sr.innerHTML=`
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${total}</div><div class="stat-delta neutral">presupuestos</div></div>
+      <div class="stat-card"><div class="stat-label">Pendientes</div><div class="stat-value" style="color:var(--amber)">${pendientes.length}</div><div class="stat-delta neutral">enviados</div></div>
+      <div class="stat-card"><div class="stat-label">Aceptados</div><div class="stat-value" style="color:var(--teal)">${aceptados.length}</div><div class="stat-delta up">$${totalAcept.toFixed(0)} USD</div></div>
+      <div class="stat-card"><div class="stat-label">Borradores</div><div class="stat-value">${DB.presupuestos.filter(p=>p.estado==='borrador').length}</div></div>`;
+  }
+  const list=document.getElementById('presupuestos-list'); if(!list) return;
+  const data=filter==='todos'?DB.presupuestos:DB.presupuestos.filter(p=>p.estado===filter);
+  if(!data.length){
+    list.innerHTML=`<div class="add-card" style="min-height:140px" onclick="openPresupuestoModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Crear primer presupuesto</span></div>`; return;
+  }
+  const stColors={borrador:'var(--text3)',enviado:'var(--blue)',aceptado:'var(--teal)',rechazado:'var(--coral)',vencido:'var(--amber)'};
+  const stIcons={borrador:'📝',enviado:'📤',aceptado:'✅',rechazado:'❌',vencido:'⏰'};
+  list.innerHTML=[...data].reverse().map(p=>{
+    const sc=stColors[p.estado]||'var(--text3)';
+    const arsStr=p.moneda==='USD'&&_dolarRate?` / $${Math.round(p.total*_dolarRate).toLocaleString('es-AR')} ARS`:'';
+    return `<div class="panel" style="margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent)">${p.numero}</span>
+            <span class="badge" style="background:${sc}22;color:${sc}">${stIcons[p.estado]||''} ${p.estado}</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:var(--text)">${p.destinatario}</div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${p.negocio||''} · ${p.fecha||'—'}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:20px;font-weight:700;color:var(--accent);font-family:var(--mono)">$${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${arsStr}${p.items?` · ${p.items.length} ítems`:''}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="editPresupuesto('${p.id}')">Editar</button>
+        ${p.estado!=='aceptado'?`<button class="btn btn-sm" style="background:rgba(56,217,169,0.1);color:var(--teal);border:0.5px solid rgba(56,217,169,0.2)" onclick="cambiarEstadoPresupuesto('${p.id}','aceptado')">✓ Aceptado</button>`:''}
+        ${p.estado==='enviado'?`<button class="btn btn-sm" style="background:rgba(255,107,91,0.1);color:var(--coral);border:0.5px solid rgba(255,107,91,0.2)" onclick="cambiarEstadoPresupuesto('${p.id}','rechazado')">✕ Rechazado</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="exportPresupuestoPDFById('${p.id}')">PDF</button>
+        <button class="btn btn-sm" style="background:#25D36622;color:#25D366;border:0.5px solid #25D36644" onclick="enviarWhatsAppById('${p.id}')">WhatsApp</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePresupuesto('${p.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildPresupuestoText(p){
+  const items=p.items||[];
+  const lineas=items.map(i=>`  • ${i.cant}× ${i.desc}: $${((i.cant||1)*(i.precio||0)).toFixed(2)} ${p.moneda||'USD'}`).join('\n');
+  return `PRESUPUESTO ${p.numero}\n${'─'.repeat(38)}\nFecha: ${p.fecha||'—'}${p.validez?`  |  Válido: ${p.validez} días`:''}\nDE: ${p.negocio||'MarcanoTech 3D'}\nPARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}\n${'─'.repeat(38)}\nÍTEMS:\n${lineas}\n${'─'.repeat(38)}\n${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)}\nDescuento ${p.descuento}%: -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${p.moneda==='USD'&&p.dolarRate?`\n≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS`:''}\n${'─'.repeat(38)}\n${p.notas?'NOTAS:\n'+p.notas+'\n':''}\nMarcanoTech 3D Workshop Dashboard`;
+}
+
+function exportPresupuestoPDFById(id){
+  const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
+  const blob=new Blob([buildPresupuestoText(p)],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`${p.numero}_${p.destinatario.replace(/\s+/g,'_')}.txt`; a.click();
+  showToast('Resumen descargado ✓');
+}
+
+function exportPresupuestoPDF(){
+  const id=document.getElementById('presupuesto-edit-id').value;
+  if(id) exportPresupuestoPDFById(id); else showToast('Guardá el presupuesto primero','error');
+}
+
+function enviarWhatsAppById(id){
+  const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
+  const tel=p.contacto?p.contacto.replace(/\D/g,''):'';
+  window.open(`https://wa.me/${tel}?text=${encodeURIComponent(buildPresupuestoText(p))}`,'_blank');
+}
+
+function enviarWhatsApp(){
+  const id=document.getElementById('presupuesto-edit-id').value;
+  if(id) enviarWhatsAppById(id); else showToast('Guardá el presupuesto primero','error');
+}
+
+function enviarEmail(){
+  const id=document.getElementById('presupuesto-edit-id').value;
+  const p=id?DB.presupuestos.find(x=>x.id===id):null; if(!p) return;
+  const mail=p.contacto&&p.contacto.includes('@')?p.contacto:'';
+  window.location.href=`mailto:${mail}?subject=Presupuesto ${p.numero}&body=${encodeURIComponent(buildPresupuestoText(p))}`;
+}
+
+function renderPresupItems(){
+  const cont=document.getElementById('presup-items-container'); if(!cont) return;
+  cont.innerHTML=_presupItems.map((item,i)=>`
+    <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border);margin-bottom:8px">
+      <div class="form-group" style="margin-bottom:8px">
+        <label class="form-label">Producto / servicio ${i+1}</label>
+        <input class="form-input" value="${item.desc||''}" placeholder="Nombre del producto o servicio"
+          oninput="_presupItems[${i}].desc=this.value">
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="flex:1"><label class="form-label">Cant.</label>
+          <input class="form-input" type="number" value="${item.cant||1}" min="1" step="0.5"
+            oninput="_presupItems[${i}].cant=parseFloat(this.value)||1;updatePresupTotal()"></div>
+        <div style="flex:2"><label class="form-label">Precio unit.</label>
+          <input class="form-input" type="number" value="${item.precio||''}" placeholder="0.00" step="0.01"
+            oninput="_presupItems[${i}].precio=parseFloat(this.value)||0;updatePresupTotal()"></div>
+        <div style="flex:2"><label class="form-label">Subtotal</label>
+          <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13px;color:var(--accent)">
+            $${((item.cant||1)*(item.precio||0)).toFixed(2)}</div></div>
+        ${_presupItems.length>1?`<button onclick="removePresupItem(${i})" style="background:rgba(255,107,91,0.1);border:none;border-radius:8px;padding:9px 10px;color:var(--coral);cursor:pointer">✕</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function addPresupItem(){ _presupItems.push({id:uid(),desc:'',cant:1,precio:0}); renderPresupItems(); }
+function removePresupItem(i){ _presupItems.splice(i,1); renderPresupItems(); updatePresupTotal(); }
+
+function togglePresupExtras(on){
+  const cont=document.getElementById('presup-extras-container');
+  const slider=document.getElementById('presup-extras-slider');
+  if(cont) cont.style.display=on?'block':'none';
+  if(slider) slider.style.background=on?'var(--accent)':'var(--border2)';
+  if(on&&_presupExtras.length===0){ _presupExtras=[{id:uid(),desc:'',precio:0}]; renderPresupExtras(); }
+}
+
+function renderPresupExtras(){
+  const cont=document.getElementById('presup-extras-container'); if(!cont) return;
+  cont.innerHTML=_presupExtras.map((item,i)=>`
+    <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px">
+      <div style="flex:3"><label class="form-label">Ítem informativo</label>
+        <input class="form-input" value="${item.desc||''}" placeholder="Descripción" oninput="_presupExtras[${i}].desc=this.value"></div>
+      <div style="flex:2"><label class="form-label">Valor ref.</label>
+        <input class="form-input" type="number" value="${item.precio||''}" placeholder="0.00" step="0.01"
+          oninput="_presupExtras[${i}].precio=parseFloat(this.value)||0"></div>
+      <button onclick="_presupExtras.splice(${i},1);renderPresupExtras()" style="background:rgba(255,107,91,0.1);border:none;border-radius:8px;padding:9px 10px;color:var(--coral);cursor:pointer">✕</button>
+    </div>`).join('')+
+    `<button onclick="_presupExtras.push({id:uid(),desc:'',precio:0});renderPresupExtras()" style="width:100%;padding:8px;border-radius:7px;border:0.5px dashed var(--border2);background:none;color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--font)">+ Agregar cotización extra</button>`;
+}
+
+function toggleClienteManual(val){ document.getElementById('presup-cliente-manual').style.display=val==='manual'?'':'none'; }
+
+function updatePresupTotal(){
+  const subtotal=_presupItems.reduce((a,i)=>a+(i.cant||1)*(i.precio||0),0);
+  const desc=parseFloat(document.getElementById('presup-descuento')?.value)||0;
+  const total=subtotal*(1-desc/100);
+  const moneda=document.getElementById('presup-moneda')?.value||'USD';
+  const fmt=n=>moneda==='ARS'?`$${n.toLocaleString('es-AR',{minimumFractionDigits:2})}`:`$${n.toFixed(2)}`;
+  const sub=document.getElementById('presup-subtotal'); if(sub) sub.textContent=fmt(subtotal);
+  const descRow=document.getElementById('presup-desc-row'); if(descRow) descRow.style.display=desc>0?'flex':'none';
+  const descVal=document.getElementById('presup-desc-val'); if(descVal) descVal.textContent=`-${fmt(subtotal-total)}`;
+  const tot=document.getElementById('presup-total-display'); if(tot) tot.textContent=`${fmt(total)} ${moneda}`;
+  const arsEl=document.getElementById('presup-total-ars');
+  if(arsEl){ arsEl.textContent=moneda==='USD'&&_dolarRate?`≈ $${Math.round(total*_dolarRate).toLocaleString('es-AR')} ARS`:moneda==='ARS'&&_dolarRate?`≈ $${(total/_dolarRate).toFixed(2)} USD`:''; }
+  renderPresupItems();
+}
+
+// ════════════════════════════════
 // ACCESORIOS — CARD GRID
 // ════════════════════════════════
 let _filtroAccesorios = 'todos';
@@ -5119,7 +5483,6 @@ function renderAccesorios(){
         </div>
       </td>
       <td><span class="badge badge-gray">${a.categoria}</span></td>
-      <td style="font-size:12px;color:var(--text2)">${a.marca||'—'}</td>
       <td style="font-family:var(--mono);font-size:12px;color:${sc};font-weight:700">${a.stock} ${a.unidad||'Und'}</td>
       <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${a.stockMin||0}</td>
       <td style="font-size:12px;font-family:var(--mono)">${arsStr}</td>
@@ -5417,9 +5780,9 @@ function renderComponentes(filter){
         <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${c.categoria?.toUpperCase()}</span>
         ${c.stock>1?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">×${c.stock}</span>`:''}
       </div>
-      ${c.specs?`<div style="font-size:11px;color:var(--text2);background:var(--bg3);padding:6px 8px;border-radius:7px;margin-bottom:8px;line-height:1.5;max-height:60px;overflow:hidden">${c.specs}</div>`:''}
+      ${c.specs?`<div style="font-size:11px;color:var(--text2);background:var(--bg3);padding:6px 8px;border-radius:7px;margin-bottom:8px;line-height:1.5;max-height:48px;overflow:hidden;text-overflow:ellipsis">${c.specs.substring(0,120)}${c.specs.length>120?'...':''}</div>`:''}
       ${arsStr?`<div style="font-size:13px;font-weight:700;color:var(--accent);font-family:var(--mono);margin-bottom:6px">${arsStr}</div>`:''}
-      ${c.url?`<a href="${c.url}" target="_blank" style="font-size:10px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">🔗 Ver compra</a>`:''}
+      ${c.url?`<a href="${c.url}" target="_blank" style="font-size:10px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">🔗 Ver compra</a>`:''}
       <div style="display:flex;gap:6px;margin-top:auto">
         <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editComponente('${c.id}')">Editar</button>
         <button class="btn btn-danger btn-sm" onclick="deleteComponente('${c.id}')">✕</button>
