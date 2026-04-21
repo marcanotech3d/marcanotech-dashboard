@@ -526,7 +526,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
     <div>
       <div class="logo-text">MarcanoTech 3D</div>
-      <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.6</span></div>
+      <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.7</span></div>
     </div>
   </div>
   <nav class="nav">
@@ -675,7 +675,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </div>
       <div>
         <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech 3D</div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--accent);padding:1px 5px;border-radius:3px">v1.6</span></div>
+        <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--accent);padding:1px 5px;border-radius:3px">v1.7</span></div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -852,9 +852,12 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
   <!-- ── ACCESORIOS ── -->
   <div class="section" id="sec-accesorios">
-    <div class="section-row" style="margin-top:0">
-      <div class="section-title">Accesorios & herramientas</div>
-      <button class="btn btn-accent btn-sm" onclick="openModal('modal-accesorio')">+ Agregar accesorio</button>
+    <div class="section-row" style="margin-top:0;margin-bottom:4px">
+      <div>
+        <div style="font-size:20px;font-weight:700;color:var(--text)">Accesorios & Herramientas</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px">Consumibles, repuestos y herramientas</div>
+      </div>
+      <button class="btn btn-accent btn-sm" onclick="openAccesorioModal()">+ Agregar accesorio</button>
     </div>
     <div class="tabs">
       <button class="tab active" onclick="filterAccesorios('todos',this)">Todos</button>
@@ -865,10 +868,10 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <button class="tab" onclick="filterAccesorios('Electrónica',this)">Electrónica</button>
       <button class="tab" onclick="filterAccesorios('Otro',this)">Otros</button>
     </div>
-    <div class="panel">
+    <div class="panel" style="overflow-x:auto">
       <table class="data-table" id="accesorios-table">
         <thead>
-          <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Marca</th><th>Stock</th><th>Mín.</th><th>Estado</th><th>Acciones</th></tr>
+          <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Marca</th><th>Stock</th><th>Mín.</th><th>Precio</th><th>Acciones</th></tr>
         </thead>
         <tbody id="accesorios-tbody"></tbody>
       </table>
@@ -1206,7 +1209,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard</div>
         </div>
         <div style="margin-left:auto;text-align:right">
-          <div style="font-size:28px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="version-badge-main">v1.6</div>
+          <div style="font-size:28px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="version-badge-main">v1.7</div>
           <div style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="version-fecha-main">2026-04-21</div>
         </div>
       </div>
@@ -2719,9 +2722,20 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v1.6',
+  version: 'v1.7',
   fecha: '2026-04-21',
   changelog: [
+    { v:'v1.7', fecha:'2026-04-21', cambios:[
+      'Pantallas Materiales y Componentes rediseñadas como grilla de cards',
+      'Sección Clientes / Proveedores con CRUD completo',
+      'Modales de Filamento, Accesorio y Componente con precios ARS/USD y URL de compra',
+      'Colores nuevos: Translúcido Naranja, Translúcido Amarillo, Gris Claro',
+      'Variantes TPU 95A / 98A / 90A / 85A en listado de materiales',
+      'Selector de marca de filamentos conocidos (Polymaker, eSun, Sunlu, etc.)',
+      'Navegación móvil rediseñada: sidebar deslizante + topbar móvil',
+      'Renombrado y reordenado del menú completo',
+      'Fix: updateSidebarPrinterSelect, renderAccesorios y funciones faltantes',
+    ]},
     { v:'v1.6', fecha:'2026-04-21', cambios:[
       'Calculadora de costos v2: moneda, perfiles, impresora, filamentos múltiples, diseño, posprocesado, ganancia con multiplicador, comisiones externas',
       'Sección Presupuestos: ítems dinámicos, cotizaciones extra, envío WhatsApp/Email, PDF',
@@ -4764,6 +4778,196 @@ function renderDashboard(){
   updateSidebarPrinterSelect();
 
 // ════════════════════════════════
+// SHARED PRICE HELPER
+// ════════════════════════════════
+function onPrecioARS(arsId, usdId, hintId){
+  const ars = parseFloat(document.getElementById(arsId)?.value)||0;
+  const usdEl = document.getElementById(usdId);
+  const hint = document.getElementById(hintId);
+  if(_dolarRate && ars > 0){
+    if(usdEl){ usdEl.value = (ars/_dolarRate).toFixed(2); }
+    if(hint) hint.textContent = `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
+  } else {
+    if(usdEl){ usdEl.value = ''; }
+    if(hint) hint.textContent = _dolarRate ? `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS` : 'Sin cotización';
+  }
+}
+
+// ════════════════════════════════
+// MATERIALES — CARD GRID
+// ════════════════════════════════
+function renderMateriales(){
+  const sr = document.getElementById('mat-stats-row');
+  if(sr){
+    const total = DB.materiales.length;
+    const stockOk = DB.materiales.filter(m=>(m.stock/m.total)>0.2).length;
+    const bajo = DB.materiales.filter(m=>m.stock>0&&(m.stock/m.total)<=0.2).length;
+    const totalKg = DB.materiales.reduce((a,m)=>a+(m.stock||0),0)/1000;
+    sr.innerHTML=`
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${total}</div><div class="stat-delta neutral">filamentos</div></div>
+      <div class="stat-card"><div class="stat-label">Stock OK</div><div class="stat-value" style="color:var(--teal)">${stockOk}</div><div class="stat-delta up">disponibles</div></div>
+      <div class="stat-card"><div class="stat-label">Stock bajo</div><div class="stat-value" style="color:var(--amber)">${bajo}</div><div class="stat-delta neutral">≤ 20%</div></div>
+      <div class="stat-card"><div class="stat-label">Stock total</div><div class="stat-value">${totalKg.toFixed(2)}</div><div class="stat-delta neutral">kg</div></div>`;
+  }
+  // Populate filter selects
+  const tipoSel = document.getElementById('mat-filter-tipo');
+  const colorSel = document.getElementById('mat-filter-color');
+  const marcaSel = document.getElementById('mat-filter-marca');
+  if(tipoSel){
+    const prevT = tipoSel.value;
+    tipoSel.innerHTML = '<option value="">Material</option>';
+    [...new Set(DB.materiales.map(m=>m.tipo))].sort().forEach(t=>{ const o=document.createElement('option'); o.value=t; o.textContent=t; if(t===prevT) o.selected=true; tipoSel.appendChild(o); });
+  }
+  if(colorSel){
+    const prevC = colorSel.value;
+    colorSel.innerHTML = '<option value="">Color</option>';
+    [...new Set(DB.materiales.map(m=>m.color))].sort().forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; if(c===prevC) o.selected=true; colorSel.appendChild(o); });
+  }
+  if(marcaSel){
+    const prevM = marcaSel.value;
+    marcaSel.innerHTML = '<option value="">Marca</option>';
+    [...new Set(DB.materiales.map(m=>m.marca).filter(m=>m&&m!=='—'))].sort().forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; if(m===prevM) o.selected=true; marcaSel.appendChild(o); });
+  }
+  const search = (document.getElementById('mat-search')?.value||'').toLowerCase();
+  const fTipo = document.getElementById('mat-filter-tipo')?.value||'';
+  const fColor = document.getElementById('mat-filter-color')?.value||'';
+  const fMarca = document.getElementById('mat-filter-marca')?.value||'';
+  let list = DB.materiales.filter(m=>{
+    if(fTipo && m.tipo!==fTipo) return false;
+    if(fColor && m.color!==fColor) return false;
+    if(fMarca && m.marca!==fMarca) return false;
+    if(search && !(`${m.tipo} ${m.color} ${m.marca}`).toLowerCase().includes(search)) return false;
+    return true;
+  });
+  const grid = document.getElementById('materiales-grid'); if(!grid) return;
+  if(!list.length){
+    grid.innerHTML=`<div class="add-card" style="grid-column:1/-1;min-height:140px" onclick="openMatModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      <span>Agregar primer filamento</span></div>`; return;
+  }
+  grid.innerHTML = list.map(m=>{
+    const pct = m.total>0 ? Math.round((m.stock/m.total)*100) : 0;
+    const c = pct>50?'var(--teal)':pct>20?'var(--amber)':'var(--coral)';
+    const colorObj = MAT_COLORES.find(x=>x.id===m.color)||{hex:'#888'};
+    const hex = colorObj.hex==='transparent-clear'?'rgba(200,200,200,0.3)':colorObj.hex;
+    const arsStr = m.precioARS ? `$${Math.round(m.precioARS).toLocaleString('es-AR')}/kg` : m.precio ? `US$${parseFloat(m.precio||0).toFixed(2)}/kg` : '';
+    return `<div class="panel" style="border:0.5px solid var(--border)">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+        ${m.imagen?`<img src="${m.imagen}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;flex-shrink:0">`
+          :`<div style="width:48px;height:48px;border-radius:8px;border:0.5px solid var(--border2);flex-shrink:0;background:${hex};display:flex;align-items:center;justify-content:center">
+              <div style="width:24px;height:24px;border-radius:50%;background:${hex};border:1.5px solid rgba(255,255,255,0.4)"></div>
+            </div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">${m.tipo} ${m.color}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:1px">${m.marca||'—'}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px">${MAT_TIPOS.find(t=>t.id===m.tipo)?.desc||''}</div>
+        </div>
+        <div style="display:flex;gap:4px">
+          <button onclick="editMaterial('${m.id}')" title="Editar" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:14px">✏️</button>
+          <button onclick="deleteMaterial('${m.id}')" title="Eliminar" style="background:none;border:none;color:var(--coral);cursor:pointer;padding:4px;font-size:14px">🗑</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:11px;color:var(--text2)">Stock</span>
+        <span style="font-size:11px;font-weight:700;color:${c};font-family:var(--mono)">${m.stock}g / ${m.total}g (${pct}%)</span>
+      </div>
+      <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px">
+        <div style="height:100%;width:${pct}%;background:${c};border-radius:3px"></div>
+      </div>
+      ${arsStr?`<div style="font-size:12px;font-weight:700;color:var(--accent);font-family:var(--mono)">${arsStr}</div>`:''}
+      ${m.url?`<a href="${m.url}" target="_blank" style="font-size:10px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 Ver compra</a>`:''}
+    </div>`;
+  }).join('')+`<div class="add-card" onclick="openMatModal()" style="min-height:120px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>Nuevo filamento</span></div>`;
+}
+
+// ════════════════════════════════
+// ACCESORIOS — CARD GRID
+// ════════════════════════════════
+let _filtroAccesorios = 'todos';
+function filterAccesorios(f, btn){
+  _filtroAccesorios = f;
+  document.querySelectorAll('#sec-accesorios .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderAccesorios();
+}
+
+function renderAccesorios(){
+  const f = _filtroAccesorios||'todos';
+  let list = f==='todos' ? DB.accesorios : DB.accesorios.filter(a=>a.categoria===f);
+  const tbody = document.getElementById('accesorios-tbody');
+  if(!tbody) return;
+  if(!list.length){
+    tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text3)">
+      <div style="cursor:pointer" onclick="openAccesorioModal()">Sin accesorios — <span style="color:var(--accent)">+ Agregar</span></div></td></tr>`;
+    return;
+  }
+  const stColors={ok:'var(--teal)',bajo:'var(--amber)',vacio:'var(--coral)'};
+  tbody.innerHTML = list.map(a=>{
+    const pct = a.stockMin>0 ? a.stock/a.stockMin : 1;
+    const st = pct>=1?'ok':pct>0?'bajo':'vacio';
+    const sc = stColors[st];
+    const arsStr = a.precioARS ? `$${Math.round(a.precioARS).toLocaleString('es-AR')}` : a.precio ? `US$${parseFloat(a.precio||0).toFixed(2)}` : '—';
+    return `<tr>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${a.codigo||'—'}</span></td>
+      <td style="max-width:220px">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${a.imagen?`<img src="${a.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>`}
+          <div><strong style="font-size:12px">${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3)">${a.notas}</div>`:''}</div>
+        </div>
+      </td>
+      <td><span class="badge badge-gray">${a.categoria}</span></td>
+      <td style="font-size:12px;color:var(--text2)">${a.marca||'—'}</td>
+      <td style="font-family:var(--mono);font-size:12px;color:${sc};font-weight:700">${a.stock} ${a.unidad||'Und'}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${a.stockMin||0}</td>
+      <td style="font-size:12px;font-family:var(--mono)">${arsStr}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm" onclick="editAccesorio('${a.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteAccesorio('${a.id}')">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════
+// ACERCA DE
+// ════════════════════════════════
+function renderAcercaDe(){
+  const vb = document.getElementById('version-badge-main');
+  const vf = document.getElementById('version-fecha-main');
+  if(vb) vb.textContent = APP_VERSION.version;
+  if(vf) vf.textContent = APP_VERSION.fecha;
+  const st = document.getElementById('acercade-stats');
+  if(st) st.innerHTML=`
+    <div class="stat-card"><div class="stat-label">Proyectos</div><div class="stat-value">${DB.proyectos.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Materiales</div><div class="stat-value">${DB.materiales.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Presupuestos</div><div class="stat-value">${DB.presupuestos.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Calibración</div><div class="stat-value">${DB.calibracion.length}</div></div>`;
+  const cl = document.getElementById('changelog-list');
+  if(!cl) return;
+  cl.innerHTML = APP_VERSION.changelog.map((ver,i)=>`
+    <div style="background:var(--bg2);border-radius:var(--r2);border:0.5px solid var(--border);overflow:hidden;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg3);border-bottom:0.5px solid var(--border);cursor:pointer"
+        onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:15px;font-weight:700;font-family:var(--mono);color:${i===0?'var(--accent)':'var(--text)'}">${ver.v}</span>
+          ${i===0?`<span style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-weight:700">ACTUAL</span>`:''}
+        </div>
+        <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${ver.fecha}</span>
+      </div>
+      <div style="${i===0?'display:block':'display:none'};padding:12px 16px">
+        ${ver.cambios.map(c=>`
+          <div style="display:flex;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text2)">
+            <span style="color:var(--teal);flex-shrink:0">✓</span><span>${c}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════
 // SECTION ROUTER
 // ════════════════════════════════
 function renderSection(id){
@@ -4771,7 +4975,7 @@ function renderSection(id){
   else if(id==='proyectos'){ document.getElementById('proyectos-grid').innerHTML=renderProyectos(_filtroProyectos); }
   else if(id==='impresoras') renderImpresoras();
   else if(id==='cola') renderCola();
-  else if(id==='materiales') renderMaterialesTable();
+  else if(id==='materiales') renderMateriales();
   else if(id==='accesorios') renderAccesorios();
   else if(id==='calibracion') renderCalibracion(_filtroCalibracion);
   else if(id==='presupuestos') renderPresupuestos(_filtroPresupuestos);
