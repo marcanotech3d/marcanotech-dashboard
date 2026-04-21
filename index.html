@@ -583,7 +583,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="topbar">
     <div class="topbar-left">
       <div class="page-title" id="topbar-title">Dashboard General</div>
-      <div class="page-date" id="topbar-date"></div>
+      <div style="display:flex;align-items:center;gap:12px"><div class="page-date" id="topbar-date"></div><div id="dolar-rate-display" style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargando USD...</div></div>
     </div>
     <div class="topbar-actions">
       <button class="btn btn-ghost btn-sm" id="topbar-add-btn" onclick="openAddModal()">+ Agregar</button>
@@ -667,7 +667,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="section" id="sec-proyectos">
     <div class="section-row" style="margin-top:0">
       <div class="section-title">Todos los proyectos</div>
-      <button class="btn btn-accent btn-sm" onclick="openModal('modal-proyecto')">+ Nuevo proyecto</button>
+      <button class="btn btn-accent btn-sm" onclick="resetProyectoForm();openModal('modal-proyecto')">+ Nuevo proyecto</button>
     </div>
     <div class="tabs">
       <button class="tab active" onclick="filterProyectos('todos',this)">Todos</button>
@@ -1142,11 +1142,12 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
     <!-- PRECIO -->
     <div class="form-group">
-      <label class="form-label">Precio por kg (opcional)</label>
+      <label class="form-label">Precio por kg USD (opcional)</label>
       <div style="position:relative">
         <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:13px">$</span>
-        <input class="form-input" type="number" id="mat-precio" placeholder="0" step="0.01" style="padding-left:28px">
+        <input class="form-input" type="number" id="mat-precio" placeholder="0" step="0.01" style="padding-left:28px" oninput="updatePriceHint('mat-precio','mat-precio-hint')">
       </div>
+      <div id="mat-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
     </div>
 
     <!-- NOTAS -->
@@ -1196,8 +1197,9 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <input class="form-input" id="prod-sku" placeholder="ej: SKU-RC-001">
       </div>
       <div class="form-group">
-        <label class="form-label">Precio de venta ($)</label>
-        <input class="form-input" type="number" id="prod-precio" placeholder="ej: 45.00" step="0.01">
+        <label class="form-label">Precio de venta (USD)</label>
+        <input class="form-input" type="number" id="prod-precio" placeholder="ej: 45.00" step="0.01" oninput="updatePriceHint('prod-precio','prod-precio-hint')">
+        <div id="prod-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
       </div>
     </div>
     <div class="form-row">
@@ -1492,8 +1494,9 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Precio unitario ($)</label>
-        <input class="form-input" type="number" id="venta-precio" placeholder="ej: 45.00" step="0.01" oninput="calcVentaTotal()">
+        <label class="form-label">Precio unitario (USD)</label>
+        <input class="form-input" type="number" id="venta-precio" placeholder="ej: 45.00" step="0.01" oninput="calcVentaTotal();updatePriceHint('venta-precio','venta-precio-hint')">
+        <div id="venta-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
       </div>
       <div class="form-group">
         <label class="form-label">Total ($)</label>
@@ -1576,8 +1579,9 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <input class="form-input" type="number" id="comp-stock" placeholder="ej: 2" value="1">
       </div>
       <div class="form-group">
-        <label class="form-label">Precio ($)</label>
-        <input class="form-input" type="number" id="comp-precio" placeholder="ej: 35.00" step="0.01">
+        <label class="form-label">Precio (USD)</label>
+        <input class="form-input" type="number" id="comp-precio" placeholder="ej: 35.00" step="0.01" oninput="updatePriceHint('comp-precio','comp-precio-hint')">
+        <div id="comp-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
       </div>
     </div>
     <div class="form-row">
@@ -1632,20 +1636,31 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="modal-title" id="acc-modal-title">Agregar Accesorio</div>
     <input type="hidden" id="accesorio-edit-id">
 
-    <!-- CÓDIGO AUTO -->
-    <div class="form-group">
-      <label class="form-label">Código de referencia</label>
-      <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;">
-        <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600" id="acc-codigo-display">MT3-0001</span>
-        <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">(auto-generado)</span>
+    <!-- IMAGEN + CÓDIGO -->
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <label class="form-label">Imagen</label>
+        <div id="acc-img-preview" onclick="document.getElementById('acc-imagen-file').click()" style="width:80px;height:72px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="acc-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'acc-img-preview','acc-imagen')">
+        <input type="hidden" id="acc-imagen">
       </div>
-      <input type="hidden" id="acc-codigo">
-    </div>
-
-    <!-- NOMBRE -->
-    <div class="form-group">
-      <label class="form-label">Nombre <span style="color:var(--coral)">*</span></label>
-      <input class="form-input" id="acc-nombre" placeholder="Ej: Laca para cama, Espátula...">
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Código de referencia</label>
+          <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px;">
+            <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600" id="acc-codigo-display">MT3-0001</span>
+            <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
+          </div>
+          <input type="hidden" id="acc-codigo">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Nombre <span style="color:var(--coral)">*</span></label>
+          <input class="form-input" id="acc-nombre" placeholder="Ej: Laca para cama, Espátula...">
+        </div>
+      </div>
     </div>
 
     <!-- CATEGORIA + MARCA -->
@@ -1699,11 +1714,12 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
     <!-- PRECIO -->
     <div class="form-group">
-      <label class="form-label">Precio unitario (opcional)</label>
+      <label class="form-label">Precio unitario USD (opcional)</label>
       <div style="position:relative">
         <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:13px">$</span>
-        <input class="form-input" type="number" id="acc-precio" placeholder="0" step="0.01" style="padding-left:28px">
+        <input class="form-input" type="number" id="acc-precio" placeholder="0" step="0.01" style="padding-left:28px" oninput="updatePriceHint('acc-precio','acc-precio-hint')">
       </div>
+      <div id="acc-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
     </div>
 
     <!-- NOTAS -->
@@ -2222,7 +2238,32 @@ function showSection(id, navEl){
 function openAddModal(){
   if(currentSection==='materiales') { openMatModal(); return; }
   if(currentSection==='accesorios') { openAccesorioModal(); return; }
+  if(currentSection==='proyectos') { resetProyectoForm(); openModal('modal-proyecto'); return; }
+  if(currentSection==='componentes') { resetComponenteForm(); openModal('modal-componente'); return; }
   if(addBtnModals[currentSection]) openModal(addBtnModals[currentSection]);
+}
+
+function resetProyectoForm(){
+  document.getElementById('proyecto-edit-id').value='';
+  document.getElementById('modal-proyecto-title').textContent='Nuevo proyecto';
+  document.querySelector('#modal-proyecto .btn-accent').textContent='Guardar proyecto';
+  clearForm(['proy-nombre','proy-material','proy-progreso','proy-notas','proy-tiempo','proy-color']);
+  document.getElementById('proy-estado').value='diseño';
+  document.getElementById('proy-tipo').value='Touring / Drift';
+  document.getElementById('proy-emoji').value='🖨️';
+  resetImgPreview('proy-img-preview','proy-imagen');
+}
+
+function resetComponenteForm(){
+  document.getElementById('comp-edit-id').value='';
+  clearForm(['comp-nombre','comp-marca','comp-modelo','comp-specs','comp-precio']);
+  document.getElementById('comp-stock').value=1;
+  document.getElementById('comp-estado').value='disponible';
+  document.getElementById('comp-categoria').value='motor';
+  resetImgPreview('comp-img-preview','comp-imagen');
+  const codigo = nextCompCodigo();
+  document.getElementById('comp-codigo-val').value=codigo;
+  document.getElementById('comp-codigo-display').textContent=codigo;
 }
 
 // ════════════════════════════════
@@ -2368,8 +2409,8 @@ function renderProyectos(filter='todos'){
     : list.map(p=>{
         const ec=estadoConfig[p.estado]||{label:p.estado,cls:'badge-gray',color:'var(--text3)'};
         const bg=p.color||'#38d9a9';
-        return `<div class="project-card" onclick="editProyecto('${p.id}')">
-          <div class="project-thumb" style="background:linear-gradient(135deg,${bg}22,${bg}08);overflow:hidden;padding:0">${p.imagen ? `<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:28px">${p.emoji||'🖨️'}</span>`}</div>
+        return `<div class="project-card" onclick="editProyecto('${p.id}')" style="display:grid;grid-template-columns:110px 1fr;overflow:hidden">
+          <div style="background:linear-gradient(135deg,${bg}22,${bg}08);display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:110px">${p.imagen ? `<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:32px">${p.emoji||'🖨️'}</span>`}</div>
           <div class="project-body">
             <div class="project-name">${p.nombre}</div>
             <div class="project-meta">${p.material||'—'} · ${p.tipo||'—'}</div>
@@ -2735,11 +2776,15 @@ function renderProductos(){
     const sc=p.stock===0?'stock-out':p.stock<=2?'stock-low':'stock-ok';
     const sl=p.stock===0?'agotado':p.stock<=2?`${p.stock} (bajo)`:`${p.stock} en stock`;
     return `<div class="product-card" onclick="editProducto('${p.id}')">
-      <div class="prod-emoji" style="height:50px;display:flex;align-items:center;justify-content:center">${p.imagen ? `<img src="${p.imagen}" style="height:48px;width:72px;object-fit:cover;border-radius:8px">` : `<span style="font-size:28px">${p.emoji||'📦'}</span>`}</div>
-      <div class="prod-name">${p.nombre}</div>
-      <div class="prod-sku">${p.sku}</div>
-      <div class="prod-price">$${parseFloat(p.precio||0).toFixed(2)}</div>
-      <div class="prod-stock ${sc}">● ${sl}</div>
+      <div style="display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:start">
+        <div style="height:70px;overflow:hidden;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center">${p.imagen?`<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:28px">${p.emoji||'📦'}</span>`}</div>
+        <div>
+          <div class="prod-name">${p.nombre}</div>
+          <div class="prod-sku">${p.sku}</div>
+          <div class="prod-price">$${parseFloat(p.precio||0).toFixed(2)} <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">${usdToArs(p.precio)?Math.round(usdToArs(p.precio)).toLocaleString("es-AR")+' ARS':''}</span></div>
+          <div class="prod-stock ${sc}">● ${sl}</div>
+        </div>
+      </div>
     </div>`;
   }).join('')+`<div class="add-card" onclick="openModal('modal-producto')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo producto</span></div>`;
 }
@@ -3054,7 +3099,8 @@ function calcularCosto(){
   const costElec=h*consumoW*kwh;
   const costBase=costMat+costElec;
   const precioVenta=costBase*(1+(margen/100));
-  document.getElementById('calc-result').textContent=`$${precioVenta.toFixed(2)}`;
+  const arsVenta = usdToArs(precioVenta);
+  document.getElementById('calc-result').innerHTML=`$${precioVenta.toFixed(2)} USD${arsVenta?` / $${Math.round(arsVenta).toLocaleString('es-AR')} ARS`:''}`;
   document.getElementById('calc-breakdown').textContent=
     `Material: $${costMat.toFixed(2)} | Electricidad: $${costElec.toFixed(2)} | Costo base: $${costBase.toFixed(2)} | Margen ${margen}%`;
 }
@@ -3172,8 +3218,8 @@ function renderDashboard(){
     pg.innerHTML=recent.map(p=>{
       const ec=estadoConfig[p.estado]||{label:p.estado,cls:'badge-gray'};
       const bg=p.color||'#38d9a9';
-      return `<div class="project-card" onclick="editProyecto('${p.id}')">
-        <div class="project-thumb" style="background:linear-gradient(135deg,${bg}22,${bg}08);overflow:hidden;padding:0">${p.imagen?`<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:28px">${p.emoji||'🖨️'}</span>`}</div>
+      return `<div class="project-card" onclick="editProyecto('${p.id}')" style="display:grid;grid-template-columns:100px 1fr;overflow:hidden">
+        <div style="background:linear-gradient(135deg,${bg}22,${bg}08);display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:100px">${p.imagen?`<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:28px">${p.emoji||'🖨️'}</span>`}</div>
         <div class="project-body">
           <div class="project-name">${p.nombre}</div>
           <div class="project-meta">${p.material||'—'}</div>
@@ -3354,7 +3400,7 @@ function renderVentas(){
   const ventasMes=DB.ventas.filter(v=>v.fecha&&v.fecha.startsWith(thisMonth));
   const totalMes=ventasMes.reduce((a,v)=>a+v.total,0);
   if(sr) sr.innerHTML=`
-    <div class="stat-card"><div class="stat-label">Total cobrado</div><div class="stat-value">$${totalCobrado.toFixed(0)}</div><div class="stat-delta up">${DB.ventas.filter(v=>v.estado==='cobrado').length} ventas</div></div>
+    <div class="stat-card"><div class="stat-label">Total cobrado</div><div class="stat-value">$${totalCobrado.toFixed(0)}</div><div class="stat-delta neutral" style="font-size:10px">${usdToArs(totalCobrado)?'≈ $'+Math.round(usdToArs(totalCobrado)).toLocaleString('es-AR')+' ARS':''}</div><div class="stat-delta up">${DB.ventas.filter(v=>v.estado==='cobrado').length} ventas</div></div>
     <div class="stat-card"><div class="stat-label">Pendiente cobro</div><div class="stat-value" style="color:var(--amber)">$${totalPendiente.toFixed(0)}</div><div class="stat-delta neutral">${DB.ventas.filter(v=>v.estado==='pendiente').length} pendientes</div></div>
     <div class="stat-card"><div class="stat-label">Este mes</div><div class="stat-value">$${totalMes.toFixed(0)}</div><div class="stat-delta neutral">${ventasMes.length} ventas</div></div>
     <div class="stat-card"><div class="stat-label">Total ventas</div><div class="stat-value">${DB.ventas.length}</div><div class="stat-delta neutral">historial completo</div></div>`;
@@ -3704,9 +3750,11 @@ function openAccesorioModal(editId=''){
   document.getElementById('acc-stock').value = 1;
   document.getElementById('acc-stock-min').value = 1;
   document.getElementById('acc-categoria').value = 'Consumible';
+  document.getElementById('acc-unidad').value = 'Und';
   const codigo = nextCodigoAccesorio();
   document.getElementById('acc-codigo').value = codigo;
   document.getElementById('acc-codigo-display').textContent = codigo;
+  resetImgPreview('acc-img-preview','acc-imagen');
   openModal('modal-accesorio');
 }
 
@@ -3725,7 +3773,8 @@ function saveAccesorio(){
       stock: parseInt(document.getElementById('acc-stock').value)||0,
       stockMin: parseInt(document.getElementById('acc-stock-min').value)||1,
       precio: parseFloat(document.getElementById('acc-precio').value)||0,
-      notas: document.getElementById('acc-notas').value||''
+      notas: document.getElementById('acc-notas').value||'',
+      imagen: document.getElementById('acc-imagen').value||''
     };
     if(editId){ DB.accesorios = DB.accesorios.map(a=>a.id===editId?obj:a); }
     else{ DB.accesorios.push(obj); logActivity(`Accesorio <strong>${obj.nombre}</strong> registrado [${obj.codigo}]`); }
@@ -3761,6 +3810,10 @@ function editAccesorio(id){
   document.getElementById('acc-unidad').value = a.unidad||'Und';
   document.getElementById('acc-precio').value = a.precio||'';
   document.getElementById('acc-notas').value = a.notas||'';
+  const imgValAcc = a.imagen||'';
+  document.getElementById('acc-imagen').value = imgValAcc;
+  if(imgValAcc){ document.getElementById('acc-img-preview').innerHTML=`<img src="${imgValAcc}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
+  else{ resetImgPreview('acc-img-preview','acc-imagen'); }
   openModal('modal-accesorio');
 }
 
@@ -3791,7 +3844,7 @@ function renderAccesorios(){
     const cc = catColors[a.categoria]||'var(--text3)';
     return `<tr>
       <td><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:rgba(232,255,71,0.08);padding:3px 8px;border-radius:6px">${a.codigo||'—'}</span></td>
-      <td style="max-width:200px"><strong>${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${a.notas}</div>`:''}</td>
+      <td style="max-width:220px"><div style="display:flex;align-items:center;gap:8px">${a.imagen?`<img src="${a.imagen}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0">`:'<div style="width:36px;height:36px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>'}<div><strong>${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${a.notas}</div>`:''}</div></div></td>
       <td><span class="badge" style="background:${cc}22;color:${cc}">${a.categoria}</span></td>
       <td class="mono">${a.marca}</td>
       <td class="mono" style="color:${stColor};font-weight:700">${a.stock} <span style="color:var(--text3)">${a.unidad||'Und'}</span></td>
@@ -3874,6 +3927,63 @@ function previewImpImg(input){
   reader.readAsDataURL(file);
 }
 
+
+// ════════════════════════════════
+// TIPO DE CAMBIO — dolarhoy.com
+// ════════════════════════════════
+let _dolarRate = null;
+let _dolarLastFetch = 0;
+
+async function fetchDolar(){
+  const now = Date.now();
+  if(_dolarRate && (now - _dolarLastFetch) < 3600000) return _dolarRate; // cache 1hr
+  try{
+    const res = await fetch('https://dolarapi.com/v1/dolares/oficial');
+    const data = await res.json();
+    _dolarRate = parseFloat(data.venta);
+    _dolarLastFetch = now;
+    localStorage.setItem('wl_dolar', JSON.stringify({rate:_dolarRate,ts:now}));
+    updateDolarDisplay();
+    return _dolarRate;
+  } catch(e){
+    // Try cached value
+    const cached = JSON.parse(localStorage.getItem('wl_dolar')||'null');
+    if(cached){ _dolarRate = cached.rate; _dolarLastFetch = cached.ts; return _dolarRate; }
+    return null;
+  }
+}
+
+function usdToArs(usd){
+  if(!_dolarRate || !usd) return null;
+  return usd * _dolarRate;
+}
+
+function arsToUsd(ars){
+  if(!_dolarRate || !ars) return null;
+  return ars / _dolarRate;
+}
+
+function formatDual(usdVal){
+  // Returns "$ X.XX USD / $ Y.YY ARS"
+  if(!usdVal || usdVal===0) return '$0.00';
+  const ars = usdToArs(usdVal);
+  if(!ars) return `$${parseFloat(usdVal).toFixed(2)}`;
+  return `$${parseFloat(usdVal).toFixed(2)} USD <span style="color:var(--text3);font-size:0.85em">/ $${Math.round(ars).toLocaleString('es-AR')} ARS</span>`;
+}
+
+function updateDolarDisplay(){
+  const el = document.getElementById('dolar-rate-display');
+  if(el && _dolarRate) el.innerHTML = `<span style="color:var(--teal)">●</span> USD oficial: <strong>$${_dolarRate.toLocaleString('es-AR')}</strong> ARS`;
+}
+
+
+function updatePriceHint(inputId, hintId){
+  const val = parseFloat(document.getElementById(inputId).value)||0;
+  const hint = document.getElementById(hintId);
+  if(!hint) return;
+  const ars = usdToArs(val);
+  hint.textContent = ars ? '≈ $'+Math.round(ars).toLocaleString('es-AR')+' ARS' : '';
+}
 // ════════════════════════════════
 // THEME SYSTEM
 // ════════════════════════════════
@@ -3949,6 +4059,7 @@ const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','
 document.getElementById('topbar-date').textContent=`${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
 document.getElementById('topbar-add-btn').style.display='none';
 initTheme();
+fetchDolar();
 updateBadges();
 renderDashboard();
 updateSidebarPrinterSelect();
