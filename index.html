@@ -1830,6 +1830,7 @@ function fbWrite(key, data){
   toSave = sanitizeForFirebase(toSave);
   // Use onAuthStateChanged result - currentUser may be null during init
   if(_firebaseUserReady){
+    if(window._fbWriteTs) window._fbWriteTs();
     fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
   } else {
     _pendingWrites[key] = toSave; // queue until auth resolves
@@ -2030,7 +2031,7 @@ function firebaseToArray(val){
 }
 
 function subscribeData(){
-  fbRef.on('value', snapshot=>{
+  fbRef.once('value').then(snapshot=>{
     const fbData = snapshot.val();
     if(fbData){
       Object.keys(KEYS).forEach(k=>{
@@ -2062,9 +2063,47 @@ function subscribeData(){
       pushAllToFirebase();
     }
     showSyncStatus('online');
-  }, err=>{
+    // After initial load, listen for changes from OTHER devices
+    // Use a timestamp to avoid re-applying our own writes
+    setupRealtimeSync();
+  }).catch(err=>{
     console.warn('Firebase read error:', err);
     showSyncStatus('error');
+  });
+}
+
+function setupRealtimeSync(){
+  // Listen for changes - but skip if we just wrote (avoid echo)
+  let _lastWriteTime = 0;
+  const origFbWrite = fbWrite;
+  window._fbWriteTs = ()=>{ _lastWriteTime = Date.now(); };
+  
+  fbRef.on('value', snapshot=>{
+    // If we wrote recently (<2s ago), skip - it's our own echo
+    if(Date.now() - _lastWriteTime < 2000) return;
+    const fbData = snapshot.val();
+    if(!fbData) return;
+    Object.keys(KEYS).forEach(k=>{
+      if(fbData[k] !== undefined && fbData[k] !== null){
+        const fromFirebase = firebaseToArray(fbData[k]);
+        // Only update if Firebase has data we don't have locally
+        if(fromFirebase.length > (DB[k]||[]).length){
+          const fromLocal = loadLocal(k) || [];
+          const localMap = {};
+          fromLocal.forEach(item=>{ if(item&&item.id) localMap[item.id]=item; });
+          DB[k] = fromFirebase.map(item=>{
+            if(item&&item.id&&localMap[item.id]&&localMap[item.id].imagen)
+              return Object.assign({},item,{imagen:localMap[item.id].imagen});
+            return item;
+          });
+          saveLocal(k, DB[k]);
+          hydrateImagesFromStorage(DB[k], k);
+        }
+      }
+    });
+    updateBadges();
+    renderSection(currentSection);
+    showSyncStatus('online');
   });
 }
 
