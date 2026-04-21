@@ -315,6 +315,23 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   .grid-3{grid-template-columns:1fr;}
 }
 
+/* ─── COST CALCULATOR ─── */
+.calc-card{background:var(--bg2);border-radius:var(--r2);border:0.5px solid var(--border);padding:16px;}
+.calc-card-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.calc-currency-btn{padding:8px 18px;border-radius:8px;border:none;background:none;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s;}
+.calc-currency-btn.active{background:var(--blue);color:#fff;}
+.calc-currency-btn:hover:not(.active){background:var(--bg4);color:var(--text);}
+.calc-toggle-btn{flex:1;padding:9px 12px;border-radius:8px;border:none;background:var(--bg3);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s;}
+.calc-toggle-btn.active{background:var(--blue);color:#fff;}
+.calc-preset-btn{padding:9px 8px;border-radius:8px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s;text-align:center;}
+.calc-preset-btn:hover{border-color:var(--blue);color:var(--blue);}
+.calc-preset-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.calc-result-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
+.calc-result-row:last-child{border-bottom:none;}
+.calc-result-row .label{color:var(--text2);display:flex;align-items:center;gap:6px;}
+.calc-result-row .val{font-family:var(--mono);color:var(--text);}
+.calc-filamento-row{background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border);margin-bottom:8px;}
+
 /* ─── MATERIAL MODAL ─── */
 .mat-peso-btn{
   padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;
@@ -466,7 +483,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
     <div>
       <div class="logo-text">MarcanoTech 3D</div>
-      <div class="logo-sub">Workshop Dashboard</div>
+      <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.6</span></div>
     </div>
   </div>
   <nav class="nav">
@@ -496,6 +513,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       Materiales
       <span class="nav-badge" id="badge-materiales">0</span>
     </button>
+    <button class="nav-item" onclick="showSection('calibracion',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+      Calibración
+      <span class="nav-badge" id="badge-calibracion">0</span>
+    </button>
     <button class="nav-item" onclick="showSection('accesorios',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       Accesorios
@@ -521,6 +543,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       Ventas
       <span class="nav-badge" id="badge-ventas">0</span>
     </button>
+    <button class="nav-item" onclick="showSection('presupuestos',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Presupuestos
+      <span class="nav-badge" id="badge-presupuestos">0</span>
+    </button>
     <button class="nav-item" onclick="showSection('componentes',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
       Componentes RC
@@ -541,6 +568,10 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <button class="nav-item" onclick="showSection('estadisticas',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Estadísticas
+    </button>
+    <button class="nav-item" onclick="showSection('acercade',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Acerca de
     </button>
   </nav>
   <div class="sidebar-footer" style="padding:0">
@@ -718,6 +749,23 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
   </div>
 
+  <!-- ── CALIBRACIÓN ── -->
+  <div class="section" id="sec-calibracion">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Perfiles de calibración</div>
+      <button class="btn btn-accent btn-sm" onclick="openCalModal()">+ Nuevo perfil</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterCalibracion('todos',this)">Todos</button>
+      <button class="tab" onclick="filterCalibracion('PLA',this)">PLA</button>
+      <button class="tab" onclick="filterCalibracion('PETG',this)">PETG</button>
+      <button class="tab" onclick="filterCalibracion('TPU',this)">TPU</button>
+      <button class="tab" onclick="filterCalibracion('ABS',this)">ABS/ASA</button>
+      <button class="tab" onclick="filterCalibracion('otro',this)">Otros</button>
+    </div>
+    <div id="calibracion-grid" class="grid-2"></div>
+  </div>
+
   <!-- ── ACCESORIOS ── -->
   <div class="section" id="sec-accesorios">
     <div class="section-row" style="margin-top:0">
@@ -770,52 +818,260 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
   <!-- ── COSTOS ── -->
   <div class="section" id="sec-costos">
-    <div class="section-row" style="margin-top:0">
-      <div class="section-title">Calculadora de costos</div>
-    </div>
-    <div class="grid-2">
-      <div class="panel">
-        <div class="panel-title">Calcular costo de pieza</div>
-        <div class="form-group">
-          <label class="form-label">Filamento utilizado (g)</label>
-          <input class="form-input" type="number" id="calc-gramos" placeholder="ej: 45" oninput="calcularCosto()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Material</label>
-          <select class="form-input" id="calc-material" onchange="calcularCosto()">
-            <option value="">Seleccionar...</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tiempo de impresión (horas)</label>
-          <input class="form-input" type="number" id="calc-horas" placeholder="ej: 3.5" step="0.5" oninput="calcularCosto()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Costo electricidad ($/kWh)</label>
-          <input class="form-input" type="number" id="calc-kwh" placeholder="ej: 0.12" step="0.01" value="0.12" oninput="calcularCosto()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Margen de ganancia (%)</label>
-          <input class="form-input" type="number" id="calc-margen" placeholder="ej: 40" value="40" oninput="calcularCosto()">
-        </div>
-        <div class="calc-panel">
-          <div class="form-label">Resultado</div>
-          <div class="calc-result" id="calc-result">$0.00</div>
-          <div class="calc-breakdown" id="calc-breakdown">Completá los campos para calcular</div>
-        </div>
+    <!-- Header -->
+    <div style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <div style="font-size:22px;font-weight:700;color:var(--text)">Calculadora de Costos</div>
+        <div style="width:22px;height:22px;border-radius:50%;border:1.5px solid var(--text3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);cursor:help" title="Calculá el precio justo para tus impresiones 3D considerando todos los costos reales">?</div>
       </div>
-      <div>
-        <div class="panel" style="margin-bottom:12px;">
-          <div class="panel-title">Precios de materiales ($/kg)</div>
-          <div id="costos-materiales-list"></div>
+      <div style="font-size:13px;color:var(--text3)">Calculá el precio justo para tus impresiones 3D</div>
+    </div>
+
+    <!-- MONEDA -->
+    <div style="display:flex;gap:4px;background:var(--bg3);padding:4px;border-radius:10px;border:0.5px solid var(--border);margin-bottom:20px;width:fit-content">
+      <button class="calc-currency-btn active" id="calc-cur-ARS" onclick="setCalcMoneda('ARS')">ARS $</button>
+      <button class="calc-currency-btn" id="calc-cur-USD" onclick="setCalcMoneda('USD')">USD US$</button>
+      <button class="calc-currency-btn" id="calc-cur-EUR" onclick="setCalcMoneda('EUR')">EUR €</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:16px;align-items:start">
+      <!-- LEFT COLUMN: inputs -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- PERFILES DE IMPRESIÓN -->
+        <div class="calc-card" style="border-left:3px solid var(--blue)">
+          <div class="calc-card-title" style="color:var(--blue)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            Perfiles de Impresión
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="form-input" id="calc-perfil-nombre" placeholder="Nombre" style="flex:1">
+            <button class="btn btn-sm" style="background:var(--blue);color:#fff;border:none;white-space:nowrap" onclick="guardarPerfilCalc()">💾 Guardar perfil</button>
+            <select class="form-input" id="calc-perfil-select" onchange="cargarPerfilCalc(this.value)" style="flex:1">
+              <option value="">⬇ Carg...</option>
+            </select>
+          </div>
         </div>
-        <div class="panel">
-          <div class="panel-title">Resumen financiero</div>
-          <div id="resumen-financiero"></div>
+
+        <!-- GASTOS FIJOS -->
+        <div class="calc-card" style="border-left:3px solid var(--blue)">
+          <div class="calc-card-title" style="color:var(--blue)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Gastos Fijos
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" style="display:flex;align-items:center;gap:6px">Precio kWh <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Precio por kWh de electricidad en tu moneda seleccionada">i</span></label>
+            <input class="form-input" type="number" id="calc-kwh-nuevo" placeholder="ej: 160" step="0.01" oninput="recalcularCosto()">
+          </div>
         </div>
+
+        <!-- IMPRESORA -->
+        <div class="calc-card" style="border-left:3px solid var(--teal)">
+          <div class="calc-card-title" style="color:var(--teal)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Impresora
+          </div>
+          <div id="calc-imp-select-wrap">
+            <select class="form-input" id="calc-impresora" onchange="recalcularCosto()" style="margin-bottom:12px">
+              <option value="">Seleccionar impresora...</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" style="display:flex;align-items:center;gap:6px">Consumo real/hora (W) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Vatios reales consumidos por la impresora">i</span></label>
+              <input class="form-input" type="number" id="calc-watts" placeholder="ej: 120" value="120" oninput="recalcularCosto()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="display:flex;align-items:center;gap:6px">Desgaste máquina (h) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Vida útil estimada de la impresora en horas">i</span></label>
+              <input class="form-input" type="number" id="calc-vida-util" placeholder="ej: 5000" value="5000" oninput="recalcularCosto()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" style="display:flex;align-items:center;gap:6px">Precio repuestos <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Costo total estimado de mantenimiento y repuestos durante la vida útil">i</span></label>
+              <input class="form-input" type="number" id="calc-repuestos" placeholder="ej: 300000" value="300000" oninput="recalcularCosto()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="display:flex;align-items:center;gap:6px">% Margen de error <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="% adicional para cubrir fallas, impresiones fallidas o desperdicio">i</span></label>
+              <input class="form-input" type="number" id="calc-margen-error" placeholder="ej: 15" value="15" min="0" max="100" oninput="recalcularCosto()">
+            </div>
+          </div>
+        </div>
+
+        <!-- PIEZA -->
+        <div class="calc-card" style="border-left:3px solid var(--text2)">
+          <div class="calc-card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Pieza
+          </div>
+          <!-- Filamentos dinámicos -->
+          <div id="calc-filamentos-container"></div>
+          <button onclick="addCalcFilamento()" style="width:100%;padding:10px;border-radius:8px;border:0.5px dashed var(--border2);background:none;color:var(--text3);font-size:13px;cursor:pointer;margin-bottom:12px;font-family:var(--font)">+ Agregar filamento</button>
+          <!-- Tiempo -->
+          <div style="margin-bottom:4px">
+            <label class="form-label" style="display:flex;align-items:center;gap:6px">Tiempo de impresión <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Tiempo total de impresión">i</span></label>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Horas</label>
+              <input class="form-input" type="number" id="calc-horas-nuevo" placeholder="0" min="0" oninput="recalcularCosto()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Minutos</label>
+              <input class="form-input" type="number" id="calc-minutos-nuevo" placeholder="0" min="0" max="59" oninput="recalcularCosto()">
+            </div>
+          </div>
+        </div>
+
+        <!-- EXTRAS -->
+        <div class="calc-card" style="border-left:3px solid var(--purple)">
+          <div class="calc-card-title" style="color:var(--purple)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Extras
+            <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help;margin-left:4px" title="Costos adicionales: lija, pintura, insertos, diseño, etc.">i</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="display:flex;align-items:center;gap:6px">Insumos <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Costo de materiales extra: lija, pintura, insertos de bronce, adhesivos, etc.">i</span></label>
+            <input class="form-input" type="number" id="calc-insumos" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
+          </div>
+          <!-- Diseño y Modelado -->
+          <div style="background:var(--bg3);border-radius:var(--r);padding:12px;margin-bottom:10px;border:0.5px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+              <span style="font-size:13px;font-weight:600;color:var(--text)">Diseño y Modelado 3D</span>
+              <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Costo del diseño o modelado 3D de la pieza">i</span>
+            </div>
+            <div style="display:flex;gap:4px;margin-bottom:10px">
+              <button class="calc-toggle-btn active" id="calc-diseno-fijo-btn" onclick="setCalcToggle('diseno','fijo')">Monto fijo</button>
+              <button class="calc-toggle-btn" id="calc-diseno-hora-btn" onclick="setCalcToggle('diseno','hora')">Por hora</button>
+            </div>
+            <div id="calc-diseno-fijo-wrap">
+              <label class="form-label">Monto fijo</label>
+              <input class="form-input" type="number" id="calc-diseno-fijo" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
+            </div>
+            <div id="calc-diseno-hora-wrap" style="display:none">
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Precio/hora</label><input class="form-input" type="number" id="calc-diseno-precio-hora" placeholder="0" step="0.01" oninput="recalcularCosto()"></div>
+                <div class="form-group"><label class="form-label">Horas</label><input class="form-input" type="number" id="calc-diseno-horas" placeholder="0" step="0.5" oninput="recalcularCosto()"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Posprocesado -->
+          <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              <span style="font-size:13px;font-weight:600;color:var(--text)">Posprocesado</span>
+              <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Lijado, pintado, curado, ensamble, etc.">i</span>
+            </div>
+            <div style="display:flex;gap:4px;margin-bottom:10px">
+              <button class="calc-toggle-btn active" id="calc-postp-fijo-btn" onclick="setCalcToggle('postp','fijo')">Monto fijo</button>
+              <button class="calc-toggle-btn" id="calc-postp-hora-btn" onclick="setCalcToggle('postp','hora')">Por hora</button>
+            </div>
+            <div id="calc-postp-fijo-wrap">
+              <label class="form-label">Monto fijo</label>
+              <input class="form-input" type="number" id="calc-postp-fijo" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
+            </div>
+            <div id="calc-postp-hora-wrap" style="display:none">
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Precio/hora</label><input class="form-input" type="number" id="calc-postp-precio-hora" placeholder="0" step="0.01" oninput="recalcularCosto()"></div>
+                <div class="form-group"><label class="form-label">Horas</label><input class="form-input" type="number" id="calc-postp-horas" placeholder="0" step="0.5" oninput="recalcularCosto()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GANANCIA -->
+        <div class="calc-card" style="border-left:3px solid var(--green)">
+          <div class="calc-card-title" style="color:var(--green)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Ganancia
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:12px">
+            <button class="calc-toggle-btn active" id="calc-gan-mult-btn" onclick="setCalcToggle('ganancia','multiplicador')">Multiplicador</button>
+            <button class="calc-toggle-btn" id="calc-gan-pct-btn" onclick="setCalcToggle('ganancia','porcentaje')">Porcentaje</button>
+          </div>
+          <!-- Multiplicador presets -->
+          <div id="calc-gan-mult-wrap">
+            <label class="form-label" style="display:flex;align-items:center;gap:6px">Margen de ganancia (multiplicador) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Multiplicás el costo base por este factor">i</span></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+              <button class="calc-preset-btn" onclick="setCalcMultiplicador(3)">Mayorista (x3)</button>
+              <button class="calc-preset-btn" onclick="setCalcMultiplicador(4)">Minorista (x4)</button>
+              <button class="calc-preset-btn" onclick="setCalcMultiplicador(5)">Llaveros (x5)</button>
+              <button class="calc-preset-btn" id="calc-mult-custom-btn" onclick="setCalcMultiplicador('custom')">Personalizado</button>
+            </div>
+            <input class="form-input" type="number" id="calc-multiplicador" value="3" step="0.1" min="1" oninput="recalcularCosto()">
+          </div>
+          <div id="calc-gan-pct-wrap" style="display:none">
+            <label class="form-label">Margen de ganancia (%)</label>
+            <input class="form-input" type="number" id="calc-ganancia-pct" placeholder="ej: 40" value="40" min="0" oninput="recalcularCosto()">
+          </div>
+        </div>
+
+        <!-- COMISIONES EXTERNAS -->
+        <div class="calc-card" style="border-left:3px solid var(--amber)">
+          <div class="calc-card-title" style="color:var(--amber)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Comisiones Externas
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" style="display:flex;align-items:center;gap:6px">Comisión externa (%) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Porcentaje de comisión de plataformas como MercadoLibre, Instagram, etc.">i</span></label>
+            <input class="form-input" type="number" id="calc-comision" placeholder="ej: 18" value="0" min="0" max="100" step="0.1" oninput="recalcularCosto()">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: results sticky -->
+      <div style="position:sticky;top:80px;display:flex;flex-direction:column;gap:12px">
+
+        <!-- COSTOS BASE -->
+        <div class="calc-card">
+          <div style="font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:14px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Costos Base
+          </div>
+          <div id="calc-result-base"></div>
+        </div>
+
+        <!-- COSTOS ADICIONALES -->
+        <div class="calc-card">
+          <div style="font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:14px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+            Costos Adicionales
+          </div>
+          <div id="calc-result-adicional"></div>
+        </div>
+
+        <!-- PRECIO FINAL -->
+        <div style="background:rgba(111,207,151,0.08);border:1.5px solid var(--green);border-radius:var(--r2);padding:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+            Precio Final
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:6px">TOTAL A COBRAR</div>
+          <div style="font-size:28px;font-weight:700;color:var(--green);font-family:var(--mono)" id="calc-total-final">$0,00</div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:4px" id="calc-total-alt"></div>
+        </div>
+
+        <!-- COMISIÓN DISPLAY -->
+        <div id="calc-comision-display" style="display:none;background:rgba(240,180,41,0.08);border:1.5px solid var(--amber);border-radius:var(--r2);padding:14px">
+          <div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px">
+            🛒 Comisiones Externas
+          </div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px" id="calc-comision-label">Precio con comisión (+0%)</div>
+          <div style="font-size:22px;font-weight:700;color:var(--amber);font-family:var(--mono)" id="calc-total-comision">$0,00</div>
+        </div>
+
+        <!-- COPIAR RESUMEN -->
+        <button onclick="copiarResumenCosto()" style="width:100%;padding:12px;border-radius:var(--r);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar Resumen
+        </button>
+
       </div>
     </div>
   </div>
+
 
   <!-- ── MANTENIMIENTO ── -->
   <div class="section" id="sec-mantenimiento">
@@ -850,6 +1106,39 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <thead><tr><th>Proyecto</th><th>Estado</th><th>Material</th><th>Progreso</th><th>Notas</th></tr></thead>
         <tbody id="stats-proyectos-tbody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- ── ACERCA DE ── -->
+  <div class="section" id="sec-acercade">
+    <div style="max-width:680px;margin:0 auto">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px">
+        <div style="width:56px;height:56px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px">MarcanoTech 3D</div>
+          <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard</div>
+        </div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:28px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="version-badge-main">v1.6</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="version-fecha-main">2026-04-21</div>
+        </div>
+      </div>
+
+      <!-- Stats rápidas -->
+      <div class="stats-row" style="margin-bottom:24px" id="acercade-stats"></div>
+
+      <!-- Changelog -->
+      <div style="margin-bottom:8px;font-size:14px;font-weight:700;color:var(--text)">Historial de versiones</div>
+      <div id="changelog-list"></div>
+
+      <!-- Footer -->
+      <div style="margin-top:28px;padding:16px;background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);text-align:center">
+        <div style="font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:6px">Desarrollado con Claude AI · Anthropic</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Firebase Realtime Database · GitHub Pages · dolarapi.com</div>
+      </div>
     </div>
   </div>
 
@@ -940,6 +1229,24 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ── PRESUPUESTOS ── -->
+  <div class="section" id="sec-presupuestos">
+    <div class="section-row" style="margin-top:0">
+      <div class="section-title">Presupuestos</div>
+      <button class="btn btn-accent btn-sm" onclick="openPresupuestoModal()">+ Nuevo presupuesto</button>
+    </div>
+    <div class="stats-row" id="presup-stats-row" style="margin-bottom:20px"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterPresupuestos('todos',this)">Todos</button>
+      <button class="tab" onclick="filterPresupuestos('borrador',this)">Borradores</button>
+      <button class="tab" onclick="filterPresupuestos('enviado',this)">Enviados</button>
+      <button class="tab" onclick="filterPresupuestos('aceptado',this)">Aceptados</button>
+      <button class="tab" onclick="filterPresupuestos('rechazado',this)">Rechazados</button>
+      <button class="tab" onclick="filterPresupuestos('vencido',this)">Vencidos</button>
+    </div>
+    <div id="presupuestos-list"></div>
   </div>
 
   <!-- ── GRÁFICOS ── -->
@@ -1735,6 +2042,321 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   </div>
 </div>
 
+<!-- Calibración -->
+<div class="modal-overlay" id="modal-calibracion">
+  <div class="modal" style="width:540px">
+    <div class="modal-title" id="cal-modal-title">Nuevo perfil de calibración</div>
+    <input type="hidden" id="calibracion-edit-id">
+
+    <!-- MATERIAL + IMPRESORA -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Material <span style="color:var(--coral)">*</span></label>
+        <select class="form-input" id="cal-material-ref">
+          <option value="">Seleccionar material...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Impresora</label>
+        <select class="form-input" id="cal-impresora-ref">
+          <option value="">Seleccionar impresora...</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- NOMBRE DEL PERFIL -->
+    <div class="form-group">
+      <label class="form-label">Nombre del perfil</label>
+      <input class="form-input" id="cal-nombre" placeholder="ej: PLA Matte Blanco — alta velocidad">
+    </div>
+
+    <!-- TEMPERATURAS -->
+    <div style="background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:14px;border:0.5px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;color:var(--text);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">🌡 Temperaturas</div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Boquilla — Primera capa (°C)</label>
+          <input class="form-input" type="number" id="cal-temp-boquilla-1" placeholder="ej: 220">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Boquilla — Resto capas (°C)</label>
+          <input class="form-input" type="number" id="cal-temp-boquilla-2" placeholder="ej: 215">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:10px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Cama — Primera capa (°C)</label>
+          <input class="form-input" type="number" id="cal-temp-cama-1" placeholder="ej: 65">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Cama — Resto capas (°C)</label>
+          <input class="form-input" type="number" id="cal-temp-cama-2" placeholder="ej: 60">
+        </div>
+      </div>
+    </div>
+
+    <!-- VELOCIDADES -->
+    <div style="background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:14px;border:0.5px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;color:var(--text);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">⚡ Velocidades (mm/s)</div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Velocidad impresión</label>
+          <input class="form-input" type="number" id="cal-vel-impresion" placeholder="ej: 150">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Primera capa</label>
+          <input class="form-input" type="number" id="cal-vel-primera" placeholder="ej: 30">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:10px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Perímetros</label>
+          <input class="form-input" type="number" id="cal-vel-perimetros" placeholder="ej: 120">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Relleno (infill)</label>
+          <input class="form-input" type="number" id="cal-vel-relleno" placeholder="ej: 200">
+        </div>
+      </div>
+    </div>
+
+    <!-- PARÁMETROS DE EXTRUSIÓN -->
+    <div style="background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:14px;border:0.5px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;color:var(--text);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">⚙️ Extrusión</div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Altura de capa (mm)</label>
+          <select class="form-input" id="cal-layer-height">
+            <option value="0.10">0.10 mm — Ultra fino</option>
+            <option value="0.15">0.15 mm — Fino</option>
+            <option value="0.20" selected>0.20 mm — Estándar</option>
+            <option value="0.25">0.25 mm — Normal</option>
+            <option value="0.30">0.30 mm — Rápido</option>
+            <option value="0.40">0.40 mm — Grueso</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Multiplicador extrusión (%)</label>
+          <input class="form-input" type="number" id="cal-flow" placeholder="ej: 100" value="100" step="0.5">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:10px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Retracción (mm)</label>
+          <input class="form-input" type="number" id="cal-retraccion" placeholder="ej: 0.5" step="0.1">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Velocidad retracción (mm/s)</label>
+          <input class="form-input" type="number" id="cal-vel-retraccion" placeholder="ej: 35">
+        </div>
+      </div>
+    </div>
+
+    <!-- VENTILACIÓN + CÁMARA -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Ventilador capa (%)</label>
+        <input class="form-input" type="number" id="cal-fan" placeholder="ej: 100" min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cámara cerrada</label>
+        <select class="form-input" id="cal-camara">
+          <option value="no">No / Abierta</option>
+          <option value="si">Sí / Cerrada</option>
+          <option value="opcional">Opcional</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- RESULTADOS / CALIFICACIÓN -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Calificación del perfil</label>
+        <select class="form-input" id="cal-rating">
+          <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+          <option value="4">⭐⭐⭐⭐ Muy bueno</option>
+          <option value="3" selected>⭐⭐⭐ Bueno</option>
+          <option value="2">⭐⭐ Regular</option>
+          <option value="1">⭐ En prueba</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select class="form-input" id="cal-estado">
+          <option value="activo">Activo — en uso</option>
+          <option value="prueba">En prueba</option>
+          <option value="archivado">Archivado</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Observaciones / notas</label>
+      <textarea class="form-input" id="cal-notas" rows="3" placeholder="Resultados, problemas encontrados, ajustes realizados..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-calibracion')">Cancelar</button>
+      <button class="btn btn-accent" style="min-width:160px" onclick="saveCalibracion()">Guardar perfil</button>
+    </div>
+  </div>
+</div>
+
+<!-- Presupuesto -->
+<div class="modal-overlay" id="modal-presupuesto">
+  <div class="modal" style="width:580px;max-height:92vh;overflow-y:auto">
+    <div class="modal-title" id="presup-modal-title">Nuevo Presupuesto</div>
+    <input type="hidden" id="presupuesto-edit-id">
+
+    <!-- NÚMERO + FECHA -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Número</label>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
+          <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="presup-num-display">PRES-0001</span>
+          <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
+        </div>
+        <input type="hidden" id="presup-numero">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" type="date" id="presup-fecha">
+      </div>
+    </div>
+
+    <!-- ITEMS DEL PRESUPUESTO -->
+    <div class="form-group">
+      <label class="form-label">Ítems del presupuesto <span style="color:var(--coral)">*</span></label>
+      <div id="presup-items-container"></div>
+      <button type="button" onclick="addPresupItem()" style="width:100%;padding:10px;border-radius:8px;border:0.5px dashed var(--border2);background:var(--bg3);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;font-family:var(--font);transition:all 0.15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+        + Agregar ítem
+      </button>
+    </div>
+
+    <!-- COTIZACIONES EXTRA -->
+    <div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;border:0.5px solid var(--border);margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">Cotizaciones extra</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">Ítems informativos que no suman al total</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer">
+          <input type="checkbox" id="presup-extras-toggle" style="opacity:0;width:0;height:0" onchange="togglePresupExtras(this.checked)">
+          <span id="presup-extras-slider" style="position:absolute;inset:0;background:var(--border2);border-radius:12px;transition:0.3s"></span>
+        </label>
+      </div>
+      <div id="presup-extras-container" style="display:none;margin-top:12px"></div>
+    </div>
+
+    <!-- MONEDA -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Moneda</label>
+        <select class="form-input" id="presup-moneda" onchange="updatePresupTotal()">
+          <option value="USD">USD ($)</option>
+          <option value="ARS">ARS ($)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descuento (%)</label>
+        <input class="form-input" type="number" id="presup-descuento" placeholder="0" min="0" max="100" step="0.5" oninput="updatePresupTotal()">
+      </div>
+    </div>
+
+    <!-- TOTAL -->
+    <div style="background:var(--bg3);border-radius:var(--r);padding:14px;border:0.5px solid var(--border2);margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:12px;color:var(--text3)">Subtotal</span>
+        <span style="font-size:13px;font-family:var(--mono);color:var(--text)" id="presup-subtotal">$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px" id="presup-desc-row" style="display:none">
+        <span style="font-size:12px;color:var(--coral)">Descuento</span>
+        <span style="font-size:13px;font-family:var(--mono);color:var(--coral)" id="presup-desc-val">-$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:0.5px solid var(--border)">
+        <span style="font-size:14px;font-weight:700;color:var(--text)">TOTAL</span>
+        <div style="text-align:right">
+          <div style="font-size:20px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="presup-total-display">$0.00</div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)" id="presup-total-ars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTE -->
+    <div class="form-group">
+      <label class="form-label">Cliente</label>
+      <select class="form-input" id="presup-cliente-tipo" onchange="toggleClienteManual(this.value)">
+        <option value="manual">Ingreso manual</option>
+        <option value="existente">Cliente existente</option>
+      </select>
+    </div>
+    <div class="form-row" id="presup-cliente-manual">
+      <div class="form-group">
+        <label class="form-label">Destinatario <span style="color:var(--coral)">*</span></label>
+        <input class="form-input" id="presup-destinatario" placeholder="Nombre del cliente">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp / Email</label>
+        <input class="form-input" id="presup-contacto" placeholder="Contacto">
+      </div>
+    </div>
+
+    <!-- NEGOCIO + VALIDEZ -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Tu negocio</label>
+        <input class="form-input" id="presup-negocio" placeholder="MarcanoTech 3D">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Validez (días)</label>
+        <input class="form-input" type="number" id="presup-validez" placeholder="ej: 7" min="1">
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Notas</label>
+      <textarea class="form-input" id="presup-notas" rows="3" placeholder="Condiciones, aclaraciones, tiempo de entrega..."></textarea>
+    </div>
+
+    <!-- DESGLOSAR -->
+    <div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;border:0.5px solid var(--border);margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">Desglosar presupuesto</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">Mostrar conceptos detallados en el PDF</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer">
+          <input type="checkbox" id="presup-desglosar" style="opacity:0;width:0;height:0">
+          <span style="position:absolute;inset:0;background:var(--border2);border-radius:12px;transition:0.3s" id="presup-desglosar-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ACCIONES -->
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modal-presupuesto')">Cancelar</button>
+        <button class="btn btn-ghost" style="flex:1" onclick="savePresupuesto('borrador')">Guardar borrador</button>
+        <button class="btn btn-accent" style="flex:1" onclick="savePresupuesto('enviado')">Guardar y enviar</button>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;padding:10px" onclick="exportPresupuestoPDF()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar PDF
+      </button>
+      <button onclick="enviarWhatsApp()" style="width:100%;padding:12px;border-radius:8px;border:none;background:#25D366;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px;vertical-align:middle"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        WhatsApp
+      </button>
+      <button onclick="enviarEmail()" style="width:100%;padding:12px;border-radius:8px;border:none;background:#4ea8ff;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ════ TOAST ════ -->
 <div class="toast" id="toast">
   <div class="toast-icon" id="toast-icon"></div>
@@ -1770,12 +2392,61 @@ let fbRef = null;
 // ════════════════════════════════
 // DATA STORE  (localStorage fallback)
 // ════════════════════════════════
+// ════════════════════════════════
+// APP VERSION
+// ════════════════════════════════
+const APP_VERSION = {
+  version: 'v1.6',
+  fecha: '2026-04-21',
+  changelog: [
+    { v:'v1.6', fecha:'2026-04-21', cambios:[
+      'Calculadora de costos v2: moneda, perfiles, impresora, filamentos múltiples, diseño, posprocesado, ganancia con multiplicador, comisiones externas',
+      'Sección Presupuestos: ítems dinámicos, cotizaciones extra, envío WhatsApp/Email, PDF',
+      'Sección Calibración de filamentos con perfiles completos',
+      'Imagen en Accesorios y Componentes RC',
+      'Código auto-incremental en Componentes RC',
+      'Cards horizontales (imagen izq + info der) en Proyectos y Productos',
+      'Tipo de cambio USD/ARS en tiempo real vía dolarapi.com',
+      'Selector de impresora en sidebar con estado en vivo',
+      'Tema claro / oscuro / automático',
+      'Fuente Inter para mejor legibilidad',
+    ]},
+    { v:'v1.5', fecha:'2026-04-20', cambios:[
+      'Fix crítico sync Firebase: unificación de claves localStorage',
+      'Fix race condition: once() para carga inicial + listener inteligente',
+      'Fix sanitizeForFirebase: elimina undefined antes de escribir',
+      'Imagen en Proyectos, Productos, Impresoras',
+      'Código auto IMP-001 en impresoras con selector de fabricante',
+      'Escala con select en Piezas/STL',
+      'Accesorios: imagen, unidad de medida, código MT3-0001',
+      'Firebase Storage preparado para imágenes cross-device',
+    ]},
+    { v:'v1.4', fecha:'2026-04-20', cambios:[
+      'Ventas con registro, historial y stats',
+      'Componentes RC con filtros por categoría',
+      'Timer de impresión con progreso y ETA',
+      'Gráficos de consumo, inventario, ventas por mes',
+      'Alertas automáticas de stock bajo',
+      'Login con Google + Firebase Auth',
+      'Sync Firebase Realtime Database',
+      'GitHub Pages hosting',
+    ]},
+    { v:'v1.0-v1.3', fecha:'2026-04-19', cambios:[
+      'Dashboard inicial con proyectos, materiales, impresoras',
+      'Cola de impresión, piezas/STL, mantenimiento',
+      'Catálogo de productos, estadísticas',
+      'Modal de filamentos mejorado con slider y dropdowns',
+      'Modo oscuro base',
+    ]},
+  ]
+};
+
 const KEYS = {
   proyectos:'proyectos', materiales:'materiales', productos:'productos',
   impresoras:'impresoras', cola:'cola', piezas:'piezas',
   mantenimiento:'mantenimiento', actividad:'actividad',
   ventas:'ventas', componentes:'componentes', timerHistorial:'timerHistorial',
-  accesorios:'accesorios'
+  accesorios:'accesorios', calibracion:'calibracion', presupuestos:'presupuestos'
 };
 
 function loadLocal(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
@@ -1806,7 +2477,9 @@ let DB = {
   ventas:        loadWithMigration('ventas',       'wl_ventas'),
   componentes:   loadWithMigration('componentes',  'wl_componentes'),
   timerHistorial:loadWithMigration('timerHistorial','wl_timer_hist'),
-  accesorios:    loadWithMigration('accesorios',   'wl_accesorios')
+  accesorios:    loadWithMigration('accesorios',   'wl_accesorios'),
+  calibracion:   loadWithMigration('calibracion',  'wl_calibracion'),
+  presupuestos:  loadWithMigration('presupuestos', 'wl_presupuestos')
 };
 
 // ── FIREBASE WRITE HELPERS ──────────────────────────────
@@ -2199,7 +2872,10 @@ const sectionTitles = {
   mantenimiento:'Mantenimiento', estadisticas:'Estadísticas',
   ventas:'Registro de Ventas', componentes:'Componentes RC',
   timer:'Timer de Impresión', graficos:'Gráficos & Consumo',
-  accesorios:'Accesorios & Herramientas'
+  accesorios:'Accesorios & Herramientas',
+  calibracion:'Calibración de Filamentos',
+  presupuestos:'Presupuestos',
+  acercade:'Acerca de'
 };
 const addBtnLabels = {
   proyectos:'+ Nuevo proyecto', impresoras:'+ Agregar impresora',
@@ -2240,6 +2916,8 @@ function openAddModal(){
   if(currentSection==='accesorios') { openAccesorioModal(); return; }
   if(currentSection==='proyectos') { resetProyectoForm(); openModal('modal-proyecto'); return; }
   if(currentSection==='componentes') { resetComponenteForm(); openModal('modal-componente'); return; }
+  if(currentSection==='calibracion') { openCalModal(); return; }
+  if(currentSection==='presupuestos') { openPresupuestoModal(); return; }
   if(addBtnModals[currentSection]) openModal(addBtnModals[currentSection]);
 }
 
@@ -3086,44 +3764,312 @@ function renderMantenimiento(){
 // ════════════════════════════════
 // COSTOS
 // ════════════════════════════════
-function calcularCosto(){
-  const g=parseFloat(document.getElementById('calc-gramos').value)||0;
-  const h=parseFloat(document.getElementById('calc-horas').value)||0;
-  const kwh=parseFloat(document.getElementById('calc-kwh').value)||0.12;
-  const margen=parseFloat(document.getElementById('calc-margen').value)||40;
-  const matId=document.getElementById('calc-material').value;
-  const mat=DB.materiales.find(m=>m.id===matId);
-  const precioMat=mat?mat.precio:0;
-  const costMat=(g/1000)*precioMat;
-  const consumoW=0.2; // kW promedio impresora
-  const costElec=h*consumoW*kwh;
-  const costBase=costMat+costElec;
-  const precioVenta=costBase*(1+(margen/100));
-  const arsVenta = usdToArs(precioVenta);
-  document.getElementById('calc-result').innerHTML=`$${precioVenta.toFixed(2)} USD${arsVenta?` / $${Math.round(arsVenta).toLocaleString('es-AR')} ARS`:''}`;
-  document.getElementById('calc-breakdown').textContent=
-    `Material: $${costMat.toFixed(2)} | Electricidad: $${costElec.toFixed(2)} | Costo base: $${costBase.toFixed(2)} | Margen ${margen}%`;
+// ════════════════════════════════
+// CALCULADORA DE COSTOS v2
+// ════════════════════════════════
+let _calcMoneda = 'ARS';
+let _calcFilamentos = [{id:'f1', matId:'', precioPorKg:0, gramos:0}];
+let _calcGananciaMode = 'multiplicador';
+let _calcDisenoMode = 'fijo';
+let _calcPostpMode = 'fijo';
+let _calcPerfiles = JSON.parse(localStorage.getItem('calc_perfiles')||'[]');
+
+const MONEDA_SIMBOLO = {ARS:'ARS $', USD:'US$', EUR:'€'};
+
+function setCalcMoneda(m){
+  _calcMoneda = m;
+  document.querySelectorAll('.calc-currency-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('calc-cur-'+m).classList.add('active');
+  recalcularCosto();
+}
+
+function setCalcToggle(tipo, modo){
+  if(tipo==='ganancia'){
+    _calcGananciaMode = modo;
+    document.getElementById('calc-gan-mult-btn').classList.toggle('active', modo==='multiplicador');
+    document.getElementById('calc-gan-pct-btn').classList.toggle('active', modo==='porcentaje');
+    document.getElementById('calc-gan-mult-wrap').style.display = modo==='multiplicador'?'':'none';
+    document.getElementById('calc-gan-pct-wrap').style.display = modo==='porcentaje'?'':'none';
+  } else if(tipo==='diseno'){
+    _calcDisenoMode = modo;
+    document.getElementById('calc-diseno-fijo-btn').classList.toggle('active', modo==='fijo');
+    document.getElementById('calc-diseno-hora-btn').classList.toggle('active', modo==='hora');
+    document.getElementById('calc-diseno-fijo-wrap').style.display = modo==='fijo'?'':'none';
+    document.getElementById('calc-diseno-hora-wrap').style.display = modo==='hora'?'':'none';
+  } else if(tipo==='postp'){
+    _calcPostpMode = modo;
+    document.getElementById('calc-postp-fijo-btn').classList.toggle('active', modo==='fijo');
+    document.getElementById('calc-postp-hora-btn').classList.toggle('active', modo==='hora');
+    document.getElementById('calc-postp-fijo-wrap').style.display = modo==='fijo'?'':'none';
+    document.getElementById('calc-postp-hora-wrap').style.display = modo==='hora'?'':'none';
+  }
+  recalcularCosto();
+}
+
+function setCalcMultiplicador(val){
+  document.querySelectorAll('.calc-preset-btn').forEach(b=>b.classList.remove('active'));
+  if(val==='custom'){
+    document.getElementById('calc-mult-custom-btn').classList.add('active');
+    document.getElementById('calc-multiplicador').focus();
+  } else {
+    document.querySelectorAll('.calc-preset-btn').forEach(b=>{ if(b.textContent.includes('x'+val)) b.classList.add('active'); });
+    document.getElementById('calc-multiplicador').value = val;
+  }
+  recalcularCosto();
+}
+
+// ── Filamentos dinámicos ──
+function addCalcFilamento(){
+  _calcFilamentos.push({id:'f'+Date.now(), matId:'', precioPorKg:0, gramos:0});
+  renderCalcFilamentos();
+}
+
+function removeCalcFilamento(idx){
+  _calcFilamentos.splice(idx,1);
+  renderCalcFilamentos();
+  recalcularCosto();
+}
+
+function renderCalcFilamentos(){
+  const cont = document.getElementById('calc-filamentos-container'); if(!cont) return;
+  const matOptions = '<option value="">Usar filamento guardado...</option>' +
+    DB.materiales.map(m=>`<option value="${m.id}" data-precio="${m.precio||0}">${m.tipo} ${m.color} — ${m.marca} ($${m.precio||0}/kg)</option>`).join('');
+  cont.innerHTML = _calcFilamentos.map((f,i)=>`
+    <div class="calc-filamento-row">
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">Filamento ${i+1}</div>
+      <select class="form-input" style="margin-bottom:8px" onchange="onCalcMatChange(${i},this)">
+        ${matOptions.replace(`value="${f.matId}"`, `value="${f.matId}" selected`)}
+      </select>
+      <div class="form-row" style="margin-bottom:0">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Precio/KG</label>
+          <input class="form-input" type="number" value="${f.precioPorKg||''}" placeholder="0" step="0.01" oninput="_calcFilamentos[${i}].precioPorKg=parseFloat(this.value)||0;recalcularCosto()">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Gramos</label>
+          <input class="form-input" type="number" value="${f.gramos||''}" placeholder="0" step="1" oninput="_calcFilamentos[${i}].gramos=parseFloat(this.value)||0;recalcularCosto()">
+        </div>
+        ${_calcFilamentos.length>1?`<button onclick="removeCalcFilamento(${i})" style="background:none;border:none;color:var(--coral);cursor:pointer;padding:0 4px;font-size:18px;align-self:flex-end;padding-bottom:6px">✕</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function onCalcMatChange(idx, sel){
+  const opt = sel.options[sel.selectedIndex];
+  const precio = parseFloat(opt.dataset.precio)||0;
+  _calcFilamentos[idx].matId = sel.value;
+  _calcFilamentos[idx].precioPorKg = precio;
+  renderCalcFilamentos();
+  recalcularCosto();
+}
+
+// ── Main calculation ──
+function recalcularCosto(){
+  const kwh = parseFloat(document.getElementById('calc-kwh-nuevo')?.value)||0;
+  const watts = parseFloat(document.getElementById('calc-watts')?.value)||120;
+  const vidaUtil = parseFloat(document.getElementById('calc-vida-util')?.value)||5000;
+  const repuestos = parseFloat(document.getElementById('calc-repuestos')?.value)||0;
+  const margenError = parseFloat(document.getElementById('calc-margen-error')?.value)||0;
+  const horas = parseFloat(document.getElementById('calc-horas-nuevo')?.value)||0;
+  const mins = parseFloat(document.getElementById('calc-minutos-nuevo')?.value)||0;
+  const tiempoH = horas + mins/60;
+  const insumos = parseFloat(document.getElementById('calc-insumos')?.value)||0;
+  const comisionPct = parseFloat(document.getElementById('calc-comision')?.value)||0;
+
+  // Material cost
+  const costMaterial = _calcFilamentos.reduce((a,f)=>a + (f.precioPorKg/1000)*(f.gramos||0), 0);
+
+  // Electricity cost
+  const kwhUsados = (watts/1000)*tiempoH;
+  const costElec = kwhUsados * kwh;
+
+  // Machine wear cost per hour
+  const costDesgaste = vidaUtil>0 ? (repuestos/vidaUtil)*tiempoH : 0;
+
+  // Base costs
+  const costoBase = costMaterial + costElec + costDesgaste;
+
+  // Additional costs
+  const costMargenError = costoBase * (margenError/100);
+  const costInsumos = insumos;
+
+  // Diseño
+  let costDiseno = 0;
+  if(_calcDisenoMode==='fijo'){
+    costDiseno = parseFloat(document.getElementById('calc-diseno-fijo')?.value)||0;
+  } else {
+    const ph = parseFloat(document.getElementById('calc-diseno-precio-hora')?.value)||0;
+    const hd = parseFloat(document.getElementById('calc-diseno-horas')?.value)||0;
+    costDiseno = ph*hd;
+  }
+
+  // Posprocesado
+  let costPostp = 0;
+  if(_calcPostpMode==='fijo'){
+    costPostp = parseFloat(document.getElementById('calc-postp-fijo')?.value)||0;
+  } else {
+    const pp = parseFloat(document.getElementById('calc-postp-precio-hora')?.value)||0;
+    const hp = parseFloat(document.getElementById('calc-postp-horas')?.value)||0;
+    costPostp = pp*hp;
+  }
+
+  const costProduccion = costDiseno + costPostp;
+  const totalCostos = costoBase + costMargenError + costProduccion + costInsumos;
+
+  // Ganancia
+  let precioFinal = 0;
+  if(_calcGananciaMode==='multiplicador'){
+    const mult = parseFloat(document.getElementById('calc-multiplicador')?.value)||3;
+    precioFinal = totalCostos * mult;
+  } else {
+    const pct = parseFloat(document.getElementById('calc-ganancia-pct')?.value)||40;
+    precioFinal = totalCostos * (1 + pct/100);
+  }
+
+  // With external commission
+  const precioConComision = comisionPct>0 ? precioFinal/(1-comisionPct/100) : precioFinal;
+
+  // Format number
+  const fmt = n => {
+    const sym = MONEDA_SIMBOLO[_calcMoneda]||'$';
+    if(_calcMoneda==='ARS') return `${sym} ${n.toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    return `${sym} ${n.toFixed(2)}`;
+  };
+
+  // Alt currency
+  const fmtAlt = n => {
+    if(!_dolarRate) return '';
+    if(_calcMoneda==='ARS') return `≈ US$ ${(n/_dolarRate).toFixed(2)}`;
+    if(_calcMoneda==='USD') return `≈ ARS $ ${Math.round(n*_dolarRate).toLocaleString('es-AR')}`;
+    return '';
+  };
+
+  // Render base
+  const baseEl = document.getElementById('calc-result-base');
+  if(baseEl) baseEl.innerHTML = `
+    <div class="calc-result-row"><span class="label">⬡ Material</span><span class="val">${fmt(costMaterial)}</span></div>
+    <div class="calc-result-row"><span class="label">⚡ Electricidad</span><span class="val">${fmt(costElec)}</span></div>
+    <div class="calc-result-row"><span class="label">🔧 Desgaste</span><span class="val">${fmt(costDesgaste)}</span></div>`;
+
+  // Render adicional
+  const adicEl = document.getElementById('calc-result-adicional');
+  if(adicEl) adicEl.innerHTML = `
+    <div class="calc-result-row"><span class="label">Margen Error (${margenError}%)</span><span class="val">${fmt(costMargenError)}</span></div>
+    <div class="calc-result-row"><span class="label">Costo Producción</span><span class="val">${fmt(costProduccion)}</span></div>
+    <div class="calc-result-row"><span class="label">Insumos (fijo)</span><span class="val">${fmt(costInsumos)}</span></div>
+    <div class="calc-result-row" style="padding-top:8px;border-top:0.5px solid var(--border2);margin-top:4px"><span class="label" style="font-weight:700;color:var(--text)">Total Costos</span><span class="val" style="font-weight:700;color:var(--text)">${fmt(totalCostos)}</span></div>`;
+
+  // Final price
+  const totalEl = document.getElementById('calc-total-final');
+  const altEl = document.getElementById('calc-total-alt');
+  if(totalEl) totalEl.textContent = fmt(precioFinal);
+  if(altEl) altEl.textContent = fmtAlt(precioFinal);
+
+  // Commission
+  const comDisp = document.getElementById('calc-comision-display');
+  const comLabel = document.getElementById('calc-comision-label');
+  const comTotal = document.getElementById('calc-total-comision');
+  if(comDisp){
+    comDisp.style.display = comisionPct>0?'block':'none';
+    if(comLabel) comLabel.textContent = `Precio con comisión (+${comisionPct}%)`;
+    if(comTotal) comTotal.textContent = fmt(precioConComision);
+  }
+}
+
+// ── Perfiles ──
+function guardarPerfilCalc(){
+  const nombre = document.getElementById('calc-perfil-nombre')?.value?.trim();
+  if(!nombre){ showToast('Ingresá un nombre para el perfil','error'); return; }
+  const perfil = {
+    id: uid(), nombre,
+    kwh: document.getElementById('calc-kwh-nuevo')?.value,
+    watts: document.getElementById('calc-watts')?.value,
+    vidaUtil: document.getElementById('calc-vida-util')?.value,
+    repuestos: document.getElementById('calc-repuestos')?.value,
+    margenError: document.getElementById('calc-margen-error')?.value,
+    gananciaMode: _calcGananciaMode,
+    multiplicador: document.getElementById('calc-multiplicador')?.value,
+    gananciaPct: document.getElementById('calc-ganancia-pct')?.value,
+    comision: document.getElementById('calc-comision')?.value,
+    moneda: _calcMoneda
+  };
+  _calcPerfiles = _calcPerfiles.filter(p=>p.nombre!==nombre);
+  _calcPerfiles.push(perfil);
+  localStorage.setItem('calc_perfiles', JSON.stringify(_calcPerfiles));
+  renderCalcPerfiles();
+  showToast(`Perfil "${nombre}" guardado ✓`);
+}
+
+function cargarPerfilCalc(id){
+  const p = _calcPerfiles.find(x=>x.id===id); if(!p) return;
+  const set = (elId, val)=>{ const el=document.getElementById(elId); if(el&&val!==undefined) el.value=val; };
+  set('calc-kwh-nuevo', p.kwh);
+  set('calc-watts', p.watts);
+  set('calc-vida-util', p.vidaUtil);
+  set('calc-repuestos', p.repuestos);
+  set('calc-margen-error', p.margenError);
+  set('calc-multiplicador', p.multiplicador);
+  set('calc-ganancia-pct', p.gananciaPct);
+  set('calc-comision', p.comision);
+  if(p.moneda) setCalcMoneda(p.moneda);
+  if(p.gananciaMode) setCalcToggle('ganancia', p.gananciaMode);
+  recalcularCosto();
+  showToast(`Perfil "${p.nombre}" cargado`);
+}
+
+function renderCalcPerfiles(){
+  const sel = document.getElementById('calc-perfil-select'); if(!sel) return;
+  sel.innerHTML = '<option value="">⬇ Cargar...</option>' +
+    _calcPerfiles.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+}
+
+function copiarResumenCosto(){
+  const fmt = n => {
+    const sym = MONEDA_SIMBOLO[_calcMoneda]||'$';
+    return `${sym} ${n.toFixed(2)}`;
+  };
+  const kwh = parseFloat(document.getElementById('calc-kwh-nuevo')?.value)||0;
+  const watts = parseFloat(document.getElementById('calc-watts')?.value)||120;
+  const vidaUtil = parseFloat(document.getElementById('calc-vida-util')?.value)||5000;
+  const repuestos = parseFloat(document.getElementById('calc-repuestos')?.value)||0;
+  const horas = parseFloat(document.getElementById('calc-horas-nuevo')?.value)||0;
+  const mins = parseFloat(document.getElementById('calc-minutos-nuevo')?.value)||0;
+  const tiempoH = horas + mins/60;
+  const costMaterial = _calcFilamentos.reduce((a,f)=>a+(f.precioPorKg/1000)*(f.gramos||0),0);
+  const costElec = (watts/1000)*tiempoH*kwh;
+  const costDesgaste = vidaUtil>0?(repuestos/vidaUtil)*tiempoH:0;
+  const costoBase = costMaterial+costElec+costDesgaste;
+  const margenError = parseFloat(document.getElementById('calc-margen-error')?.value)||0;
+  const insumos = parseFloat(document.getElementById('calc-insumos')?.value)||0;
+  const totalCostos = costoBase*(1+margenError/100)+insumos;
+  const precioFinalEl = document.getElementById('calc-total-final');
+  const texto = `📊 RESUMEN DE COSTO — MarcanoTech 3D
+${'─'.repeat(35)}
+Material:       ${fmt(costMaterial)}
+Electricidad:   ${fmt(costElec)}
+Desgaste:       ${fmt(costDesgaste)}
+Costo base:     ${fmt(costoBase)}
+─────────────────────────
+Total costos:   ${fmt(totalCostos)}
+PRECIO FINAL:   ${precioFinalEl?.textContent||'—'}
+${'─'.repeat(35)}
+Generado con MarcanoTech 3D Dashboard`;
+  navigator.clipboard.writeText(texto).then(()=>showToast('Resumen copiado ✓')).catch(()=>showToast('No se pudo copiar','error'));
 }
 
 function renderCostos(){
-  const sel=document.getElementById('calc-material');
-  if(sel) sel.innerHTML=DB.materiales.map(m=>`<option value="${m.id}">${m.tipo} ${m.color} — $${m.precio}/kg</option>`).join('')||'<option>Sin materiales</option>';
-  const ml=document.getElementById('costos-materiales-list');
-  if(ml){
-    ml.innerHTML=DB.materiales.length
-      ?DB.materiales.map(m=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:12px;color:var(--text)">${m.tipo} ${m.color}</span><span style="font-family:var(--mono);font-size:12px;color:var(--accent)">$${m.precio.toFixed(2)}/kg</span></div>`).join('')
-      :`<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:12px 0">Registrá materiales para ver precios</div>`;
+  renderCalcFilamentos();
+  renderCalcPerfiles();
+  // Populate impresora select
+  const sel = document.getElementById('calc-impresora');
+  if(sel){
+    sel.innerHTML = '<option value="">Seleccionar impresora...</option>' +
+      DB.impresoras.map(i=>`<option value="${i.id}">${i.codigo||''} ${i.nombre}</option>`).join('');
   }
-  const rf=document.getElementById('resumen-financiero');
-  if(rf){
-    const totalStock=DB.materiales.reduce((a,m)=>a+(m.stock/1000)*m.precio,0);
-    const totalProductos=DB.productos.reduce((a,p)=>a+p.precio*p.stock,0);
-    rf.innerHTML=`
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:12px;color:var(--text2)">Valor stock filamentos</span><span style="font-family:var(--mono);font-size:12px;color:var(--text)">$${totalStock.toFixed(2)}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:12px;color:var(--text2)">Valor stock productos</span><span style="font-family:var(--mono);font-size:12px;color:var(--text)">$${totalProductos.toFixed(2)}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:10px 0"><span style="font-size:13px;font-weight:700;color:var(--text)">Total inventario</span><span style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accent)">$${(totalStock+totalProductos).toFixed(2)}</span></div>`;
-  }
+  recalcularCosto();
 }
+
+
 
 // ════════════════════════════════
 // ESTADÍSTICAS
@@ -3305,6 +4251,8 @@ function renderSection(id){
   else if(id==='cola') renderCola();
   else if(id==='materiales') renderMaterialesTable();
   else if(id==='accesorios') renderAccesorios();
+  else if(id==='calibracion') renderCalibracion(_filtroCalibracion);
+  else if(id==='presupuestos') renderPresupuestos(_filtroPresupuestos);
   else if(id==='productos') renderProductos();
   else if(id==='piezas') renderPiezas();
   else if(id==='costos') renderCostos();
@@ -3314,6 +4262,7 @@ function renderSection(id){
   else if(id==='componentes') renderComponentes(_filtroComponentes);
   else if(id==='timer') renderTimer();
   else if(id==='graficos') renderGraficos();
+  else if(id==='acercade') renderAcercaDe();
 }
 
 // ════════════════════════════════
@@ -3329,6 +4278,8 @@ function updateBadges(){
   document.getElementById('badge-ventas').textContent=DB.ventas.length;
   document.getElementById('badge-componentes').textContent=DB.componentes.length;
   document.getElementById('badge-accesorios').textContent=DB.accesorios.length;
+  document.getElementById('badge-calibracion').textContent=DB.calibracion.length;
+  document.getElementById('badge-presupuestos').textContent=DB.presupuestos.length;
   const bajos=DB.materiales.filter(m=>(m.stock/m.total)<0.2);
   const bajosAcc=DB.accesorios.filter(a=>a.stock<=(a.stockMin||1));
   const nd=document.getElementById('notif-dot');
@@ -3984,6 +4935,47 @@ function updatePriceHint(inputId, hintId){
   const ars = usdToArs(val);
   hint.textContent = ars ? '≈ $'+Math.round(ars).toLocaleString('es-AR')+' ARS' : '';
 }
+
+// ════════════════════════════════
+// ACERCA DE
+// ════════════════════════════════
+function renderAcercaDe(){
+  // Version badge
+  const vb = document.getElementById('version-badge-main');
+  const vf = document.getElementById('version-fecha-main');
+  if(vb) vb.textContent = APP_VERSION.version;
+  if(vf) vf.textContent = APP_VERSION.fecha;
+
+  // Quick stats
+  const st = document.getElementById('acercade-stats');
+  if(st) st.innerHTML = `
+    <div class="stat-card"><div class="stat-label">Proyectos</div><div class="stat-value">${DB.proyectos.length}</div><div class="stat-delta neutral">registrados</div></div>
+    <div class="stat-card"><div class="stat-label">Materiales</div><div class="stat-value">${DB.materiales.length}</div><div class="stat-delta neutral">en inventario</div></div>
+    <div class="stat-card"><div class="stat-label">Presupuestos</div><div class="stat-value">${DB.presupuestos.length}</div><div class="stat-delta neutral">generados</div></div>
+    <div class="stat-card"><div class="stat-label">Perfiles cal.</div><div class="stat-value">${DB.calibracion.length}</div><div class="stat-delta neutral">guardados</div></div>`;
+
+  // Changelog
+  const cl = document.getElementById('changelog-list');
+  if(!cl) return;
+  cl.innerHTML = APP_VERSION.changelog.map((ver,i)=>`
+    <div style="background:var(--bg2);border-radius:var(--r2);border:0.5px solid var(--border);overflow:hidden;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg3);border-bottom:0.5px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:15px;font-weight:700;font-family:var(--mono);color:${i===0?'var(--accent)':'var(--text)'}">${ver.v}</span>
+          ${i===0?`<span style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-weight:700">ACTUAL</span>`:''}
+        </div>
+        <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${ver.fecha}</span>
+      </div>
+      <div style="${i===0?'display:block':'display:none'};padding:12px 16px">
+        ${ver.cambios.map(c=>`
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text2)">
+            <span style="color:var(--teal);flex-shrink:0;margin-top:1px">✓</span>
+            <span>${c}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
 // ════════════════════════════════
 // THEME SYSTEM
 // ════════════════════════════════
@@ -4049,8 +5041,535 @@ function setSidebarImpresora(id){
 }
 
 // ════════════════════════════════
-// HELPERS
+// PRESUPUESTOS
 // ════════════════════════════════
+let _filtroPresupuestos = 'todos';
+let _presupItems = [];
+let _presupExtras = [];
+
+function nextPresupNumero(){
+  if(!DB.presupuestos||!DB.presupuestos.length) return 'PRES-0001';
+  const nums = DB.presupuestos.map(p=>parseInt((p.numero||'PRES-0000').split('-')[1]||0)).filter(n=>!isNaN(n));
+  return 'PRES-'+String((nums.length?Math.max(...nums):0)+1).padStart(4,'0');
+}
+
+function openPresupuestoModal(editId=''){
+  document.getElementById('presupuesto-edit-id').value='';
+  document.getElementById('presup-modal-title').textContent='Nuevo Presupuesto';
+  // Reset
+  clearForm(['presup-destinatario','presup-contacto','presup-negocio','presup-notas','presup-descuento','presup-validez']);
+  document.getElementById('presup-moneda').value='USD';
+  document.getElementById('presup-cliente-tipo').value='manual';
+  document.getElementById('presup-cliente-manual').style.display='';
+  document.getElementById('presup-extras-toggle').checked=false;
+  document.getElementById('presup-extras-container').style.display='none';
+  document.getElementById('presup-desglosar').checked=false;
+  document.getElementById('presup-negocio').value='MarcanoTech 3D';
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('presup-fecha').value=today;
+  const num=nextPresupNumero();
+  document.getElementById('presup-numero').value=num;
+  document.getElementById('presup-num-display').textContent=num;
+  // Init items
+  _presupItems=[{id:uid(),desc:'',cant:1,precio:0}];
+  _presupExtras=[];
+  renderPresupItems();
+  updatePresupTotal();
+  openModal('modal-presupuesto');
+}
+
+function renderPresupItems(){
+  const cont=document.getElementById('presup-items-container');
+  if(!cont) return;
+  cont.innerHTML=_presupItems.map((item,i)=>`
+    <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border);margin-bottom:8px" id="presup-item-${item.id}">
+      <div class="form-group" style="margin-bottom:8px">
+        <label class="form-label">Producto / servicio ${i+1}</label>
+        <input class="form-input" value="${item.desc||''}" placeholder="Nombre del producto o servicio"
+          oninput="_presupItems[${i}].desc=this.value">
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="flex:1">
+          <label class="form-label">Cant.</label>
+          <input class="form-input" type="number" value="${item.cant||1}" min="1" step="0.5"
+            oninput="_presupItems[${i}].cant=parseFloat(this.value)||1;updatePresupTotal()">
+        </div>
+        <div style="flex:2">
+          <label class="form-label">Precio unit. *</label>
+          <input class="form-input" type="number" value="${item.precio||''}" placeholder="0.00" step="0.01" min="0"
+            oninput="_presupItems[${i}].precio=parseFloat(this.value)||0;updatePresupTotal()">
+        </div>
+        <div style="flex:2">
+          <label class="form-label">Subtotal</label>
+          <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13px;color:var(--accent)">
+            $${((item.cant||1)*(item.precio||0)).toFixed(2)}
+          </div>
+        </div>
+        ${_presupItems.length>1?`<button onclick="removePresupItem(${i})" style="background:rgba(255,107,91,0.1);border:none;border-radius:8px;padding:9px 10px;color:var(--coral);cursor:pointer;font-size:14px" title="Eliminar">✕</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function addPresupItem(){
+  _presupItems.push({id:uid(),desc:'',cant:1,precio:0});
+  renderPresupItems();
+}
+
+function removePresupItem(i){
+  _presupItems.splice(i,1);
+  renderPresupItems();
+  updatePresupTotal();
+}
+
+function renderPresupExtras(){
+  const cont=document.getElementById('presup-extras-container');
+  if(!cont) return;
+  cont.innerHTML=_presupExtras.map((item,i)=>`
+    <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px">
+      <div style="flex:3">
+        <label class="form-label">Ítem informativo</label>
+        <input class="form-input" value="${item.desc||''}" placeholder="Descripción"
+          oninput="_presupExtras[${i}].desc=this.value">
+      </div>
+      <div style="flex:2">
+        <label class="form-label">Valor ref.</label>
+        <input class="form-input" type="number" value="${item.precio||''}" placeholder="0.00" step="0.01"
+          oninput="_presupExtras[${i}].precio=parseFloat(this.value)||0">
+      </div>
+      <button onclick="_presupExtras.splice(${i},1);renderPresupExtras()" style="background:rgba(255,107,91,0.1);border:none;border-radius:8px;padding:9px 10px;color:var(--coral);cursor:pointer">✕</button>
+    </div>`).join('')+
+    `<button onclick="_presupExtras.push({id:uid(),desc:'',precio:0});renderPresupExtras()" style="width:100%;padding:8px;border-radius:7px;border:0.5px dashed var(--border2);background:none;color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--font)">+ Agregar cotización extra</button>`;
+}
+
+function togglePresupExtras(on){
+  const cont=document.getElementById('presup-extras-container');
+  const slider=document.getElementById('presup-extras-slider');
+  if(cont) cont.style.display=on?'block':'none';
+  if(slider) slider.style.background=on?'var(--accent)':'var(--border2)';
+  if(on && _presupExtras.length===0){ _presupExtras=[{id:uid(),desc:'',precio:0}]; renderPresupExtras(); }
+}
+
+function toggleClienteManual(val){
+  document.getElementById('presup-cliente-manual').style.display=val==='manual'?'':'none';
+}
+
+function updatePresupTotal(){
+  const subtotal=_presupItems.reduce((a,i)=>a+(i.cant||1)*(i.precio||0),0);
+  const desc=parseFloat(document.getElementById('presup-descuento')?.value)||0;
+  const total=subtotal*(1-desc/100);
+  const moneda=document.getElementById('presup-moneda')?.value||'USD';
+  document.getElementById('presup-subtotal').textContent=`${moneda==='ARS'?'$':'\$'}${subtotal.toFixed(2)}`;
+  const descRow=document.getElementById('presup-desc-row');
+  if(descRow) descRow.style.display=desc>0?'flex':'none';
+  document.getElementById('presup-desc-val').textContent=`-$${(subtotal-total).toFixed(2)}`;
+  document.getElementById('presup-total-display').textContent=`${moneda==='ARS'?'$':'$'}${total.toFixed(2)} ${moneda}`;
+  const arsEl=document.getElementById('presup-total-ars');
+  if(arsEl){
+    if(moneda==='USD'&&_dolarRate) arsEl.textContent=`≈ $${Math.round(total*_dolarRate).toLocaleString('es-AR')} ARS`;
+    else if(moneda==='ARS'&&_dolarRate) arsEl.textContent=`≈ $${(total/_dolarRate).toFixed(2)} USD`;
+    else arsEl.textContent='';
+  }
+  // Refresh item subtotals display
+  renderPresupItems();
+}
+
+function savePresupuesto(estado='borrador'){
+  const editId=document.getElementById('presupuesto-edit-id').value;
+  const items=_presupItems.filter(i=>i.desc&&i.desc.trim());
+  if(!items.length){ showToast('Agregá al menos un ítem con descripción','error'); return; }
+  const destinatario=document.getElementById('presup-destinatario').value.trim();
+  if(!destinatario){ showToast('Ingresá el destinatario','error'); return; }
+  const subtotal=_presupItems.reduce((a,i)=>a+(i.cant||1)*(i.precio||0),0);
+  const desc=parseFloat(document.getElementById('presup-descuento').value)||0;
+  const total=subtotal*(1-desc/100);
+  const obj={
+    id:editId||uid(),
+    numero:document.getElementById('presup-numero').value,
+    fecha:document.getElementById('presup-fecha').value,
+    estado,
+    items:_presupItems.map(i=>({...i})),
+    extras:_presupExtras.map(i=>({...i})),
+    moneda:document.getElementById('presup-moneda').value,
+    descuento:desc,
+    subtotal,
+    total,
+    destinatario,
+    contacto:document.getElementById('presup-contacto').value,
+    negocio:document.getElementById('presup-negocio').value||'MarcanoTech 3D',
+    validez:document.getElementById('presup-validez').value||'',
+    notas:document.getElementById('presup-notas').value,
+    desglosar:document.getElementById('presup-desglosar').checked,
+    dolarRate:_dolarRate||null,
+    ts:Date.now()
+  };
+  if(editId){ DB.presupuestos=DB.presupuestos.map(p=>p.id===editId?obj:p); }
+  else{ DB.presupuestos.push(obj); logActivity(`Presupuesto <strong>${obj.numero}</strong> creado para ${obj.destinatario}`); }
+  persist('presupuestos');
+  updateBadges();
+  closeModal('modal-presupuesto');
+  renderSection(currentSection);
+  showToast(`Presupuesto ${estado==='borrador'?'guardado como borrador':'guardado ✓'}`);
+}
+
+function deletePresupuesto(id){
+  if(!confirm('¿Eliminar este presupuesto?')) return;
+  DB.presupuestos=DB.presupuestos.filter(p=>p.id!==id);
+  persist('presupuestos'); updateBadges(); renderSection(currentSection);
+}
+
+function editPresupuesto(id){
+  const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
+  openPresupuestoModal(id);
+  document.getElementById('presupuesto-edit-id').value=p.id;
+  document.getElementById('presup-modal-title').textContent='Editar Presupuesto';
+  document.getElementById('presup-numero').value=p.numero;
+  document.getElementById('presup-num-display').textContent=p.numero;
+  document.getElementById('presup-fecha').value=p.fecha||'';
+  document.getElementById('presup-moneda').value=p.moneda||'USD';
+  document.getElementById('presup-descuento').value=p.descuento||'';
+  document.getElementById('presup-destinatario').value=p.destinatario||'';
+  document.getElementById('presup-contacto').value=p.contacto||'';
+  document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech 3D';
+  document.getElementById('presup-validez').value=p.validez||'';
+  document.getElementById('presup-notas').value=p.notas||'';
+  document.getElementById('presup-desglosar').checked=p.desglosar||false;
+  _presupItems=p.items&&p.items.length?p.items.map(i=>({...i})):[{id:uid(),desc:'',cant:1,precio:0}];
+  _presupExtras=p.extras?p.extras.map(i=>({...i})):[];
+  if(_presupExtras.length){ document.getElementById('presup-extras-toggle').checked=true; togglePresupExtras(true); }
+  renderPresupItems();
+  updatePresupTotal();
+}
+
+function cambiarEstadoPresupuesto(id, nuevoEstado){
+  DB.presupuestos=DB.presupuestos.map(p=>p.id===id?{...p,estado:nuevoEstado}:p);
+  persist('presupuestos'); renderSection(currentSection);
+  showToast(`Estado actualizado: ${nuevoEstado}`);
+}
+
+function filterPresupuestos(f,btn){
+  _filtroPresupuestos=f;
+  document.querySelectorAll('#sec-presupuestos .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderPresupuestos(f);
+}
+
+function renderPresupuestos(filter='todos'){
+  // Stats
+  const sr=document.getElementById('presup-stats-row');
+  const total=DB.presupuestos.reduce((a,p)=>a+(p.moneda==='USD'?p.total:p.total/(_dolarRate||1)),0);
+  const aceptados=DB.presupuestos.filter(p=>p.estado==='aceptado');
+  const pendientes=DB.presupuestos.filter(p=>p.estado==='enviado');
+  const totalAcept=aceptados.reduce((a,p)=>a+(p.moneda==='USD'?p.total:p.total/(_dolarRate||1)),0);
+  if(sr) sr.innerHTML=`
+    <div class="stat-card"><div class="stat-label">Total presupuestos</div><div class="stat-value">${DB.presupuestos.length}</div><div class="stat-delta neutral">${DB.presupuestos.filter(p=>p.estado==='borrador').length} borradores</div></div>
+    <div class="stat-card"><div class="stat-label">Pendientes</div><div class="stat-value" style="color:var(--amber)">${pendientes.length}</div><div class="stat-delta neutral">enviados sin respuesta</div></div>
+    <div class="stat-card"><div class="stat-label">Aceptados</div><div class="stat-value" style="color:var(--teal)">${aceptados.length}</div><div class="stat-delta up">$${totalAcept.toFixed(0)} USD</div></div>
+    <div class="stat-card"><div class="stat-label">Valor total</div><div class="stat-value">$${total.toFixed(0)}</div><div class="stat-delta neutral">USD equivalente</div></div>`;
+
+  const list=document.getElementById('presupuestos-list'); if(!list) return;
+  const data=filter==='todos'?DB.presupuestos:DB.presupuestos.filter(p=>p.estado===filter);
+  if(!data.length){
+    list.innerHTML=`<div class="add-card" style="min-height:140px" onclick="openPresupuestoModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Crear primer presupuesto</span></div>`;
+    return;
+  }
+  const stColors={borrador:'var(--text3)',enviado:'var(--blue)',aceptado:'var(--teal)',rechazado:'var(--coral)',vencido:'var(--amber)'};
+  const stIcons={borrador:'📝',enviado:'📤',aceptado:'✅',rechazado:'❌',vencido:'⏰'};
+  list.innerHTML=[...data].reverse().map(p=>{
+    const sc=stColors[p.estado]||'var(--text3)';
+    const arsStr=p.moneda==='USD'&&_dolarRate?`<span style="font-size:11px;color:var(--text3);font-family:var(--mono)"> / $${Math.round(p.total*_dolarRate).toLocaleString('es-AR')} ARS</span>`:'';
+    const vence=p.validez&&p.fecha?new Date(new Date(p.fecha).getTime()+p.validez*86400000):null;
+    const vencido=vence&&vence<new Date();
+    return `<div class="panel" style="margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:rgba(232,255,71,0.08);padding:2px 8px;border-radius:5px">${p.numero}</span>
+            <span class="badge" style="background:${sc}22;color:${sc}">${stIcons[p.estado]||''} ${p.estado}</span>
+            ${vencido?`<span class="badge" style="background:rgba(240,180,41,0.15);color:var(--amber)">⏰ vencido</span>`:''}
+          </div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px">${p.destinatario}</div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${p.negocio||''} · ${p.fecha||'—'}${p.validez?` · válido ${p.validez}d`:''}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:20px;font-weight:700;color:var(--accent);font-family:var(--mono)">$${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${arsStr}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${p.items?p.items.length:0} ítems${p.descuento?` · ${p.descuento}% desc.`:''}</div>
+        </div>
+      </div>
+      ${p.items&&p.items.length?`<div style="margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)">
+        ${p.items.slice(0,3).map(i=>`<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);padding:2px 0"><span>${i.cant}× ${i.desc}</span><span style="font-family:var(--mono)">$${((i.cant||1)*(i.precio||0)).toFixed(2)}</span></div>`).join('')}
+        ${p.items.length>3?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">+${p.items.length-3} más...</div>`:''}
+      </div>`:''}
+      ${p.notas?`<div style="margin-top:8px;font-size:11px;color:var(--text3);background:var(--bg3);padding:7px 10px;border-radius:7px">${p.notas}</div>`:''}
+      <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="editPresupuesto('${p.id}')">Editar</button>
+        ${p.estado!=='aceptado'?`<button class="btn btn-sm" style="background:rgba(56,217,169,0.1);color:var(--teal);border:0.5px solid rgba(56,217,169,0.2)" onclick="cambiarEstadoPresupuesto('${p.id}','aceptado')">✓ Aceptado</button>`:''}
+        ${p.estado==='enviado'?`<button class="btn btn-sm" style="background:rgba(255,107,91,0.1);color:var(--coral);border:0.5px solid rgba(255,107,91,0.2)" onclick="cambiarEstadoPresupuesto('${p.id}','rechazado')">✕ Rechazado</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="exportPresupuestoPDFById('${p.id}')">PDF</button>
+        <button class="btn btn-sm" style="background:#25D36622;color:#25D366;border:0.5px solid #25D36644" onclick="enviarWhatsAppById('${p.id}')">WhatsApp</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePresupuesto('${p.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── EXPORT PDF ──
+function buildPresupuestoText(p){
+  const items=p.items||[];
+  const lineas=items.map(i=>`  • ${i.cant}× ${i.desc}: $${((i.cant||1)*(i.precio||0)).toFixed(2)} ${p.moneda||'USD'}`).join('\n');
+  const extras=(p.extras||[]).map(i=>`  • ${i.desc}: $${parseFloat(i.precio||0).toFixed(2)} (ref.)`).join('\n');
+  const arsNote=p.moneda==='USD'&&p.dolarRate?`\n  (≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS al momento de emisión)`:'';
+  return `PRESUPUESTO ${p.numero}
+${'─'.repeat(40)}
+Fecha: ${p.fecha||'—'}${p.validez?`  |  Válido por: ${p.validez} días`:''}
+
+DE:  ${p.negocio||'MarcanoTech 3D'}
+PARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}
+
+${'─'.repeat(40)}
+ÍTEMS:
+${lineas}
+${extras?'\nCOTIZACIONES EXTRA (informativas):\n'+extras:''}
+${'─'.repeat(40)}
+${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)} ${p.moneda||'USD'}
+Descuento (${p.descuento}%): -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)} ${p.moneda||'USD'}
+`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${arsNote}
+${'─'.repeat(40)}
+${p.notas?'NOTAS:\n'+p.notas+'\n':''}
+Presupuesto generado por MarcanoTech 3D Dashboard`;
+}
+
+function exportPresupuestoPDF(){
+  const editId=document.getElementById('presupuesto-edit-id').value;
+  const p=editId?DB.presupuestos.find(x=>x.id===editId):null;
+  if(!p){ showToast('Guardá el presupuesto primero','error'); return; }
+  exportPresupuestoPDFById(p.id);
+}
+
+function exportPresupuestoPDFById(id){
+  const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
+  const text=buildPresupuestoText(p);
+  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${p.numero}_${p.destinatario.replace(/\s+/g,'_')}.txt`;
+  a.click();
+  showToast('PDF descargado ✓');
+}
+
+function enviarWhatsApp(){
+  const editId=document.getElementById('presupuesto-edit-id').value;
+  const p=editId?DB.presupuestos.find(x=>x.id===editId):null;
+  if(!p){ showToast('Guardá el presupuesto primero','error'); return; }
+  enviarWhatsAppById(p.id);
+}
+
+function enviarWhatsAppById(id){
+  const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
+  const msg=buildPresupuestoText(p);
+  const tel=p.contacto?p.contacto.replace(/\D/g,''):'';
+  const url=`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+}
+
+function enviarEmail(){
+  const editId=document.getElementById('presupuesto-edit-id').value;
+  const p=editId?DB.presupuestos.find(x=>x.id===editId):null;
+  if(!p){ showToast('Guardá el presupuesto primero','error'); return; }
+  const msg=buildPresupuestoText(p);
+  const mail=p.contacto&&p.contacto.includes('@')?p.contacto:'';
+  window.location.href=`mailto:${mail}?subject=Presupuesto ${p.numero} — ${p.negocio||'MarcanoTech 3D'}&body=${encodeURIComponent(msg)}`;
+}
+
+// ════════════════════════════════
+// CALIBRACIÓN DE FILAMENTOS
+// ════════════════════════════════
+let _filtroCalibracion = 'todos';
+
+function openCalModal(editId=''){
+  document.getElementById('calibracion-edit-id').value = '';
+  document.getElementById('cal-modal-title').textContent = 'Nuevo perfil de calibración';
+  // Reset all fields
+  clearForm(['cal-nombre','cal-temp-boquilla-1','cal-temp-boquilla-2',
+    'cal-temp-cama-1','cal-temp-cama-2','cal-vel-impresion','cal-vel-primera',
+    'cal-vel-perimetros','cal-vel-relleno','cal-retraccion','cal-vel-retraccion',
+    'cal-fan','cal-notas']);
+  document.getElementById('cal-layer-height').value = '0.20';
+  document.getElementById('cal-flow').value = '100';
+  document.getElementById('cal-rating').value = '3';
+  document.getElementById('cal-estado').value = 'activo';
+  document.getElementById('cal-camara').value = 'no';
+  // Populate material and impresora selects
+  const matSel = document.getElementById('cal-material-ref');
+  const impSel = document.getElementById('cal-impresora-ref');
+  matSel.innerHTML = '<option value="">Seleccionar material...</option>' +
+    DB.materiales.map(m=>`<option value="${m.id}">${m.tipo} ${m.color} — ${m.marca}</option>`).join('');
+  impSel.innerHTML = '<option value="">Seleccionar impresora...</option>' +
+    DB.impresoras.map(i=>`<option value="${i.id}">${i.codigo||''} ${i.nombre}</option>`).join('');
+  openModal('modal-calibracion');
+}
+
+function saveCalibracion(){
+  try{
+    const editId = document.getElementById('calibracion-edit-id').value;
+    const matId = document.getElementById('cal-material-ref').value;
+    if(!matId){ showToast('Seleccioná un material','error'); return; }
+    const mat = DB.materiales.find(m=>m.id===matId);
+    const imp = DB.impresoras.find(i=>i.id===document.getElementById('cal-impresora-ref').value);
+    const obj = {
+      id: editId||uid(),
+      materialId: matId,
+      materialNombre: mat ? `${mat.tipo} ${mat.color} — ${mat.marca}` : '—',
+      materialTipo: mat ? mat.tipo : 'otro',
+      materialColorHex: mat ? mat.colorHex : '#888',
+      impresoraId: document.getElementById('cal-impresora-ref').value||'',
+      impresoraNombre: imp ? imp.nombre : '—',
+      nombre: document.getElementById('cal-nombre').value || (mat?`${mat.tipo} ${mat.color} perfil`:'Perfil'),
+      tempBoquilla1: document.getElementById('cal-temp-boquilla-1').value||'—',
+      tempBoquilla2: document.getElementById('cal-temp-boquilla-2').value||'—',
+      tempCama1: document.getElementById('cal-temp-cama-1').value||'—',
+      tempCama2: document.getElementById('cal-temp-cama-2').value||'—',
+      velImpresion: document.getElementById('cal-vel-impresion').value||'—',
+      velPrimera: document.getElementById('cal-vel-primera').value||'—',
+      velPerimetros: document.getElementById('cal-vel-perimetros').value||'—',
+      velRelleno: document.getElementById('cal-vel-relleno').value||'—',
+      retraccion: document.getElementById('cal-retraccion').value||'—',
+      velRetraccion: document.getElementById('cal-vel-retraccion').value||'—',
+      layerHeight: document.getElementById('cal-layer-height').value||'0.20',
+      flow: document.getElementById('cal-flow').value||'100',
+      fan: document.getElementById('cal-fan').value||'—',
+      camara: document.getElementById('cal-camara').value||'no',
+      rating: parseInt(document.getElementById('cal-rating').value)||3,
+      estado: document.getElementById('cal-estado').value||'activo',
+      notas: document.getElementById('cal-notas').value||'',
+      fecha: editId ? (DB.calibracion.find(c=>c.id===editId)||{}).fecha||new Date().toISOString() : new Date().toISOString()
+    };
+    if(editId){ DB.calibracion = DB.calibracion.map(c=>c.id===editId?obj:c); }
+    else{ DB.calibracion.push(obj); logActivity(`Perfil de calibración <strong>${obj.nombre}</strong> guardado`); }
+    persist('calibracion');
+    updateBadges();
+    closeModal('modal-calibracion');
+    renderSection(currentSection);
+    showToast('Perfil guardado ✓');
+  } catch(e){ console.error(e); showToast('Error: '+e.message,'error'); }
+}
+
+function deleteCalibracion(id){
+  if(!confirm('¿Eliminar este perfil?')) return;
+  DB.calibracion = DB.calibracion.filter(c=>c.id!==id);
+  persist('calibracion'); updateBadges(); renderSection(currentSection);
+}
+
+function editCalibracion(id){
+  const c = DB.calibracion.find(x=>x.id===id); if(!c) return;
+  openCalModal(id);
+  document.getElementById('calibracion-edit-id').value = c.id;
+  document.getElementById('cal-modal-title').textContent = 'Editar perfil';
+  document.getElementById('cal-material-ref').value = c.materialId||'';
+  document.getElementById('cal-impresora-ref').value = c.impresoraId||'';
+  document.getElementById('cal-nombre').value = c.nombre||'';
+  document.getElementById('cal-temp-boquilla-1').value = c.tempBoquilla1||'';
+  document.getElementById('cal-temp-boquilla-2').value = c.tempBoquilla2||'';
+  document.getElementById('cal-temp-cama-1').value = c.tempCama1||'';
+  document.getElementById('cal-temp-cama-2').value = c.tempCama2||'';
+  document.getElementById('cal-vel-impresion').value = c.velImpresion||'';
+  document.getElementById('cal-vel-primera').value = c.velPrimera||'';
+  document.getElementById('cal-vel-perimetros').value = c.velPerimetros||'';
+  document.getElementById('cal-vel-relleno').value = c.velRelleno||'';
+  document.getElementById('cal-retraccion').value = c.retraccion||'';
+  document.getElementById('cal-vel-retraccion').value = c.velRetraccion||'';
+  document.getElementById('cal-layer-height').value = c.layerHeight||'0.20';
+  document.getElementById('cal-flow').value = c.flow||'100';
+  document.getElementById('cal-fan').value = c.fan||'';
+  document.getElementById('cal-camara').value = c.camara||'no';
+  document.getElementById('cal-rating').value = c.rating||3;
+  document.getElementById('cal-estado').value = c.estado||'activo';
+  document.getElementById('cal-notas').value = c.notas||'';
+}
+
+function filterCalibracion(f, btn){
+  _filtroCalibracion = f;
+  document.querySelectorAll('#sec-calibracion .tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderCalibracion(f);
+}
+
+function renderCalibracion(filter='todos'){
+  const grid = document.getElementById('calibracion-grid'); if(!grid) return;
+  const list = filter==='todos' ? DB.calibracion :
+    DB.calibracion.filter(c=>{
+      if(filter==='ABS') return c.materialTipo==='ABS'||c.materialTipo==='ASA';
+      return c.materialTipo===filter||c.materialTipo.startsWith(filter);
+    });
+  if(!list.length){
+    grid.innerHTML=`<div class="add-card" style="grid-column:1/-1;min-height:140px" onclick="openCalModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      <span>Agregar primer perfil de calibración</span>
+    </div>`;
+    return;
+  }
+  const stColors={activo:'var(--teal)',prueba:'var(--amber)',archivado:'var(--text3)'};
+  const stars = n=>'⭐'.repeat(n)+'☆'.repeat(5-n);
+  grid.innerHTML = list.map(c=>{
+    const sc = stColors[c.estado]||'var(--text3)';
+    return `<div class="panel" style="position:relative;border:0.5px solid var(--border)">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:14px;height:14px;border-radius:50%;background:${c.materialColorHex||'#888'};border:0.5px solid var(--border2);flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.nombre}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${c.materialNombre}</div>
+        </div>
+        <span class="badge" style="background:${sc}22;color:${sc};flex-shrink:0">${c.estado}</span>
+      </div>
+      <!-- Rating -->
+      <div style="font-size:13px;margin-bottom:12px;letter-spacing:1px">${stars(c.rating||3)}</div>
+      <!-- Impresora -->
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:12px">🖨️ ${c.impresoraNombre||'Sin impresora'} · capa ${c.layerHeight||'—'}mm</div>
+      <!-- Specs grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+        <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">BOQUILLA</div>
+          <div style="font-size:13px;font-weight:700;color:var(--coral)">${c.tempBoquilla1||'—'}°C <span style="font-size:10px;font-weight:400;color:var(--text3)">/ ${c.tempBoquilla2||'—'}°C</span></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">CAMA</div>
+          <div style="font-size:13px;font-weight:700;color:var(--amber)">${c.tempCama1||'—'}°C <span style="font-size:10px;font-weight:400;color:var(--text3)">/ ${c.tempCama2||'—'}°C</span></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">VELOCIDAD</div>
+          <div style="font-size:13px;font-weight:700;color:var(--blue)">${c.velImpresion||'—'} <span style="font-size:10px;color:var(--text3)">mm/s</span></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">RETRACCIÓN</div>
+          <div style="font-size:13px;font-weight:700;color:var(--purple)">${c.retraccion||'—'} <span style="font-size:10px;color:var(--text3)">mm @ ${c.velRetraccion||'—'}</span></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">VENTILADOR</div>
+          <div style="font-size:13px;font-weight:700;color:var(--teal)">${c.fan||'—'}<span style="font-size:10px;color:var(--text3)">%</span></div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">FLOW / CÁMARA</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${c.flow||'100'}<span style="font-size:10px;color:var(--text3)">% / ${c.camara||'—'}</span></div>
+        </div>
+      </div>
+      <!-- Velocidades extra -->
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">
+        1ª capa: ${c.velPrimera||'—'} mm/s · Perímetros: ${c.velPerimetros||'—'} mm/s · Relleno: ${c.velRelleno||'—'} mm/s
+      </div>
+      ${c.notas?`<div style="font-size:11px;color:var(--text2);background:var(--bg3);padding:8px 10px;border-radius:8px;border-left:3px solid var(--accent);margin-bottom:8px;line-height:1.5">${c.notas}</div>`:''}
+      <!-- Fecha + acciones -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:10px;border-top:0.5px solid var(--border)">
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${new Date(c.fecha).toLocaleDateString('es-AR')}</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="editCalibracion('${c.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCalibracion('${c.id}')">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')+`<div class="add-card" onclick="openCalModal()" style="min-height:140px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo perfil</span></div>`;
+}
+
+
 function clearForm(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); }
 
 const d=new Date();
