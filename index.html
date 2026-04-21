@@ -1482,61 +1482,68 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="modal-title" id="mat-modal-title">Nuevo Filamento</div>
     <input type="hidden" id="material-edit-id">
 
-    <!-- FILA 1: Material + Color + Imagen -->
-    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
-      <!-- Material -->
-      <div style="flex:1;min-width:0">
-        <label class="form-label">Material <span style="color:var(--coral)">*</span></label>
-        <div style="position:relative">
-          <div id="mat-tipo-display" onclick="toggleMatDropdown()" style="
-            background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
-            padding:10px 30px 10px 10px;cursor:pointer;font-size:13px;color:var(--text);
-            display:flex;align-items:center;justify-content:space-between;user-select:none;">
-            <span id="mat-tipo-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Seleccionar...</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+    <!-- FILA SUPERIOR: campos izquierda + imagen derecha -->
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
+
+      <!-- Columna izquierda: Material y Color apilados -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px">
+
+        <!-- Material -->
+        <div>
+          <label class="form-label">Material <span style="color:var(--coral)">*</span></label>
+          <div style="position:relative">
+            <div id="mat-tipo-display" onclick="toggleMatDropdown()" style="
+              background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+              padding:10px 32px 10px 12px;cursor:pointer;font-size:13px;color:var(--text);
+              display:flex;align-items:center;justify-content:space-between;user-select:none;">
+              <span id="mat-tipo-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Seleccionar material...</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="flex-shrink:0;position:absolute;right:10px"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div id="mat-tipo-dropdown" style="
+              display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+              background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+              overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:260px;overflow-y:auto;">
+            </div>
           </div>
-          <div id="mat-tipo-dropdown" style="
-            display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
-            background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
-            overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:260px;overflow-y:auto;">
-          </div>
+          <input type="hidden" id="mat-tipo" value="">
         </div>
-        <input type="hidden" id="mat-tipo" value="">
+
+        <!-- Color -->
+        <div>
+          <label class="form-label">Color <span style="color:var(--coral)">*</span></label>
+          <div style="position:relative">
+            <div id="mat-color-display" onclick="toggleColorDropdown()" style="
+              background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+              padding:10px 32px 10px 12px;cursor:pointer;font-size:13px;color:var(--text3);
+              display:flex;align-items:center;gap:8px;user-select:none;">
+              <span id="mat-color-swatch" style="width:14px;height:14px;border-radius:50%;background:transparent;border:0.5px solid var(--border2);flex-shrink:0;display:none"></span>
+              <span id="mat-color-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Seleccionar color</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="margin-left:auto;flex-shrink:0;position:absolute;right:10px"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div id="mat-color-dropdown" style="
+              display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+              background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+              overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:220px;overflow-y:auto;">
+            </div>
+          </div>
+          <input type="hidden" id="mat-color-nombre" value="">
+          <input type="hidden" id="mat-color-hex" value="#888888">
+        </div>
+
       </div>
 
-      <!-- Color -->
-      <div style="flex:1;min-width:0">
-        <label class="form-label">Color <span style="color:var(--coral)">*</span></label>
-        <div style="position:relative">
-          <div id="mat-color-display" onclick="toggleColorDropdown()" style="
-            background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
-            padding:10px 30px 10px 10px;cursor:pointer;font-size:13px;color:var(--text3);
-            display:flex;align-items:center;gap:8px;user-select:none;">
-            <span id="mat-color-swatch" style="width:14px;height:14px;border-radius:50%;background:transparent;border:0.5px solid var(--border2);flex-shrink:0;display:none"></span>
-            <span id="mat-color-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Color</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="margin-left:auto;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div id="mat-color-dropdown" style="
-            display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
-            background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
-            overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-height:220px;overflow-y:auto;">
-          </div>
-        </div>
-        <input type="hidden" id="mat-color-nombre" value="">
-        <input type="hidden" id="mat-color-hex" value="#888888">
-      </div>
-
-      <!-- Imagen del filamento -->
-      <div style="flex-shrink:0">
+      <!-- Imagen del filamento — más grande, lado derecho -->
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center">
         <label class="form-label">Imagen</label>
-        <div id="mat-img-preview" onclick="document.getElementById('mat-imagen-file').click()" style="width:72px;height:66px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div id="mat-img-preview" onclick="document.getElementById('mat-imagen-file').click()" style="width:110px;height:110px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:4px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
         </div>
         <input type="file" id="mat-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'mat-img-preview','mat-imagen')">
         <input type="hidden" id="mat-imagen">
       </div>
     </div>
+
 
     <!-- MARCA (select + opción manual) -->
     <div class="form-group">
@@ -2092,7 +2099,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;display:block">ARS $</label>
           <div style="position:relative">
             <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:12px">$</span>
-            <input class="form-input" type="number" id="comp-precio-ars" placeholder="0" step="1" min="0" style="padding-left:24px" oninput="onPrecioARS('comp-precio-ars','comp-precio','comp-precio-hint')">
+            <input class="form-input" type="number" id="comp-precio-ars" placeholder="0.00" step="0.01" min="0" style="padding-left:24px" oninput="onPrecioARS('comp-precio-ars','comp-precio','comp-precio-hint')">
           </div>
         </div>
         <div style="flex:1">
@@ -2231,7 +2238,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;display:block">ARS $</label>
           <div style="position:relative">
             <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-family:var(--mono);font-size:12px">$</span>
-            <input class="form-input" type="number" id="acc-precio-ars" placeholder="0" step="1" min="0" style="padding-left:24px" oninput="onPrecioARS('acc-precio-ars','acc-precio','acc-precio-hint')">
+            <input class="form-input" type="number" id="acc-precio-ars" placeholder="0.00" step="0.01" min="0" style="padding-left:24px" oninput="onPrecioARS('acc-precio-ars','acc-precio','acc-precio-hint')">
           </div>
         </div>
         <div style="flex:1">
@@ -5093,7 +5100,7 @@ function renderMateriales(){
     const c = pct>50?'var(--teal)':pct>20?'var(--amber)':'var(--coral)';
     const colorObj = MAT_COLORES.find(x=>x.id===m.color)||{hex:'#888'};
     const hex = colorObj.hex==='transparent-clear'?'rgba(200,200,200,0.3)':colorObj.hex;
-    const arsStr = m.precioARS ? `$${Math.round(m.precioARS).toLocaleString('es-AR')}/kg` : m.precio ? `US$${parseFloat(m.precio||0).toFixed(2)}/kg` : '';
+    const arsStr = m.precioARS ? `$${parseFloat(m.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}/kg` : m.precio ? `US$${parseFloat(m.precio||0).toFixed(2)}/kg` : '';
     return `<div class="panel" style="border:0.5px solid var(--border)">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
         ${m.imagen?`<img src="${m.imagen}" style="width:48px;height:48px;object-fit:cover;border-radius:50%;flex-shrink:0;border:2px solid var(--border2)">`
@@ -5497,7 +5504,7 @@ function renderAccesorios(){
     const pct = a.stockMin>0 ? a.stock/a.stockMin : 1;
     const st = pct>=1?'ok':pct>0?'bajo':'vacio';
     const sc = stColors[st];
-    const arsStr = a.precioARS ? `$${Math.round(a.precioARS).toLocaleString('es-AR')}` : a.precio ? `US$${parseFloat(a.precio||0).toFixed(2)}` : '—';
+    const arsStr = a.precioARS ? `$${parseFloat(a.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : a.precio ? `US$${parseFloat(a.precio||0).toFixed(2)}` : '—';
     return `<tr>
       <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${a.codigo||'—'}</span></td>
       <td style="max-width:260px">
@@ -5505,7 +5512,7 @@ function renderAccesorios(){
           ${a.imagen?`<img src="${a.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>`}
           <div style="min-width:0;flex:1">
             <strong style="font-size:12px;display:block">${a.nombre}</strong>
-            ${a.marca&&a.marca!=='—'?`<div style="font-size:10px;color:var(--text3)">${a.marca}</div>`:''}
+            ${a.url?`<a href="${a.url}" target="_blank" style="font-size:10px;color:var(--blue);text-decoration:none;font-family:var(--mono)">🔗 Ver compra</a>`:(a.marca&&a.marca!=='—'?`<span style="font-size:10px;color:var(--text3)">${a.marca}</span>`:'')}
           </div>
         </div>
       </td>
@@ -5790,7 +5797,7 @@ function renderComponentes(filter){
   const stColors={disponible:'var(--teal)',instalado:'var(--blue)',dañado:'var(--coral)',pedido:'var(--amber)'};
   grid.innerHTML = list.map(c=>{
     const sc = stColors[c.estado]||'var(--text3)';
-    const arsStr = c.precioARS ? `$${Math.round(c.precioARS).toLocaleString('es-AR')}` : c.precio ? `US$${parseFloat(c.precio||0).toFixed(2)}` : '';
+    const arsStr = c.precioARS ? `$${parseFloat(c.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : c.precio ? `US$${parseFloat(c.precio||0).toFixed(2)}` : '';
     return `<div class="panel" style="border:0.5px solid var(--border)">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
         <div style="width:48px;height:48px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
