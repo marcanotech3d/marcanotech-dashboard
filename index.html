@@ -303,16 +303,59 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 .calc-breakdown{font-size:11px;color:var(--text3);font-family:var(--mono);}
 
 /* ─── RESPONSIVE ─── */
+
+/* ─── MOBILE NAV ─── */
+.mobile-topbar{
+  display:none;position:sticky;top:0;z-index:50;
+  background:var(--bg2);border-bottom:0.5px solid var(--border);
+  padding:12px 16px;align-items:center;justify-content:space-between;
+}
+.mobile-menu-btn{
+  width:36px;height:36px;background:var(--bg3);border:0.5px solid var(--border2);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-direction:column;gap:4px;
+}
+.mobile-menu-btn span{
+  display:block;width:16px;height:2px;background:var(--text2);border-radius:2px;
+  transition:all 0.2s;
+}
+.mobile-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  z-index:98;backdrop-filter:blur(2px);
+}
+.mobile-overlay.open{display:block;}
+
+/* ─── DESKTOP ─── */
+@media(min-width:901px){
+  .mobile-topbar{display:none !important;}
+  .mobile-overlay{display:none !important;}
+}
+
+/* ─── TABLET + MOBILE ─── */
 @media(max-width:900px){
   .app{grid-template-columns:1fr;}
-  .sidebar{position:relative;height:auto;flex-direction:row;}
-  .sidebar-footer{display:none;}
+  .mobile-topbar{display:flex;}
+  .sidebar{
+    position:fixed;top:0;left:-260px;width:260px;height:100vh;
+    z-index:99;transition:left 0.28s cubic-bezier(0.4,0,0.2,1);
+    box-shadow:none;
+  }
+  .sidebar.open{
+    left:0;
+    box-shadow:4px 0 24px rgba(0,0,0,0.3);
+  }
+  .sidebar-footer{display:flex !important;flex-direction:column;}
+  .main{padding-top:0;}
+  .topbar{display:none;}
   .stats-row,.projects-grid,.grid-3,.grid-4{grid-template-columns:repeat(2,1fr);}
   .grid-2,.grid-2-1,.grid-1-2{grid-template-columns:1fr;}
+  .section{padding:14px 14px 32px;}
 }
 @media(max-width:560px){
   .stats-row,.projects-grid,.grid-4{grid-template-columns:1fr 1fr;}
   .grid-3{grid-template-columns:1fr;}
+  .grid-2{grid-template-columns:1fr;}
+  #sec-costos > div:last-child{grid-template-columns:1fr;}
 }
 
 /* ─── COST CALCULATOR ─── */
@@ -487,41 +530,39 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
   </div>
   <nav class="nav">
+    <!-- PRINCIPAL -->
     <div class="nav-section">Principal</div>
     <button class="nav-item active" onclick="showSection('dashboard',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       Dashboard
-    </button>
-    <button class="nav-item" onclick="showSection('proyectos',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      Proyectos
-      <span class="nav-badge" id="badge-proyectos">0</span>
     </button>
     <button class="nav-item" onclick="showSection('impresoras',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Impresoras
       <span class="nav-badge" id="badge-impresoras">0</span>
     </button>
-    <button class="nav-item" onclick="showSection('cola',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Cola de impresión
-      <span class="nav-badge" id="badge-cola">0</span>
+    <button class="nav-item" onclick="showSection('proyectos',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Proyectos
+      <span class="nav-badge" id="badge-proyectos">0</span>
     </button>
+
+    <!-- INVENTARIO -->
     <div class="nav-section">Inventario</div>
     <button class="nav-item" onclick="showSection('materiales',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
       Materiales
       <span class="nav-badge" id="badge-materiales">0</span>
     </button>
-    <button class="nav-item" onclick="showSection('calibracion',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
-      Calibración
-      <span class="nav-badge" id="badge-calibracion">0</span>
-    </button>
     <button class="nav-item" onclick="showSection('accesorios',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       Accesorios
       <span class="nav-badge" id="badge-accesorios">0</span>
+    </button>
+    <button class="nav-item" onclick="showSection('componentes',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Componentes
+      <span class="nav-badge" id="badge-componentes">0</span>
     </button>
     <button class="nav-item" onclick="showSection('productos',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -530,44 +571,51 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </button>
     <button class="nav-item" onclick="showSection('piezas',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-      Piezas & STL
+      Archivos STL
       <span class="nav-badge" id="badge-piezas">0</span>
     </button>
+
+    <!-- GESTIÓN -->
     <div class="nav-section">Gestión</div>
     <button class="nav-item" onclick="showSection('costos',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Costos & precios
-    </button>
-    <button class="nav-item" onclick="showSection('ventas',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-      Ventas
-      <span class="nav-badge" id="badge-ventas">0</span>
+      Calculadora de Costos
     </button>
     <button class="nav-item" onclick="showSection('presupuestos',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Presupuestos
       <span class="nav-badge" id="badge-presupuestos">0</span>
     </button>
-    <button class="nav-item" onclick="showSection('componentes',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-      Componentes RC
-      <span class="nav-badge" id="badge-componentes">0</span>
+    <button class="nav-item" onclick="showSection('ventas',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Facturación
+      <span class="nav-badge" id="badge-ventas">0</span>
+    </button>
+    <button class="nav-item" onclick="showSection('calibracion',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      Calibración de Material
+      <span class="nav-badge" id="badge-calibracion">0</span>
+    </button>
+    <button class="nav-item" onclick="showSection('cola',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Cola de Impresión
+      <span class="nav-badge" id="badge-cola">0</span>
     </button>
     <button class="nav-item" onclick="showSection('timer',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Timer de impresión
+      Tiempo de Impresión
     </button>
     <button class="nav-item" onclick="showSection('graficos',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="17" x2="7" y2="11"/><line x1="12" y1="17" x2="12" y2="7"/><line x1="17" y1="17" x2="17" y2="13"/></svg>
-      Gráficos & consumo
-    </button>
-    <button class="nav-item" onclick="showSection('mantenimiento',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      Mantenimiento
+      Consumo de Material
     </button>
     <button class="nav-item" onclick="showSection('estadisticas',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Estadísticas
+    </button>
+    <button class="nav-item" onclick="showSection('mantenimiento',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Mantenimiento
     </button>
     <button class="nav-item" onclick="showSection('acercade',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -609,8 +657,30 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   </div>
 </aside>
 
+<!-- ════ MOBILE OVERLAY ════ -->
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+
 <!-- ════ MAIN ════ -->
 <main class="main">
+  <!-- Mobile topbar (only visible on mobile) -->
+  <div class="mobile-topbar" id="mobile-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech 3D</div>
+        <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--accent);padding:1px 5px;border-radius:3px">v1.6</span></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="sync-status-mobile" style="font-size:10px;color:var(--text3);font-family:var(--mono)"></div>
+      <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
   <div class="topbar">
     <div class="topbar-left">
       <div class="page-title" id="topbar-title">Dashboard General</div>
@@ -2849,16 +2919,17 @@ function showApp(user){
 // ════════════════════════════════
 function showSyncStatus(state){
   const el = document.getElementById('sync-status');
-  if(!el) return;
+  const elMobile = document.getElementById('sync-status-mobile');
   const cfg = {
-    offline:    {dot:'var(--text3)',  label:'Modo local',    title:'Los datos se guardan solo en este dispositivo. Configurá Firebase para sincronizar.'},
+    offline:    {dot:'var(--text3)',  label:'Modo local',    title:'Los datos se guardan solo en este dispositivo.'},
     connecting: {dot:'var(--amber)',  label:'Conectando…',   title:'Conectando a Firebase...'},
-    online:     {dot:'var(--teal)',   label:'Sincronizado',  title:'Datos sincronizados con Firebase — disponibles desde cualquier dispositivo'},
-    error:      {dot:'var(--coral)',  label:'Sin conexión',  title:'No se pudo conectar a Firebase. Trabajando en modo local.'}
+    online:     {dot:'var(--teal)',   label:'Sincronizado',  title:'Datos sincronizados con Firebase'},
+    error:      {dot:'var(--coral)',  label:'Sin conexión',  title:'No se pudo conectar a Firebase.'}
   };
   const c = cfg[state]||cfg.offline;
-  el.title = c.title;
-  el.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:${c.dot};display:inline-block;${state==='connecting'?'animation:pulse 1s infinite':''}"></span><span style="font-size:10px;font-family:var(--mono);color:${c.dot}">${c.label}</span>`;
+  const html = `<span style="width:7px;height:7px;border-radius:50%;background:${c.dot};display:inline-block;${state==='connecting'?'animation:pulse 1s infinite':''}"></span><span style="font-size:10px;font-family:var(--mono);color:${c.dot};margin-left:4px">${c.label}</span>`;
+  if(el){ el.title=c.title; el.innerHTML=html; }
+  if(elMobile){ elMobile.innerHTML=html; }
 }
 
 // ════════════════════════════════
@@ -2868,12 +2939,12 @@ const sectionTitles = {
   dashboard:'Dashboard General', proyectos:'Proyectos RC',
   impresoras:'Mis Impresoras', cola:'Cola de Impresión',
   materiales:'Materiales & Filamentos', productos:'Catálogo de Productos',
-  piezas:'Piezas & Archivos STL', costos:'Costos & Precios',
+  piezas:'Archivos STL', costos:'Calculadora de Costos',
   mantenimiento:'Mantenimiento', estadisticas:'Estadísticas',
-  ventas:'Registro de Ventas', componentes:'Componentes RC',
-  timer:'Timer de Impresión', graficos:'Gráficos & Consumo',
+  ventas:'Facturación', componentes:'Componentes',
+  timer:'Tiempo de Impresión', graficos:'Consumo de Material',
   accesorios:'Accesorios & Herramientas',
-  calibracion:'Calibración de Filamentos',
+  calibracion:'Calibración de Material',
   presupuestos:'Presupuestos',
   acercade:'Acerca de'
 };
@@ -2903,12 +2974,15 @@ function showSection(id, navEl){
       if(i.getAttribute('onclick')&&i.getAttribute('onclick').includes("'"+id+"'")) i.classList.add('active');
     });
   }
-  document.getElementById('topbar-title').textContent = sectionTitles[id]||id;
+  const title = sectionTitles[id]||id;
+  document.getElementById('topbar-title').textContent = title;
   const addBtn = document.getElementById('topbar-add-btn');
   if(addBtnLabels[id]){ addBtn.textContent=addBtnLabels[id]; addBtn.style.display=''; }
   else { addBtn.style.display='none'; }
   currentSection = id;
   renderSection(id);
+  // Close mobile menu on navigation
+  if(window.innerWidth <= 900) closeMobileMenu();
 }
 
 function openAddModal(){
@@ -4975,6 +5049,36 @@ function renderAcercaDe(){
       </div>
     </div>`).join('');
 }
+
+// ════════════════════════════════
+// MOBILE MENU
+// ════════════════════════════════
+function toggleMobileMenu(){
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+  const btn = document.getElementById('mobile-menu-btn');
+  const isOpen = sidebar.classList.contains('open');
+  if(isOpen){ closeMobileMenu(); }
+  else {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+
+function closeMobileMenu(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('mobile-overlay').classList.remove('open');
+  const btn = document.getElementById('mobile-menu-btn');
+  if(btn) btn.classList.remove('open');
+}
+
+// Close menu when nav item is clicked on mobile
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    if(window.innerWidth <= 900) closeMobileMenu();
+  });
+});
 
 // ════════════════════════════════
 // THEME SYSTEM
