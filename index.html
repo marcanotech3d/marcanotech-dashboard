@@ -3382,6 +3382,15 @@ function resetProyectoForm(){
   resetImgPreview('proy-img-preview','proy-imagen');
 }
 
+function nextCompCodigo(categoria){
+  const prefixMap = {motor:'MOT',esc:'ESC',servo:'SRV',bateria:'BAT',radio:'RAD',otro:'ELC'};
+  const cat = categoria || 'otro';
+  const prefix = prefixMap[cat] || 'ELC';
+  if(!DB.componentes || !DB.componentes.length) return prefix+'-0001';
+  const nums = DB.componentes.map(c => parseInt((c.codigo||'ELC-0000').split('-')[1]||0)).filter(n=>!isNaN(n));
+  return prefix+'-'+String((nums.length ? Math.max(...nums) : 0)+1).padStart(4,'0');
+}
+
 function resetComponenteForm(){
   document.getElementById('comp-edit-id').value='';
   clearForm(['comp-nombre','comp-marca','comp-modelo','comp-specs','comp-precio']);
@@ -3891,10 +3900,12 @@ function onMatPrecioUSD(usdVal){
   }
 }
 
+// ── FIX openMatModal — full reset when called without editId ──
 function openMatModal(editId=''){
   _matTipoSelected = '';
   _matColorSelected = null;
-  // Reset UI
+  document.getElementById('material-edit-id').value = '';
+  // Reset all fields
   document.getElementById('mat-tipo-label').textContent = 'Seleccionar material...';
   document.getElementById('mat-tipo').value = '';
   document.getElementById('mat-color-label').textContent = 'Seleccionar color';
@@ -3903,6 +3914,22 @@ function openMatModal(editId=''){
   document.getElementById('mat-color-hex').value = '#888888';
   document.getElementById('mat-modal-title').textContent = editId ? 'Editar Filamento' : 'Nuevo Filamento';
   document.querySelector('#modal-material .btn-accent').textContent = editId ? 'Guardar cambios' : 'Agregar Filamento';
+  // Reset marca
+  document.getElementById('mat-marca').value = '';
+  document.getElementById('mat-marca').style.display = 'none';
+  document.getElementById('mat-marca-select').value = '';
+  // Reset precios
+  document.getElementById('mat-precio').value = '';
+  document.getElementById('mat-precio-ars').value = '';
+  // Reset notas y URL
+  document.getElementById('mat-notas').value = '';
+  if(document.getElementById('mat-url')) document.getElementById('mat-url').value = '';
+  // Reset imagen
+  resetImgPreview('mat-img-preview','mat-imagen');
+  // Reset dolar hint
+  const hint = document.getElementById('mat-dolar-rate-hint');
+  if(hint && _dolarRate) hint.textContent = `USD oficial: $${_dolarRate.toLocaleString('es-AR')} ARS`;
+  // Reset peso a 1kg
   selectPeso(1000);
   buildMatDropdowns();
   openModal('modal-material');
@@ -5473,12 +5500,12 @@ function renderAccesorios(){
     const arsStr = a.precioARS ? `$${Math.round(a.precioARS).toLocaleString('es-AR')}` : a.precio ? `US$${parseFloat(a.precio||0).toFixed(2)}` : '—';
     return `<tr>
       <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${a.codigo||'—'}</span></td>
-      <td style="max-width:200px">
+      <td style="max-width:260px">
         <div style="display:flex;align-items:center;gap:8px">
           ${a.imagen?`<img src="${a.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>`}
-          <div style="min-width:0">
-            <strong style="font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${a.nombre}</strong>
-            ${a.notas&&!a.notas.startsWith('http')?`<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${a.notas}</div>`:''}
+          <div style="min-width:0;flex:1">
+            <strong style="font-size:12px;display:block">${a.nombre}</strong>
+            ${a.marca&&a.marca!=='—'?`<div style="font-size:10px;color:var(--text3)">${a.marca}</div>`:''}
           </div>
         </div>
       </td>
