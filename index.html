@@ -1886,8 +1886,7 @@ function initFirebase(){
   const scripts = [
     'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js',
-    'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js',
-    'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js'
+    'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js'
   ];
   let loaded = 0;
   scripts.forEach(src=>{
@@ -1939,7 +1938,11 @@ function connectFirebase(){
 let _storage = null;
 
 function initStorage(){
-  try{ _storage = firebase.storage(); } catch(e){ console.warn('Storage init:', e); }
+  try{
+    if(typeof firebase !== 'undefined' && firebase.storage){
+      _storage = firebase.storage();
+    }
+  } catch(e){ /* Storage not enabled - images work locally only */ }
 }
 
 // Upload image to Firebase Storage and return download URL
@@ -1957,7 +1960,7 @@ function uploadImageToStorage(dataUrl, path){
 
 // Replace local base64 images with Storage URLs before saving
 async function persistWithStorage(key, items){
-  if(!_storage || !Array.isArray(items)){
+  if(!_storage || !Array.isArray(items) || !_firebaseUserReady){
     persist(key); return;
   }
   const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'anon';
