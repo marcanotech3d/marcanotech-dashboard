@@ -3533,6 +3533,206 @@ function saveProyecto(){
   showToast('Proyecto guardado ✓');
 }
 
+// ════════════════════════════════
+// IMAGE PREVIEW HELPERS
+// ════════════════════════════════
+function previewGenImg(input, previewId, hiddenId){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 300;
+      let w = img.width, h = img.height;
+      if(w > MAX){ h = Math.round(h*(MAX/w)); w = MAX; }
+      if(h > MAX){ w = Math.round(w*(MAX/h)); h = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+      document.getElementById(hiddenId).value = dataUrl;
+      const prev = document.getElementById(previewId);
+      if(prev) prev.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewImpImg(input){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 400;
+      let w = img.width, h = img.height;
+      if(w > MAX){ h = Math.round(h*(MAX/w)); w = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('imp-imagen').value = dataUrl;
+      const prev = document.getElementById('imp-img-preview');
+      if(prev) prev.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetImgPreview(previewId, hiddenId){
+  const el = document.getElementById(hiddenId);
+  if(el) el.value = '';
+  const prev = document.getElementById(previewId);
+  if(prev) prev.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>`;
+}
+
+// ════════════════════════════════
+// GRAFICOS / CONSUMO DE MATERIAL
+// ════════════════════════════════
+function renderGraficos(){
+  const stats = document.getElementById('graficos-stats');
+  if(stats){
+    const totalKg = DB.materiales.reduce((a,m)=>a+(m.total||0),0)/1000;
+    const usadoKg = DB.materiales.reduce((a,m)=>a+(m.total-m.stock||0),0)/1000;
+    const pct = totalKg>0 ? Math.round((usadoKg/totalKg)*100) : 0;
+    const totalCosto = DB.materiales.reduce((a,m)=>{
+      const precioKg = m.precioARS || (m.precio ? m.precio*(_dolarRate||1) : 0);
+      return a + (m.total/1000)*precioKg;
+    }, 0);
+    stats.innerHTML=`
+      <div class="stat-card"><div class="stat-label">Stock total</div><div class="stat-value">${totalKg.toFixed(2)}</div><div class="stat-delta neutral">kg inventario</div></div>
+      <div class="stat-card"><div class="stat-label">Consumido</div><div class="stat-value" style="color:var(--amber)">${usadoKg.toFixed(2)}</div><div class="stat-delta neutral">kg usado</div></div>
+      <div class="stat-card"><div class="stat-label">% Consumo</div><div class="stat-value">${pct}%</div><div class="stat-delta neutral">del inventario</div></div>
+      <div class="stat-card"><div class="stat-label">Valor stock</div><div class="stat-value">$${Math.round(totalCosto).toLocaleString('es-AR')}</div><div class="stat-delta neutral">ARS total</div></div>`;
+  }
+  const chartEl = document.getElementById('chart-filamentos');
+  if(chartEl && DB.materiales.length){
+    const bars = DB.materiales.map(m=>{
+      const pct = m.total>0 ? Math.round((m.stock/m.total)*100) : 0;
+      const c = pct>50?'var(--teal)':pct>20?'var(--amber)':'var(--coral)';
+      const colorObj = MAT_COLORES.find(x=>x.id===m.color)||{hex:'#888'};
+      const hex = colorObj.hex==='transparent-clear'?'rgba(180,180,180,0.5)':colorObj.hex;
+      return `<div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:10px;height:10px;border-radius:50%;background:${hex};border:0.5px solid var(--border2);flex-shrink:0;display:inline-block"></span>
+            <span style="font-size:12px;color:var(--text)">${m.tipo} ${m.color}</span>
+            <span style="font-size:10px;color:var(--text3)">${m.marca||''}</span>
+          </div>
+          <span style="font-size:11px;color:${c};font-family:var(--mono);font-weight:700">${m.stock}g / ${m.total}g (${pct}%)</span>
+        </div>
+        <div style="height:7px;background:var(--border);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${c};border-radius:4px"></div>
+        </div>
+      </div>`;
+    }).join('');
+    chartEl.innerHTML = bars;
+  } else if(chartEl){
+    chartEl.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">Sin materiales registrados</div>`;
+  }
+  const chartVentas = document.getElementById('chart-ventas-mes');
+  if(chartVentas){
+    const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const porMes = Array(12).fill(0);
+    DB.ventas.forEach(v=>{ const d=new Date(v.fecha||v.ts||0); if(d.getFullYear()===new Date().getFullYear()) porMes[d.getMonth()]+=parseFloat(v.total||0); });
+    const max = Math.max(...porMes,1);
+    chartVentas.innerHTML = `<div style="display:flex;align-items:flex-end;gap:4px;height:80px">
+      ${porMes.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="width:100%;background:var(--accent);border-radius:3px 3px 0 0;height:${Math.round((v/max)*70)+4}px;opacity:${v>0?1:0.2}"></div>
+        <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">${meses[i]}</span>
+      </div>`).join('')}
+    </div>`;
+  }
+}
+
+// ════════════════════════════════
+// TIMER
+// ════════════════════════════════
+let _timerInterval = null;
+let _timerStart = 0;
+let _timerPaused = 0;
+let _timerRunning = false;
+
+function renderTimer(){
+  const sel = document.getElementById('timer-proyecto');
+  if(sel) sel.innerHTML = '<option value="">Sin proyecto</option>' +
+    DB.proyectos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+  renderTimerHistorial();
+}
+
+function renderTimerHistorial(){
+  const el = document.getElementById('timer-historial');
+  if(!el) return;
+  if(!DB.timerHistorial||!DB.timerHistorial.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:12px 0">Sin registros aún</div>'; return;
+  }
+  el.innerHTML = DB.timerHistorial.slice(0,10).map(h=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:12px">
+      <div><div style="color:var(--text);font-weight:600">${h.nombre||'Sin nombre'}</div>
+        <div style="color:var(--text3);font-size:10px;font-family:var(--mono)">${h.fecha||''}</div>
+      </div>
+      <span style="font-family:var(--mono);color:var(--accent);font-weight:700">${h.tiempo||'—'}</span>
+    </div>`).join('');
+}
+
+function timerStart(){
+  if(_timerRunning) return;
+  _timerRunning = true;
+  _timerStart = Date.now() - _timerPaused;
+  document.getElementById('btn-timer-start').style.display='none';
+  document.getElementById('btn-timer-pause').style.display='';
+  document.getElementById('btn-timer-finish').style.display='';
+  _timerInterval = setInterval(()=>{
+    const elapsed = Date.now()-_timerStart;
+    const h=Math.floor(elapsed/3600000), m=Math.floor((elapsed%3600000)/60000), s=Math.floor((elapsed%60000)/1000);
+    const disp = document.getElementById('timer-display');
+    if(disp) disp.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    const est = parseInt(document.getElementById('timer-estimado')?.value)||0;
+    const bar = document.getElementById('timer-progress-bar');
+    if(bar&&est>0) bar.style.width=Math.min(100,Math.round((elapsed/60000/est)*100))+'%';
+  },1000);
+}
+
+function timerPause(){
+  if(!_timerRunning) return;
+  _timerRunning = false;
+  _timerPaused = Date.now()-_timerStart;
+  clearInterval(_timerInterval);
+  document.getElementById('btn-timer-start').style.display='';
+  document.getElementById('btn-timer-pause').style.display='none';
+}
+
+function timerReset(){
+  clearInterval(_timerInterval);
+  _timerRunning=false; _timerStart=0; _timerPaused=0;
+  const disp=document.getElementById('timer-display');
+  if(disp) disp.textContent='00:00:00';
+  const bar=document.getElementById('timer-progress-bar');
+  if(bar) bar.style.width='0%';
+  document.getElementById('btn-timer-start').style.display='';
+  document.getElementById('btn-timer-pause').style.display='none';
+  document.getElementById('btn-timer-finish').style.display='none';
+}
+
+function timerFinish(){
+  if(!_timerRunning&&!_timerPaused) return;
+  clearInterval(_timerInterval);
+  _timerRunning=false;
+  const elapsed = _timerPaused||(Date.now()-_timerStart);
+  const h=Math.floor(elapsed/3600000), m=Math.floor((elapsed%3600000)/60000), s=Math.floor((elapsed%60000)/1000);
+  const tiempo=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const nombre=document.getElementById('timer-nombre')?.value||'Trabajo';
+  const entry={id:uid(),nombre,tiempo,fecha:new Date().toLocaleDateString('es-AR'),ts:Date.now()};
+  DB.timerHistorial.unshift(entry);
+  if(DB.timerHistorial.length>20) DB.timerHistorial=DB.timerHistorial.slice(0,20);
+  persist('timerHistorial');
+  timerReset();
+  renderTimerHistorial();
+  showToast(`Registrado: ${nombre} — ${tiempo}`);
+}
+
 function renderProyectos(filter='todos'){
   const list=filter==='todos'?DB.proyectos:DB.proyectos.filter(p=>p.estado===filter);
   return list.length===0
@@ -4853,10 +5053,8 @@ function renderMateriales(){
     const arsStr = m.precioARS ? `$${Math.round(m.precioARS).toLocaleString('es-AR')}/kg` : m.precio ? `US$${parseFloat(m.precio||0).toFixed(2)}/kg` : '';
     return `<div class="panel" style="border:0.5px solid var(--border)">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
-        ${m.imagen?`<img src="${m.imagen}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;flex-shrink:0">`
-          :`<div style="width:48px;height:48px;border-radius:8px;border:0.5px solid var(--border2);flex-shrink:0;background:${hex};display:flex;align-items:center;justify-content:center">
-              <div style="width:24px;height:24px;border-radius:50%;background:${hex};border:1.5px solid rgba(255,255,255,0.4)"></div>
-            </div>`}
+        ${m.imagen?`<img src="${m.imagen}" style="width:48px;height:48px;object-fit:cover;border-radius:50%;flex-shrink:0;border:2px solid var(--border2)">`
+          :`<div style="width:48px;height:48px;border-radius:50%;flex-shrink:0;background:${hex};border:2px solid var(--border2)"></div>`}
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">${m.tipo} ${m.color}</div>
           <div style="font-size:11px;color:var(--text3);margin-top:1px">${m.marca||'—'}</div>
@@ -4911,10 +5109,13 @@ function renderAccesorios(){
     const arsStr = a.precioARS ? `$${Math.round(a.precioARS).toLocaleString('es-AR')}` : a.precio ? `US$${parseFloat(a.precio||0).toFixed(2)}` : '—';
     return `<tr>
       <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${a.codigo||'—'}</span></td>
-      <td style="max-width:220px">
+      <td style="max-width:200px">
         <div style="display:flex;align-items:center;gap:8px">
           ${a.imagen?`<img src="${a.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>`}
-          <div><strong style="font-size:12px">${a.nombre}</strong>${a.notas?`<div style="font-size:10px;color:var(--text3)">${a.notas}</div>`:''}</div>
+          <div style="min-width:0">
+            <strong style="font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${a.nombre}</strong>
+            ${a.notas&&!a.notas.startsWith('http')?`<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${a.notas}</div>`:''}
+          </div>
         </div>
       </td>
       <td><span class="badge badge-gray">${a.categoria}</span></td>
