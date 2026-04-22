@@ -706,6 +706,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div style="display:flex;align-items:center;gap:12px"><div class="page-date" id="topbar-date"></div><div id="dolar-rate-display" style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargando USD...</div></div>
     </div>
     <div class="topbar-actions">
+      <button class="btn btn-sm" title="Nueva cotización" onclick="openModal('modal-cotizacion-web')" style="background:rgba(37,211,102,0.1);color:#25D366;border:0.5px solid rgba(37,211,102,0.25)">💬 Cotización</button>
       <button class="btn btn-ghost btn-sm" id="topbar-add-btn" onclick="openAddModal()">+ Agregar</button>
       <button class="btn btn-accent btn-sm" onclick="showSection('estadisticas',null)">Ver estadísticas</button>
       <div id="sync-status" style="display:flex;align-items:center;gap:5px;padding:6px 10px;background:var(--bg3);border-radius:8px;border:0.5px solid var(--border);cursor:help">
@@ -2739,6 +2740,67 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-cliente')">Cancelar</button>
       <button class="btn btn-accent" style="min-width:140px" onclick="saveCliente()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL COTIZACIÓN WEB ════ -->
+<div class="modal-overlay" id="modal-cotizacion-web">
+  <div class="modal" style="width:500px;max-height:92vh;overflow-y:auto">
+    <div class="modal-title">Nueva Solicitud de Cotización</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:20px;margin-top:-8px">Así la ven tus clientes en marcanotech.com — se envía por WhatsApp</div>
+
+    <!-- Título -->
+    <div class="form-group">
+      <label class="form-label">Título <span style="color:var(--coral)">*</span></label>
+      <input class="form-input" id="wcot-titulo" placeholder="Ej: Necesito 50 llaveros personalizados">
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group">
+      <label class="form-label">Descripción <span style="color:var(--coral)">*</span></label>
+      <textarea class="form-input" id="wcot-desc" rows="4" placeholder="Describí lo que necesitás: material, cantidad, tamaño, color, uso, etc."></textarea>
+    </div>
+
+    <!-- Ciudad + Provincia -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Ciudad</label>
+        <input class="form-input" id="wcot-ciudad" placeholder="Ej: Buenos Aires">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Provincia</label>
+        <input class="form-input" id="wcot-prov" placeholder="Ej: CABA">
+      </div>
+    </div>
+
+    <!-- Contacto -->
+    <div style="background:rgba(224,26,0,0.06);border:1px solid rgba(224,26,0,0.2);border-radius:10px;padding:14px 16px;margin-bottom:16px">
+      <div style="font-size:11px;color:var(--coral);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.48 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Datos de contacto (solo se revelan al aceptar la cotización)
+      </div>
+      <div class="form-row" style="gap:10px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">WhatsApp / Teléfono</label>
+          <input class="form-input" id="wcot-wa" placeholder="+54 11...">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="wcot-email" placeholder="tu@email.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div id="wcot-preview" style="display:none;background:var(--bg3);border:0.5px solid var(--border2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:12px;font-family:var(--mono);color:var(--text2);white-space:pre-wrap;line-height:1.7"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cotizacion-web')">Cancelar</button>
+      <button class="btn btn-sm btn-ghost" onclick="previewCotizacion()" style="margin-right:auto">👁 Preview</button>
+      <button class="btn btn-accent" style="background:#25D366;min-width:160px" onclick="enviarCotizacionWA()">
+        Enviar por WhatsApp
+      </button>
     </div>
   </div>
 </div>
