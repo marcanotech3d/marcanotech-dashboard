@@ -60,7 +60,7 @@ input,select,textarea{font-family:var(--font);}
   margin-left:auto;background:var(--bg3);border-radius:20px;
   font-size:10px;padding:2px 7px;font-family:var(--mono);color:var(--text3);
 }
-.nav-item.active .nav-badge{background:rgba(232,255,71,0.15);color:var(--accent);}
+.nav-item.active .nav-badge{background:rgba(224,26,0,0.15);color:var(--ferrari);font-weight:700;}
 .sidebar-footer{padding:14px 10px;border-top:0.5px solid var(--border);}
 .printer-status{background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border);}
 .printer-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
@@ -393,7 +393,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   cursor:pointer;font-family:var(--font);transition:all 0.15s;
 }
 .mat-peso-btn:hover{background:var(--bg4);color:var(--text);}
-.mat-peso-btn.active{background:var(--accent);color:#0f0f11;border-color:var(--accent);}
+.mat-peso-btn.active{background:var(--navy);color:#ffffff;border-color:var(--navy);}
 .mat-dropdown-item{
   display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;
   font-size:13px;color:var(--text);transition:background 0.1s;border-bottom:0.5px solid var(--border);
@@ -1421,9 +1421,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Proyecto -->
 <div class="modal-overlay" id="modal-proyecto">
-  <div class="modal">
+  <div class="modal" style="width:580px;max-height:92vh;overflow-y:auto">
     <div class="modal-title" id="modal-proyecto-title">Nuevo proyecto</div>
     <input type="hidden" id="proyecto-edit-id">
+
+    <!-- IMAGEN + NOMBRE -->
     <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
       <div>
         <label class="form-label">Imagen</label>
@@ -1442,6 +1444,8 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         </div>
       </div>
     </div>
+
+    <!-- BODY STYLE + ESTADO -->
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Body style</label>
@@ -1459,42 +1463,64 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Estado</label>
         <select class="form-input" id="proy-estado">
-          <option value="diseño">Diseño</option><option value="imprimiendo">Imprimiendo</option>
-          <option value="pausa">En pausa</option><option value="prueba">En prueba</option>
+          <option value="diseño">Diseño</option>
+          <option value="imprimiendo">Imprimiendo</option>
+          <option value="pausa">En pausa</option>
+          <option value="prueba">En prueba</option>
           <option value="completado">Completado</option>
         </select>
       </div>
     </div>
+
+    <!-- PROGRESO + TIEMPO -->
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Material principal</label>
-        <input class="form-input" id="proy-material" placeholder="ej: PETG Negro">
-      </div>
       <div class="form-group">
         <label class="form-label">Progreso (%)</label>
         <input class="form-input" type="number" id="proy-progreso" min="0" max="100" placeholder="0-100">
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Notas / descripción</label>
-      <textarea class="form-input" id="proy-notas" rows="3" placeholder="Detalles, componentes, observaciones..."></textarea>
-    </div>
-    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Tiempo estimado</label>
         <input class="form-input" id="proy-tiempo" placeholder="ej: 3h 20m">
       </div>
-      <div class="form-group">
-        <label class="form-label">Color de fondo (hex)</label>
-        <input class="form-input" id="proy-color" placeholder="#38d9a9">
+    </div>
+
+    <!-- ══ LISTA DE INSUMOS DEL PROYECTO ══ -->
+    <div style="background:var(--bg3);border-radius:var(--r);border:0.5px solid var(--border2);padding:14px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">Insumos del proyecto</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">Materiales, accesorios, componentes y productos necesarios</div>
+        </div>
+        <button type="button" onclick="addProyInsumo()" style="background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Agregar</button>
+      </div>
+      <div id="proy-insumos-container"></div>
+      <div id="proy-insumos-empty" style="text-align:center;padding:16px 0;color:var(--text3);font-size:12px;font-family:var(--mono)">
+        Sin insumos — hacé clic en "+ Agregar" para añadir materiales, componentes o accesorios
       </div>
     </div>
+
+    <!-- NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Notas / descripción</label>
+      <textarea class="form-input" id="proy-notas" rows="2" placeholder="Detalles, observaciones..."></textarea>
+    </div>
+
+    <!-- COLOR -->
+    <div class="form-group">
+      <label class="form-label">Color de fondo (hex)</label>
+      <input class="form-input" id="proy-color" placeholder="#38d9a9">
+    </div>
+
+    <!-- Campo legacy oculto para compatibilidad -->
+    <input type="hidden" id="proy-material" value="">
+
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-proyecto')">Cancelar</button>
       <button class="btn btn-accent" onclick="saveProyecto()">Guardar proyecto</button>
     </div>
   </div>
 </div>
+
 
 <!-- Material -->
 <div class="modal-overlay" id="modal-material">
@@ -3414,6 +3440,8 @@ function resetProyectoForm(){
   document.getElementById('proy-tipo').value='Touring / Drift';
   document.getElementById('proy-emoji').value='🖨️';
   resetImgPreview('proy-img-preview','proy-imagen');
+  _proyInsumos = [];
+  renderProyInsumos();
 }
 
 function nextCompCodigo(categoria){
@@ -3553,6 +3581,7 @@ function saveProyecto(){
     nombre:document.getElementById('proy-nombre').value.trim(),
     emoji:document.getElementById('proy-emoji').value||'🖨️',
     imagen:document.getElementById('proy-imagen').value||'',
+    insumos:_proyInsumos.map(i=>({...i})),
     tipo:document.getElementById('proy-tipo').value,
     estado:document.getElementById('proy-estado').value,
     material:document.getElementById('proy-material').value,
@@ -3776,6 +3805,145 @@ function timerFinish(){
   showToast(`Registrado: ${nombre} — ${tiempo}`);
 }
 
+// ════════════════════════════════
+// PROYECTO — INSUMOS (materials list)
+// ════════════════════════════════
+let _proyInsumos = []; // [{id, tipo, refId, nombre, cantidad, unidad, consumir}]
+
+const INSUMO_TIPOS = [
+  {value:'material',   label:'Material / Filamento', icon:'⬡'},
+  {value:'accesorio',  label:'Accesorio',             icon:'🔩'},
+  {value:'componente', label:'Componente RC',          icon:'⚡'},
+  {value:'producto',   label:'Producto',               icon:'📦'},
+  {value:'libre',      label:'Item libre',             icon:'✏️'},
+];
+
+function addProyInsumo(){
+  _proyInsumos.push({id:uid(), tipo:'material', refId:'', nombre:'', cantidad:1, unidad:'g', consumir:true});
+  renderProyInsumos();
+}
+
+function removeProyInsumo(idx){
+  _proyInsumos.splice(idx,1);
+  renderProyInsumos();
+}
+
+function getInsumoOptions(tipo){
+  switch(tipo){
+    case 'material':   return DB.materiales.map(m=>({id:m.id, label:`${m.tipo} ${m.color} — ${m.marca}`, unidad:'g', stock:m.stock}));
+    case 'accesorio':  return DB.accesorios.map(a=>({id:a.id, label:`${a.nombre} (${a.codigo||''})`, unidad:a.unidad||'Und', stock:a.stock}));
+    case 'componente': return DB.componentes.map(c=>({id:c.id, label:`${c.nombre} ${c.codigo?'('+c.codigo+')':''}`, unidad:'Und', stock:c.stock}));
+    case 'producto':   return DB.productos.map(p=>({id:p.id, label:`${p.nombre} (${p.sku||''})`, unidad:'Und', stock:p.stock}));
+    default: return [];
+  }
+}
+
+function onInsumoTipoChange(idx){
+  const tipoSel = document.getElementById(`insumo-tipo-${idx}`);
+  if(!tipoSel) return;
+  _proyInsumos[idx].tipo = tipoSel.value;
+  _proyInsumos[idx].refId = '';
+  _proyInsumos[idx].nombre = '';
+  // Auto-set default unit
+  const units = {material:'g', accesorio:'Und', componente:'Und', producto:'Und', libre:''};
+  _proyInsumos[idx].unidad = units[tipoSel.value]||'Und';
+  renderProyInsumos();
+}
+
+function onInsumoRefChange(idx){
+  const refSel = document.getElementById(`insumo-ref-${idx}`);
+  if(!refSel) return;
+  const opts = getInsumoOptions(_proyInsumos[idx].tipo);
+  const found = opts.find(o=>o.id===refSel.value);
+  _proyInsumos[idx].refId = refSel.value;
+  if(found){
+    _proyInsumos[idx].nombre = found.label;
+    _proyInsumos[idx].unidad = found.unidad||_proyInsumos[idx].unidad;
+  }
+  // Update unit display
+  const unitEl = document.getElementById(`insumo-unit-${idx}`);
+  if(unitEl) unitEl.textContent = _proyInsumos[idx].unidad;
+}
+
+function renderProyInsumos(){
+  const cont = document.getElementById('proy-insumos-container');
+  const empty = document.getElementById('proy-insumos-empty');
+  if(!cont) return;
+  if(empty) empty.style.display = _proyInsumos.length ? 'none' : 'block';
+  if(!_proyInsumos.length){ cont.innerHTML=''; return; }
+
+  cont.innerHTML = _proyInsumos.map((ins, i)=>{
+    const opts = getInsumoOptions(ins.tipo);
+    const optHtml = opts.length
+      ? '<option value="">Seleccionar...</option>'+opts.map(o=>`<option value="${o.id}" ${ins.refId===o.id?'selected':''}>${o.label.substring(0,40)}${o.label.length>40?'...':''}</option>`).join('')
+      : '<option value="">Sin registros</option>';
+    const tipoIcon = INSUMO_TIPOS.find(t=>t.value===ins.tipo)?.icon||'•';
+    return `<div style="background:var(--bg2);border-radius:var(--r);border:0.5px solid var(--border);padding:10px 12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <!-- Tipo -->
+        <select style="font-size:11px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:6px;padding:4px 8px;color:var(--text);font-family:var(--font);cursor:pointer"
+          id="insumo-tipo-${i}" onchange="onInsumoTipoChange(${i})">
+          ${INSUMO_TIPOS.map(t=>`<option value="${t.value}" ${ins.tipo===t.value?'selected':''}>${t.icon} ${t.label}</option>`).join('')}
+        </select>
+        <!-- Toggle consumir stock -->
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px;color:var(--text2);margin-left:auto">
+          <input type="checkbox" ${ins.consumir?'checked':''} onchange="_proyInsumos[${i}].consumir=this.checked" style="accent-color:var(--ferrari)">
+          Descontar stock
+        </label>
+        <!-- Eliminar -->
+        <button onclick="removeProyInsumo(${i})" style="background:rgba(224,26,0,0.1);border:none;border-radius:6px;padding:4px 8px;color:var(--ferrari);cursor:pointer;font-size:12px">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+        ${ins.tipo==='libre'
+          ? `<div style="flex:1;min-width:140px">
+               <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:3px">Nombre</label>
+               <input class="form-input" style="font-size:12px" placeholder="Descripción libre" value="${ins.nombre||''}"
+                 oninput="_proyInsumos[${i}].nombre=this.value">
+             </div>`
+          : `<div style="flex:1;min-width:140px">
+               <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:3px">Item</label>
+               <select class="form-input" style="font-size:12px" id="insumo-ref-${i}" onchange="onInsumoRefChange(${i})">
+                 ${optHtml}
+               </select>
+             </div>`}
+        <div style="width:80px">
+          <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:3px">Cantidad</label>
+          <input class="form-input" type="number" style="font-size:12px" value="${ins.cantidad||1}" min="0.01" step="${ins.tipo==='material'?50:1}"
+            oninput="_proyInsumos[${i}].cantidad=parseFloat(this.value)||1">
+        </div>
+        <div style="width:60px">
+          <label style="font-size:10px;color:var(--text3);display:block;margin-bottom:3px">Unidad</label>
+          <div style="font-size:12px;color:var(--text2);font-family:var(--mono);padding:9px 4px;font-weight:600" id="insumo-unit-${i}">${ins.unidad||'Und'}</div>
+        </div>
+        ${ins.refId && opts.length ? `<div style="font-size:10px;color:var(--text3);padding-bottom:10px">
+          Stock: <span style="color:${opts.find(o=>o.id===ins.refId)?.stock>0?'var(--teal)':'var(--ferrari)'}">${opts.find(o=>o.id===ins.refId)?.stock??'—'}</span>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Called when saving proyecto — optionally deduct stock
+function aplicarInsumosAlStock(insumos){
+  insumos.forEach(ins=>{
+    if(!ins.consumir || !ins.refId) return;
+    const cant = parseFloat(ins.cantidad)||0;
+    if(ins.tipo==='material'){
+      const m = DB.materiales.find(x=>x.id===ins.refId);
+      if(m){ m.stock = Math.max(0, (m.stock||0)-cant); persist('materiales'); }
+    } else if(ins.tipo==='accesorio'){
+      const a = DB.accesorios.find(x=>x.id===ins.refId);
+      if(a){ a.stock = Math.max(0, (a.stock||0)-cant); persist('accesorios'); }
+    } else if(ins.tipo==='componente'){
+      const c = DB.componentes.find(x=>x.id===ins.refId);
+      if(c){ c.stock = Math.max(0, (c.stock||0)-cant); persist('componentes'); }
+    } else if(ins.tipo==='producto'){
+      const p = DB.productos.find(x=>x.id===ins.refId);
+      if(p){ p.stock = Math.max(0, (p.stock||0)-cant); persist('productos'); }
+    }
+  });
+}
+
 function renderProyectos(filter='todos'){
   const list=filter==='todos'?DB.proyectos:DB.proyectos.filter(p=>p.estado===filter);
   return list.length===0
@@ -3788,7 +3956,7 @@ function renderProyectos(filter='todos'){
           <div style="background:linear-gradient(135deg,${bg}22,${bg}08);display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:110px">${p.imagen ? `<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">` : `<span style="font-size:32px">${p.emoji||'🖨️'}</span>`}</div>
           <div class="project-body">
             <div class="project-name">${p.nombre}</div>
-            <div class="project-meta">${p.material||'—'} · ${p.tipo||'—'}</div>
+            <div class="project-meta">${(p.insumos&&p.insumos.length)?p.insumos.length+' insumo'+(p.insumos.length>1?'s':''):(p.material||'Sin insumos')} · ${p.tipo||'—'}</div>
             <div class="project-progress"><div class="progress-fill" style="width:${p.progreso||0}%;background:${bg}"></div></div>
             <div class="project-footer">
               <span class="badge ${ec.cls}">${ec.label}</span>
@@ -3816,6 +3984,9 @@ function editProyecto(id){
   document.getElementById('proy-imagen').value = imgValP;
   if(imgValP){ document.getElementById('proy-img-preview').innerHTML=`<img src="${imgValP}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
   else{ resetImgPreview('proy-img-preview','proy-imagen'); }
+  // Restore insumos
+  _proyInsumos = (p.insumos||[]).map(i=>({...i}));
+  renderProyInsumos();
   openModal('modal-proyecto');
 }
 
