@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MarcanoTech 3D — Workshop Dashboard</title>
+<title>MarcanoTech | Workshop Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -517,7 +517,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
       </svg>
     </div>
-    <div class="login-title">MarcanoTech 3D</div>
+    <div class="login-title">MarcanoTech</div>
     <div class="login-sub">Workshop Dashboard</div>
     <div class="login-error" id="login-error"></div>
     <button class="btn-google" id="btn-google-login" onclick="loginWithGoogle()" disabled style="opacity:0.5;cursor:not-allowed">
@@ -539,7 +539,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </svg>
     </div>
     <div>
-      <div class="logo-text">MarcanoTech 3D</div>
+      <div class="logo-text">MarcanoTech</div>
       <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.7</span></div>
     </div>
   </div>
@@ -636,6 +636,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
       Mantenimiento
     </button>
+    <button class="nav-item" onclick="showSection('cotizaciones',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Cotizaciones
+      <span class="nav-badge" id="badge-cotizaciones">0</span>
+    </button>
     <button class="nav-item" onclick="showSection('acercade',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       Acerca de
@@ -688,7 +693,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
       <div>
-        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech 3D</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech</div>
         <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--accent);padding:1px 5px;border-radius:3px">v1.7</span></div>
       </div>
     </div>
@@ -1211,6 +1216,29 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
   </div>
 
+  <!-- ── COTIZACIONES ── -->
+  <div class="section" id="sec-cotizaciones">
+    <div class="section-row" style="margin-top:0;margin-bottom:4px">
+      <div>
+        <div style="font-size:20px;font-weight:700;color:var(--text)">Cotizaciones</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px">Solicitudes recibidas desde la web</div>
+      </div>
+      <button class="btn btn-accent btn-sm" onclick="openCotizacionModal()">+ Nueva cotización</button>
+    </div>
+    <div id="cotiz-stats-row" class="stats-row" style="margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <select class="form-input" id="cotiz-filter" style="width:180px" onchange="renderCotizaciones()">
+        <option value="">Todos los estados</option>
+        <option value="nuevo">Nuevo</option>
+        <option value="contactado">Contactado</option>
+        <option value="presupuestado">Presupuestado</option>
+        <option value="aceptado">Aceptado</option>
+        <option value="rechazado">Rechazado</option>
+      </select>
+    </div>
+    <div id="cotizaciones-list"></div>
+  </div>
+
   <!-- ── ACERCA DE ── -->
   <div class="section" id="sec-acercade">
     <div style="max-width:680px;margin:0 auto">
@@ -1220,7 +1248,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
         <div>
-          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px">MarcanoTech 3D</div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px">MarcanoTech</div>
           <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard</div>
         </div>
         <div style="margin-left:auto;text-align:right">
@@ -2588,7 +2616,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Tu negocio</label>
-        <input class="form-input" id="presup-negocio" placeholder="MarcanoTech 3D">
+        <input class="form-input" id="presup-negocio" placeholder="MarcanoTech">
       </div>
       <div class="form-group">
         <label class="form-label">Validez (días)</label>
@@ -2635,6 +2663,64 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Email
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Cliente / Proveedor -->
+<div class="modal-overlay" id="modal-cotizacion">
+  <div class="modal" style="width:500px;max-height:92vh;overflow-y:auto">
+    <div class="modal-title" id="cotiz-modal-title">Nueva Cotización</div>
+    <input type="hidden" id="cotiz-edit-id">
+
+    <div class="form-group">
+      <label class="form-label">Título <span style="color:var(--coral)">*</span></label>
+      <input class="form-input" id="cotiz-titulo" placeholder="Ej: Necesito 50 llaveros personalizados">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción</label>
+      <textarea class="form-input" id="cotiz-desc" rows="3" placeholder="Material, cantidad, tamaño, color, etc."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Ciudad</label>
+        <input class="form-input" id="cotiz-ciudad" placeholder="Buenos Aires">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Provincia</label>
+        <input class="form-input" id="cotiz-prov" placeholder="CABA">
+      </div>
+    </div>
+    <div style="background:rgba(224,26,0,0.06);border:1px solid rgba(224,26,0,0.2);border-radius:8px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--ferrari);margin-bottom:10px">📱 Datos de contacto</div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">WhatsApp / Teléfono</label>
+          <input class="form-input" id="cotiz-wa" placeholder="+54 11...">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="cotiz-email" placeholder="correo@...">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Estado</label>
+      <select class="form-input" id="cotiz-estado">
+        <option value="nuevo">Nuevo</option>
+        <option value="contactado">Contactado</option>
+        <option value="presupuestado">Presupuestado</option>
+        <option value="aceptado">Aceptado</option>
+        <option value="rechazado">Rechazado</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas internas</label>
+      <textarea class="form-input" id="cotiz-notas" rows="2" placeholder="Observaciones, seguimiento..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cotizacion')">Cancelar</button>
+      <button class="btn btn-accent" style="min-width:140px" onclick="saveCotizacion()">Guardar</button>
     </div>
   </div>
 </div>
@@ -3337,6 +3423,7 @@ const sectionTitles = {
   calibracion:'Calibración de Material',
   presupuestos:'Presupuestos',
   clientes:'Clientes & Proveedores',
+  cotizaciones:'Cotizaciones',
   acercade:'Acerca de'
 };
 const addBtnLabels = {
@@ -5100,7 +5187,7 @@ function copiarResumenCosto(){
   const insumos = parseFloat(document.getElementById('calc-insumos')?.value)||0;
   const totalCostos = costoBase*(1+margenError/100)+insumos;
   const precioFinalEl = document.getElementById('calc-total-final');
-  const texto = `📊 RESUMEN DE COSTO — MarcanoTech 3D
+  const texto = `📊 RESUMEN DE COSTO — MarcanoTech
 ${'─'.repeat(35)}
 Material:       ${fmt(costMaterial)}
 Electricidad:   ${fmt(costElec)}
@@ -5110,7 +5197,7 @@ Costo base:     ${fmt(costoBase)}
 Total costos:   ${fmt(totalCostos)}
 PRECIO FINAL:   ${precioFinalEl?.textContent||'—'}
 ${'─'.repeat(35)}
-Generado con MarcanoTech 3D Dashboard`;
+Generado con MarcanoTech Dashboard`;
   navigator.clipboard.writeText(texto).then(()=>showToast('Resumen copiado ✓')).catch(()=>showToast('No se pudo copiar','error'));
 }
 
@@ -5512,7 +5599,7 @@ function openPresupuestoModal(editId=''){
   if(extCont) extCont.style.display='none';
   const desglosar=document.getElementById('presup-desglosar');
   if(desglosar) desglosar.checked=false;
-  document.getElementById('presup-negocio').value='MarcanoTech 3D';
+  document.getElementById('presup-negocio').value='MarcanoTech';
   document.getElementById('presup-fecha').value=new Date().toISOString().split('T')[0];
   const num=nextPresupNumero();
   document.getElementById('presup-numero').value=num;
@@ -5541,7 +5628,7 @@ function savePresupuesto(estado='borrador'){
     moneda:document.getElementById('presup-moneda').value, descuento:desc,
     subtotal, total, destinatario,
     contacto:document.getElementById('presup-contacto').value,
-    negocio:document.getElementById('presup-negocio').value||'MarcanoTech 3D',
+    negocio:document.getElementById('presup-negocio').value||'MarcanoTech',
     validez:document.getElementById('presup-validez').value||'',
     notas:document.getElementById('presup-notas').value,
     desglosar:document.getElementById('presup-desglosar')?.checked||false,
@@ -5572,7 +5659,7 @@ function editPresupuesto(id){
   document.getElementById('presup-descuento').value=p.descuento||'';
   document.getElementById('presup-destinatario').value=p.destinatario||'';
   document.getElementById('presup-contacto').value=p.contacto||'';
-  document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech 3D';
+  document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech';
   document.getElementById('presup-validez').value=p.validez||'';
   document.getElementById('presup-notas').value=p.notas||'';
   _presupItems=p.items&&p.items.length?p.items.map(i=>({...i})):[{id:uid(),desc:'',cant:1,precio:0}];
@@ -5649,7 +5736,7 @@ function renderPresupuestos(filter){
 function buildPresupuestoText(p){
   const items=p.items||[];
   const lineas=items.map(i=>`  • ${i.cant}× ${i.desc}: $${((i.cant||1)*(i.precio||0)).toFixed(2)} ${p.moneda||'USD'}`).join('\n');
-  return `PRESUPUESTO ${p.numero}\n${'─'.repeat(38)}\nFecha: ${p.fecha||'—'}${p.validez?`  |  Válido: ${p.validez} días`:''}\nDE: ${p.negocio||'MarcanoTech 3D'}\nPARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}\n${'─'.repeat(38)}\nÍTEMS:\n${lineas}\n${'─'.repeat(38)}\n${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)}\nDescuento ${p.descuento}%: -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${p.moneda==='USD'&&p.dolarRate?`\n≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS`:''}\n${'─'.repeat(38)}\n${p.notas?'NOTAS:\n'+p.notas+'\n':''}\nMarcanoTech 3D Workshop Dashboard`;
+  return `PRESUPUESTO ${p.numero}\n${'─'.repeat(38)}\nFecha: ${p.fecha||'—'}${p.validez?`  |  Válido: ${p.validez} días`:''}\nDE: ${p.negocio||'MarcanoTech'}\nPARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}\n${'─'.repeat(38)}\nÍTEMS:\n${lineas}\n${'─'.repeat(38)}\n${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)}\nDescuento ${p.descuento}%: -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${p.moneda==='USD'&&p.dolarRate?`\n≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS`:''}\n${'─'.repeat(38)}\n${p.notas?'NOTAS:\n'+p.notas+'\n':''}\nMarcanoTech Workshop Dashboard`;
 }
 
 function exportPresupuestoPDFById(id){
@@ -5849,6 +5936,7 @@ function renderSection(id){
   else if(id==='calibracion') renderCalibracion(_filtroCalibracion);
   else if(id==='presupuestos') renderPresupuestos(_filtroPresupuestos);
   else if(id==='clientes') renderClientes();
+  else if(id==='cotizaciones') renderCotizaciones();
   else if(id==='productos') renderProductos();
   else if(id==='piezas') renderPiezas();
   else if(id==='costos') renderCostos();
@@ -5876,6 +5964,7 @@ function updateBadges(){
   document.getElementById('badge-accesorios').textContent=DB.accesorios.length;
   document.getElementById('badge-calibracion').textContent=DB.calibracion.length;
   document.getElementById('badge-presupuestos').textContent=DB.presupuestos.length;
+  if(document.getElementById('badge-cotizaciones')) document.getElementById('badge-cotizaciones').textContent=(DB.cotizaciones||[]).length;
   document.getElementById('badge-clientes').textContent=DB.clientes.length;
   const bajos=DB.materiales.filter(m=>(m.stock/m.total)<0.2);
   const bajosAcc=DB.accesorios.filter(a=>a.stock<=(a.stockMin||1));
@@ -6330,6 +6419,121 @@ function filterCalibracion(f, btn){
   document.querySelectorAll('#sec-calibracion .tab').forEach(t=>t.classList.remove('active'));
   if(btn) btn.classList.add('active');
   renderCalibracion(f);
+}
+
+// ════════════════════════════════
+// COTIZACIONES
+// ════════════════════════════════
+function renderCotizaciones(){
+  if(!DB.cotizaciones) DB.cotizaciones=[];
+  const sr=document.getElementById('cotiz-stats-row');
+  if(sr){
+    const total=DB.cotizaciones.length;
+    const nuevos=DB.cotizaciones.filter(c=>c.estado==='nuevo').length;
+    const acept=DB.cotizaciones.filter(c=>c.estado==='aceptado').length;
+    sr.innerHTML=`
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${total}</div><div class="stat-delta neutral">solicitudes</div></div>
+      <div class="stat-card"><div class="stat-label">Nuevas</div><div class="stat-value" style="color:var(--ferrari)">${nuevos}</div><div class="stat-delta neutral">sin responder</div></div>
+      <div class="stat-card"><div class="stat-label">Aceptadas</div><div class="stat-value" style="color:var(--teal)">${acept}</div><div class="stat-delta up">convertidas</div></div>`;
+  }
+  const f=document.getElementById('cotiz-filter')?.value||'';
+  const list=f?DB.cotizaciones.filter(c=>c.estado===f):[...DB.cotizaciones];
+  const cont=document.getElementById('cotizaciones-list'); if(!cont) return;
+  if(!list.length){
+    cont.innerHTML=`<div class="add-card" style="min-height:140px" onclick="openCotizacionModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Sin cotizaciones — Agregar primera</span></div>`;
+    return;
+  }
+  const stColors={nuevo:'var(--ferrari)',contactado:'var(--amber)',presupuestado:'var(--blue)',aceptado:'var(--teal)',rechazado:'var(--text3)'};
+  cont.innerHTML=list.map(c=>`
+    <div class="panel" style="margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <span class="badge" style="background:${stColors[c.estado]||'var(--text3)'}22;color:${stColors[c.estado]||'var(--text3)'}">${c.estado}</span>
+            <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${c.fecha||'—'}</span>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:var(--text)">${c.titulo}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5">${c.descripcion||''}</div>
+          ${c.ciudad||c.provincia?`<div style="font-size:11px;color:var(--text3);margin-top:6px">📍 ${[c.ciudad,c.provincia].filter(Boolean).join(', ')}</div>`:''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          ${c.whatsapp?`<div style="font-size:12px;color:var(--text2)">📱 ${c.whatsapp}</div>`:''}
+          ${c.email?`<div style="font-size:12px;color:var(--text2)">✉️ ${c.email}</div>`:''}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="background:#25D36622;color:#25D366;border:0.5px solid #25D36644;text-decoration:none">💬 WhatsApp</a>`:''}
+        <select class="btn btn-ghost btn-sm" style="cursor:pointer" onchange="cambiarEstadoCotiz('${c.id}',this.value);this.value=''">
+          <option value="">Estado...</option>
+          <option value="nuevo">Nuevo</option>
+          <option value="contactado">Contactado</option>
+          <option value="presupuestado">Presupuestado</option>
+          <option value="aceptado">Aceptado</option>
+          <option value="rechazado">Rechazado</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="editCotizacion('${c.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCotizacion('${c.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function cambiarEstadoCotiz(id,estado){
+  if(!estado) return;
+  DB.cotizaciones=DB.cotizaciones.map(c=>c.id===id?{...c,estado}:c);
+  persist('cotizaciones'); updateBadges(); renderSection(currentSection);
+}
+
+function deleteCotizacion(id){
+  if(!confirm('¿Eliminar esta cotización?')) return;
+  DB.cotizaciones=DB.cotizaciones.filter(c=>c.id!==id);
+  persist('cotizaciones'); updateBadges(); renderSection(currentSection);
+}
+
+function openCotizacionModal(){
+  document.getElementById('cotiz-edit-id').value='';
+  document.getElementById('cotiz-modal-title').textContent='Nueva Cotización';
+  clearForm(['cotiz-titulo','cotiz-desc','cotiz-ciudad','cotiz-prov','cotiz-wa','cotiz-email','cotiz-notas']);
+  if(document.getElementById('cotiz-estado')) document.getElementById('cotiz-estado').value='nuevo';
+  openModal('modal-cotizacion');
+}
+
+function editCotizacion(id){
+  const c=(DB.cotizaciones||[]).find(x=>x.id===id); if(!c) return;
+  openCotizacionModal();
+  document.getElementById('cotiz-edit-id').value=c.id;
+  document.getElementById('cotiz-modal-title').textContent='Editar Cotización';
+  document.getElementById('cotiz-titulo').value=c.titulo||'';
+  document.getElementById('cotiz-desc').value=c.descripcion||'';
+  document.getElementById('cotiz-ciudad').value=c.ciudad||'';
+  document.getElementById('cotiz-prov').value=c.provincia||'';
+  document.getElementById('cotiz-wa').value=c.whatsapp||'';
+  document.getElementById('cotiz-email').value=c.email||'';
+  document.getElementById('cotiz-notas').value=c.notas||'';
+  if(document.getElementById('cotiz-estado')) document.getElementById('cotiz-estado').value=c.estado||'nuevo';
+}
+
+function saveCotizacion(){
+  const editId=document.getElementById('cotiz-edit-id').value;
+  const titulo=document.getElementById('cotiz-titulo').value.trim();
+  if(!titulo){ showToast('Ingresá el título','error'); return; }
+  const obj={
+    id:editId||uid(), titulo,
+    descripcion:document.getElementById('cotiz-desc').value,
+    ciudad:document.getElementById('cotiz-ciudad').value,
+    provincia:document.getElementById('cotiz-prov').value,
+    whatsapp:document.getElementById('cotiz-wa').value,
+    email:document.getElementById('cotiz-email').value,
+    notas:document.getElementById('cotiz-notas').value,
+    estado:document.getElementById('cotiz-estado')?.value||'nuevo',
+    fecha:new Date().toLocaleDateString('es-AR'), ts:Date.now()
+  };
+  if(!DB.cotizaciones) DB.cotizaciones=[];
+  if(editId){ DB.cotizaciones=DB.cotizaciones.map(c=>c.id===editId?obj:c); }
+  else{ DB.cotizaciones.unshift(obj); logActivity(`Cotización <strong>${obj.titulo}</strong> registrada`); }
+  persist('cotizaciones'); updateBadges(); closeModal('modal-cotizacion');
+  renderSection(currentSection); showToast('Cotización guardada ✓');
 }
 
 function renderCalibracion(filter='todos'){
