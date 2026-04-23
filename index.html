@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MarcanoTech | Workshop Dashboard</title>
+<title>MarcanoTech 3D — Workshop Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -517,7 +517,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
       </svg>
     </div>
-    <div class="login-title">MarcanoTech</div>
+    <div class="login-title">MarcanoTech 3D</div>
     <div class="login-sub">Workshop Dashboard</div>
     <div class="login-error" id="login-error"></div>
     <button class="btn-google" id="btn-google-login" onclick="loginWithGoogle()" disabled style="opacity:0.5;cursor:not-allowed">
@@ -539,7 +539,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </svg>
     </div>
     <div>
-      <div class="logo-text">MarcanoTech</div>
+      <div class="logo-text">MarcanoTech 3D</div>
       <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.7</span></div>
     </div>
   </div>
@@ -693,7 +693,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
       <div>
-        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech 3D</div>
         <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--accent);padding:1px 5px;border-radius:3px">v1.7</span></div>
       </div>
     </div>
@@ -711,6 +711,8 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div style="display:flex;align-items:center;gap:12px"><div class="page-date" id="topbar-date"></div><div id="dolar-rate-display" style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargando USD...</div></div>
     </div>
     <div class="topbar-actions">
+      <!-- Timer en ejecución -->
+      <div id="topbar-timer" onclick="showSection('timer',null)" style="display:none;align-items:center;gap:5px;padding:5px 10px;background:rgba(224,26,0,0.12);border:0.5px solid rgba(224,26,0,0.3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--ferrari);cursor:pointer;animation:pulse 2s infinite"></div>
       <button class="btn btn-sm" title="Nueva cotización" onclick="openModal('modal-cotizacion-web')" style="background:rgba(37,211,102,0.1);color:#25D366;border:0.5px solid rgba(37,211,102,0.25)">💬 Cotización</button>
       <button class="btn btn-ghost btn-sm" id="topbar-add-btn" onclick="openAddModal()">+ Agregar</button>
       <button class="btn btn-accent btn-sm" onclick="showSection('estadisticas',null)">Ver estadísticas</button>
@@ -911,7 +913,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="section" id="sec-piezas">
     <div class="section-row" style="margin-top:0">
       <div class="section-title">Piezas & archivos STL</div>
-      <button class="btn btn-accent btn-sm" onclick="openModal('modal-pieza')">+ Registrar pieza</button>
+      <button class="btn btn-accent btn-sm" onclick="openPiezaModal()">+ Registrar pieza</button>
     </div>
     <div class="panel">
       <table class="data-table">
@@ -1248,7 +1250,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
         <div>
-          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px">MarcanoTech</div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px">MarcanoTech 3D</div>
           <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard</div>
         </div>
         <div style="margin-left:auto;text-align:right">
@@ -1534,10 +1536,26 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <textarea class="form-input" id="proy-notas" rows="2" placeholder="Detalles, observaciones..."></textarea>
     </div>
 
-    <!-- COLOR -->
+    <!-- COLOR DE PROYECTO -->
     <div class="form-group">
-      <label class="form-label">Color de fondo (hex)</label>
-      <input class="form-input" id="proy-color" placeholder="#38d9a9">
+      <label class="form-label">Color de proyecto</label>
+      <div style="position:relative">
+        <div id="proy-color-display" onclick="toggleProyColorDropdown()" style="
+          background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
+          padding:10px 32px 10px 12px;cursor:pointer;font-size:13px;color:var(--text);
+          display:flex;align-items:center;gap:10px;user-select:none;">
+          <span id="proy-color-swatch" style="width:14px;height:14px;border-radius:50%;background:#38d9a9;border:0.5px solid var(--border2);flex-shrink:0"></span>
+          <span id="proy-color-label">Teal</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" style="position:absolute;right:10px"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="proy-color-dropdown" style="
+          display:none;position:absolute;bottom:calc(100% + 4px);left:0;right:0;z-index:50;
+          background:var(--bg2);border:0.5px solid var(--border2);border-radius:10px;
+          padding:10px;box-shadow:0 8px 24px rgba(0,0,0,0.4);
+          display:none;flex-wrap:wrap;gap:8px;">
+        </div>
+      </div>
+      <input type="hidden" id="proy-color" value="#38d9a9">
     </div>
 
     <!-- Campo legacy oculto para compatibilidad -->
@@ -1730,7 +1748,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Producto -->
 <div class="modal-overlay" id="modal-producto">
-  <div class="modal">
+  <div class="modal" style="width:540px">
     <div class="modal-title">Nuevo producto al catálogo</div>
     <input type="hidden" id="producto-edit-id">
     <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
@@ -1782,6 +1800,27 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         </select>
       </div>
     </div>
+
+    <!-- Tiempo impresión + Gramos filamento -->
+    <div style="background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--navy-l, var(--accent));font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🖨️ Datos de fabricación</div>
+      <div class="form-row" style="margin-bottom:0">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Tiempo de impresión</label>
+          <input class="form-input" id="prod-tiempo" placeholder="ej: 3h 20m">
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">Útil para cotizar y planificar</div>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Consumo de filamento (g)</label>
+          <div style="position:relative">
+            <input class="form-input" type="number" id="prod-gramos" placeholder="ej: 85" step="1" min="0" style="padding-right:32px">
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-family:var(--mono)">g</span>
+          </div>
+          <div id="prod-gramos-costo" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <label class="form-label">Descripción</label>
       <textarea class="form-input" id="prod-descripcion" rows="2" placeholder="Descripción del producto..."></textarea>
@@ -1792,6 +1831,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
   </div>
 </div>
+
 
 <!-- Impresora -->
 <div class="modal-overlay" id="modal-impresora">
@@ -1937,22 +1977,35 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Pieza -->
 <div class="modal-overlay" id="modal-pieza">
-  <div class="modal">
-    <div class="modal-title">Registrar pieza / STL</div>
-    <div class="form-group">
-      <label class="form-label">Nombre de la pieza</label>
-      <input class="form-input" id="pieza-nombre" placeholder="ej: Chasis_Touring_v2_3.stl">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Proyecto</label>
-        <select class="form-input" id="pieza-proyecto"></select>
+  <div class="modal" style="width:560px;max-height:92vh;overflow-y:auto">
+    <div class="modal-title" id="pieza-modal-title">Registrar Archivo STL</div>
+    <input type="hidden" id="pieza-edit-id">
+
+    <!-- IMAGEN + NOMBRE -->
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
+      <div style="flex-shrink:0">
+        <label class="form-label">Foto de la pieza</label>
+        <div id="pieza-img-preview" onclick="document.getElementById('pieza-imagen-file').click()" style="width:88px;height:80px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
+        </div>
+        <input type="file" id="pieza-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'pieza-img-preview','pieza-imagen')">
+        <input type="hidden" id="pieza-imagen">
       </div>
-      <div class="form-group">
-        <label class="form-label">Material</label>
-        <select class="form-input" id="pieza-material"></select>
+      <div style="flex:1">
+        <div class="form-group">
+          <label class="form-label">Nombre de la pieza <span style="color:var(--coral)">*</span></label>
+          <input class="form-input" id="pieza-nombre" placeholder="ej: Chasis_Touring_v2_3.stl">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Código de referencia</label>
+          <input class="form-input" id="pieza-codigo" placeholder="ej: STL-RC-001" style="font-family:var(--mono)">
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">Para uso en guías de construcción</div>
+        </div>
       </div>
     </div>
+
+    <!-- ESCALA + BOQUILLA -->
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Escala</label>
@@ -1962,41 +2015,74 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <option value="1:12">1:12 — Compacto</option>
           <option value="1:18">1:18 — Mini</option>
           <option value="1:24">1:24 — Micro</option>
-          <option value="1:32">1:32 — Nano</option>
           <option value="Otro">Otro</option>
         </select>
       </div>
       <div class="form-group">
+        <label class="form-label">Boquilla recomendada</label>
+        <select class="form-input" id="pieza-boquilla">
+          <option value="0.2mm">0.2 mm — Alta resolución</option>
+          <option value="0.4mm" selected>0.4 mm — Estándar</option>
+          <option value="0.6mm">0.6 mm — Rápido</option>
+          <option value="0.8mm">0.8 mm — Muy rápido</option>
+          <option value="1.0mm">1.0 mm — Estructural</option>
+          <option value="Acero">Acero endurecido (CF)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- TIEMPO + GRAMOS + PLACAS -->
+    <div class="form-row">
+      <div class="form-group">
         <label class="form-label">Tiempo estimado</label>
         <input class="form-input" id="pieza-tiempo" placeholder="ej: 4h 15m">
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Estado</label>
-        <select class="form-input" id="pieza-estado">
-          <option value="pendiente">Pendiente</option>
-          <option value="en-cola">En cola</option>
-          <option value="imprimiendo">Imprimiendo</option>
-          <option value="lista">Lista</option>
-          <option value="fallida">Fallida</option>
-        </select>
-      </div>
       <div class="form-group">
         <label class="form-label">Gramos estimados (g)</label>
-        <input class="form-input" type="number" id="pieza-gramos" placeholder="ej: 45">
+        <input class="form-input" type="number" id="pieza-gramos" placeholder="ej: 45" min="0">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Notas</label>
-      <textarea class="form-input" id="pieza-notas" rows="2" placeholder="Configuraciones, observaciones..."></textarea>
+      <label class="form-label">Cantidad de placas / impresiones</label>
+      <input class="form-input" type="number" id="pieza-placas" placeholder="ej: 2" min="1" value="1">
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">Cuántas veces se imprime esta pieza para completar el set</div>
     </div>
+
+    <!-- MATERIALES RECOMENDADOS -->
+    <div style="background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text)">Materiales recomendados</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">Materiales, accesorios o componentes sugeridos para esta pieza</div>
+        </div>
+        <button type="button" onclick="addPiezaInsumo()" style="background:var(--navy);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Agregar</button>
+      </div>
+      <div id="pieza-insumos-container"></div>
+      <div id="pieza-insumos-empty" style="text-align:center;padding:12px 0;color:var(--text3);font-size:11px;font-family:var(--mono)">
+        Sin materiales — hacé clic en "+ Agregar"
+      </div>
+    </div>
+
+    <!-- URL DESCARGA -->
+    <div class="form-group">
+      <label class="form-label">URL de descarga</label>
+      <input class="form-input" id="pieza-url" placeholder="https://cults3d.com / makerworld.com / drive.google.com...">
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">Cults3D, MakerWorld, Printables, Drive, etc.</div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Notas / configuraciones</label>
+      <textarea class="form-input" id="pieza-notas" rows="2" placeholder="Parámetros de laminado, configuraciones especiales..."></textarea>
+    </div>
+
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-pieza')">Cancelar</button>
-      <button class="btn btn-accent" onclick="savePieza()">Guardar pieza</button>
+      <button class="btn btn-accent" id="pieza-save-btn" style="min-width:140px" onclick="savePieza()">Guardar STL</button>
     </div>
   </div>
 </div>
+
 
 <!-- Mantenimiento -->
 <div class="modal-overlay" id="modal-mantenimiento">
@@ -2070,17 +2156,33 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <input class="form-input" id="venta-total" readonly style="color:var(--accent);font-weight:700" placeholder="0.00">
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Cliente</label>
+    <!-- CLIENTE: toggle manual / existente -->
+    <div class="form-group">
+      <label class="form-label">Cliente</label>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <button type="button" id="venta-cliente-btn-manual" onclick="setVentaClienteMode('manual')"
+          style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">
+          Ingresar manualmente
+        </button>
+        <button type="button" id="venta-cliente-btn-existente" onclick="setVentaClienteMode('existente')"
+          style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">
+          Seleccionar cliente
+        </button>
+      </div>
+      <div id="venta-cliente-manual">
         <input class="form-input" id="venta-cliente" placeholder="ej: Juan García">
       </div>
+      <div id="venta-cliente-existente" style="display:none">
+        <select class="form-input" id="venta-cliente-select" onchange="onVentaClienteSelect(this.value)">
+          <option value="">— Seleccionar cliente —</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Fecha</label>
         <input class="form-input" type="date" id="venta-fecha">
       </div>
-    </div>
-    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Canal de venta</label>
         <select class="form-input" id="venta-canal">
@@ -2088,14 +2190,14 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <option>WhatsApp</option><option>Facebook</option><option>Otro</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Estado</label>
-        <select class="form-input" id="venta-estado">
-          <option value="cobrado">Cobrado</option>
-          <option value="pendiente">Pendiente de cobro</option>
-          <option value="cancelado">Cancelado</option>
-        </select>
-      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Estado</label>
+      <select class="form-input" id="venta-estado">
+        <option value="cobrado">Cobrado</option>
+        <option value="pendiente">Pendiente de cobro</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
     </div>
     <div class="form-group">
       <label class="form-label">Notas</label>
@@ -2616,7 +2718,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Tu negocio</label>
-        <input class="form-input" id="presup-negocio" placeholder="MarcanoTech">
+        <input class="form-input" id="presup-negocio" placeholder="MarcanoTech 3D">
       </div>
       <div class="form-group">
         <label class="form-label">Validez (días)</label>
@@ -2817,7 +2919,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <input class="form-input" id="cliente-direccion" placeholder="Calle y número">
     </div>
 
-    <!-- NOTAS -->
+    <!-- WEB + NOTAS -->
+    <div class="form-group">
+      <label class="form-label">Página web</label>
+      <input class="form-input" id="cliente-web" placeholder="https://...">
+    </div>
     <div class="form-group">
       <label class="form-label">Notas</label>
       <textarea class="form-input" id="cliente-notas" rows="2" placeholder="Preferencias, historial, condiciones especiales..."></textarea>
@@ -2930,8 +3036,8 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v1.7',
-  fecha: '2026-04-21',
+  version: 'v1.8',
+  fecha: '2026-04-23',
   changelog: [
     { v:'v1.7', fecha:'2026-04-21', cambios:[
       'Pantallas Materiales y Componentes rediseñadas como grilla de cards',
@@ -2991,7 +3097,8 @@ const KEYS = {
   impresoras:'impresoras', cola:'cola', piezas:'piezas',
   mantenimiento:'mantenimiento', actividad:'actividad',
   ventas:'ventas', componentes:'componentes', timerHistorial:'timerHistorial',
-  accesorios:'accesorios', calibracion:'calibracion', presupuestos:'presupuestos'
+  accesorios:'accesorios', calibracion:'calibracion', presupuestos:'presupuestos',
+  clientes:'clientes', cotizaciones:'cotizaciones'
 };
 
 function loadLocal(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
@@ -3025,7 +3132,8 @@ let DB = {
   accesorios:    loadWithMigration('accesorios',   'wl_accesorios'),
   calibracion:   loadWithMigration('calibracion',  'wl_calibracion'),
   presupuestos:  loadWithMigration('presupuestos', 'wl_presupuestos'),
-  clientes:      loadWithMigration('clientes',     'wl_clientes')
+  clientes:      loadWithMigration('clientes',     'wl_clientes'),
+  cotizaciones:  loadWithMigration('cotizaciones',  'wl_cotizaciones')
 };
 
 // ── FIREBASE WRITE HELPERS ──────────────────────────────
@@ -3591,6 +3699,8 @@ function resetProyectoForm(){
   resetImgPreview('proy-img-preview','proy-imagen');
   _proyInsumos = [];
   renderProyInsumos();
+  selectProyColor('#38d9a9','Teal');
+  _proyColorOpen = false;
 }
 
 function nextCompCodigo(categoria){
@@ -3627,6 +3737,14 @@ function openModal(id){
 }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
+// Close proy color dropdown on outside click
+document.addEventListener('click', e=>{
+  const dd = document.getElementById('proy-color-dropdown');
+  const disp = document.getElementById('proy-color-display');
+  if(dd && disp && !disp.contains(e.target) && !dd.contains(e.target)){
+    dd.style.display='none'; _proyColorOpen=false;
+  }
+});
 document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
 });
@@ -3640,10 +3758,7 @@ function populateModalSelects(modalId){
     document.getElementById('cola-proyecto').innerHTML=proyOpts;
     document.getElementById('cola-material-select').innerHTML=matOpts;
   }
-  if(modalId==='modal-pieza'){
-    document.getElementById('pieza-proyecto').innerHTML=proyOpts;
-    document.getElementById('pieza-material').innerHTML=matOpts;
-  }
+  // modal-pieza: no longer needs proyecto/material selects
   if(modalId==='modal-mantenimiento'){
     document.getElementById('mant-impresora').innerHTML=impOpts;
     document.getElementById('mant-fecha').value=today;
@@ -3954,6 +4069,63 @@ function timerFinish(){
   showToast(`Registrado: ${nombre} — ${tiempo}`);
 }
 
+
+// ════════════════════════════════
+// PROYECTO COLOR SELECTOR
+// ════════════════════════════════
+const PROY_COLORES = [
+  {hex:'#38d9a9',label:'Teal'},     {hex:'#4a7fd4',label:'Azul'},
+  {hex:'#e01a00',label:'Ferrari'},  {hex:'#fbbf24',label:'Ámbar'},
+  {hex:'#a78bfa',label:'Violeta'},  {hex:'#f97316',label:'Naranja'},
+  {hex:'#34d399',label:'Verde'},    {hex:'#f472b6',label:'Rosa'},
+  {hex:'#9eaab8',label:'Plateado'}, {hex:'#ffffff',label:'Blanco'},
+  {hex:'#0d0d0f',label:'Negro'},    {hex:'#1a3a6b',label:'Navy'},
+  {hex:'#78716c',label:'Gris'},     {hex:'#ec4899',label:'Fucsia'},
+  {hex:'#06b6d4',label:'Cyan'},     {hex:'#84cc16',label:'Lima'},
+];
+
+function buildProyColorDropdown(){
+  const dd = document.getElementById('proy-color-dropdown');
+  if(!dd || dd.children.length > 0) return;
+  dd.style.display = 'flex';
+  dd.innerHTML = PROY_COLORES.map(c=>`
+    <div onclick="selectProyColor('${c.hex}','${c.label}')"
+      style="width:28px;height:28px;border-radius:50%;background:${c.hex};
+      border:2px solid var(--border2);cursor:pointer;flex-shrink:0;
+      transition:transform 0.15s,box-shadow 0.15s"
+      title="${c.label}"
+      onmouseover="this.style.transform='scale(1.2)';this.style.boxShadow='0 0 0 2px var(--accent)'"
+      onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
+    </div>`).join('');
+  dd.style.display = 'none';
+}
+
+let _proyColorOpen = false;
+function toggleProyColorDropdown(){
+  const dd = document.getElementById('proy-color-dropdown');
+  if(!dd) return;
+  buildProyColorDropdown();
+  _proyColorOpen = !_proyColorOpen;
+  dd.style.display = _proyColorOpen ? 'flex' : 'none';
+}
+
+function selectProyColor(hex, label){
+  document.getElementById('proy-color').value = hex;
+  document.getElementById('proy-color-swatch').style.background = hex;
+  document.getElementById('proy-color-label').textContent = label;
+  const dd = document.getElementById('proy-color-dropdown');
+  if(dd) dd.style.display = 'none';
+  _proyColorOpen = false;
+}
+
+function setProyColorFromHex(hex){
+  const c = PROY_COLORES.find(x=>x.hex===hex)||{hex:hex,label:hex};
+  document.getElementById('proy-color').value = c.hex;
+  const sw = document.getElementById('proy-color-swatch');
+  const lb = document.getElementById('proy-color-label');
+  if(sw) sw.style.background = c.hex;
+  if(lb) lb.textContent = c.label;
+}
 // ════════════════════════════════
 // PROYECTO — INSUMOS (materials list)
 // ════════════════════════════════
@@ -4128,7 +4300,7 @@ function editProyecto(id){
   document.getElementById('proy-progreso').value=p.progreso;
   document.getElementById('proy-notas').value=p.notas;
   document.getElementById('proy-tiempo').value=p.tiempo;
-  document.getElementById('proy-color').value=p.color;
+  setProyColorFromHex(p.color||'#38d9a9');
   const imgValP = p.imagen||'';
   document.getElementById('proy-imagen').value = imgValP;
   if(imgValP){ document.getElementById('proy-img-preview').innerHTML=`<img src="${imgValP}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
@@ -4569,6 +4741,8 @@ function saveProducto(){
     nombre:document.getElementById('prod-nombre').value.trim(),
     emoji:document.getElementById('prod-emoji').value||'📦',
     imagen:document.getElementById('prod-imagen').value||'',
+    tiempo:document.getElementById('prod-tiempo')?.value||'',
+    gramos:parseFloat(document.getElementById('prod-gramos')?.value)||0,
     sku:document.getElementById('prod-sku').value||'—',
     precio:parseFloat(document.getElementById('prod-precio').value)||0,
     stock:parseInt(document.getElementById('prod-stock').value)||0,
@@ -4605,6 +4779,10 @@ function renderProductos(){
           <div class="prod-sku">${p.sku}</div>
           <div class="prod-price">$${parseFloat(p.precio||0).toFixed(2)} <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">${usdToArs(p.precio)?Math.round(usdToArs(p.precio)).toLocaleString("es-AR")+' ARS':''}</span></div>
           <div class="prod-stock ${sc}">● ${sl}</div>
+          ${p.tiempo||p.gramos?`<div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
+            ${p.tiempo?`<span style="font-size:9px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:2px 6px;border-radius:4px">⏱ ${p.tiempo}</span>`:''}
+            ${p.gramos?`<span style="font-size:9px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:2px 6px;border-radius:4px">🔴 ${p.gramos}g</span>`:''}
+          </div>`:''}
         </div>
       </div>
     </div>`;
@@ -4621,6 +4799,8 @@ function editProducto(id){
   document.getElementById('prod-stock').value=p.stock;
   document.getElementById('prod-categoria').value=p.categoria;
   document.getElementById('prod-descripcion').value=p.descripcion;
+  if(document.getElementById('prod-tiempo')) document.getElementById('prod-tiempo').value=p.tiempo||'';
+  if(document.getElementById('prod-gramos')) document.getElementById('prod-gramos').value=p.gramos||'';
   const imgValProd = p.imagen||'';
   document.getElementById('prod-imagen').value = imgValProd;
   if(imgValProd){ document.getElementById('prod-img-preview').innerHTML=`<img src="${imgValProd}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
@@ -4796,50 +4976,144 @@ function renderCola(){
 // ════════════════════════════════
 // PIEZAS
 // ════════════════════════════════
+// ════════════════════════════════
+// PIEZAS / ARCHIVOS STL
+// ════════════════════════════════
+let _piezaInsumos = [];
+
+function addPiezaInsumo(){
+  _piezaInsumos.push({id:uid(), tipo:'material', refId:'', nombre:'', cantidad:1, unidad:'g'});
+  renderPiezaInsumos();
+}
+
+function renderPiezaInsumos(){
+  const cont = document.getElementById('pieza-insumos-container');
+  const empty = document.getElementById('pieza-insumos-empty');
+  if(!cont) return;
+  if(empty) empty.style.display = _piezaInsumos.length ? 'none' : 'block';
+  if(!_piezaInsumos.length){ cont.innerHTML=''; return; }
+  cont.innerHTML = _piezaInsumos.map((ins,i)=>{
+    const opts = getInsumoOptions(ins.tipo);
+    const optHtml = opts.length
+      ? '<option value="">Seleccionar...</option>'+opts.map(o=>`<option value="${o.id}" ${ins.refId===o.id?'selected':''}>${o.label.substring(0,38)}${o.label.length>38?'...':''}</option>`).join('')
+      : '<option value="">Sin registros</option>';
+    return `<div style="background:var(--bg2);border-radius:var(--r);border:0.5px solid var(--border);padding:8px 10px;margin-bottom:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <select style="font-size:11px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:6px;padding:4px 8px;color:var(--text);font-family:var(--font);cursor:pointer"
+        onchange="_piezaInsumos[${i}].tipo=this.value;_piezaInsumos[${i}].refId='';renderPiezaInsumos()">
+        <option value="material" ${ins.tipo==='material'?'selected':''}>⬡ Material</option>
+        <option value="accesorio" ${ins.tipo==='accesorio'?'selected':''}>🔩 Accesorio</option>
+        <option value="componente" ${ins.tipo==='componente'?'selected':''}>⚡ Componente</option>
+        <option value="libre" ${ins.tipo==='libre'?'selected':''}>✏️ Libre</option>
+      </select>
+      ${ins.tipo==='libre'
+        ? `<input class="form-input" style="flex:1;font-size:12px;min-width:120px" placeholder="Nombre" value="${ins.nombre||''}" oninput="_piezaInsumos[${i}].nombre=this.value">`
+        : `<select class="form-input" style="flex:1;font-size:12px;min-width:120px" onchange="_piezaInsumos[${i}].refId=this.value;const o=getInsumoOptions('${ins.tipo}').find(x=>x.id===this.value);if(o){_piezaInsumos[${i}].nombre=o.label;_piezaInsumos[${i}].unidad=o.unidad||'Und';}">${optHtml}</select>`}
+      <button onclick="_piezaInsumos.splice(${i},1);renderPiezaInsumos()" style="background:rgba(224,26,0,0.1);border:none;border-radius:6px;padding:4px 8px;color:var(--ferrari);cursor:pointer;font-size:12px;flex-shrink:0">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openPiezaModal(editId=''){
+  _piezaInsumos=[];
+  document.getElementById('pieza-edit-id').value='';
+  document.getElementById('pieza-modal-title').textContent='Registrar Archivo STL';
+  document.getElementById('pieza-save-btn').textContent='Guardar STL';
+  clearForm(['pieza-nombre','pieza-codigo','pieza-tiempo','pieza-notas','pieza-url']);
+  document.getElementById('pieza-escala').value='1:10';
+  document.getElementById('pieza-boquilla').value='0.4mm';
+  document.getElementById('pieza-gramos').value='';
+  document.getElementById('pieza-placas').value='1';
+  resetImgPreview('pieza-img-preview','pieza-imagen');
+  renderPiezaInsumos();
+  openModal('modal-pieza');
+}
+
 function savePieza(){
+  const editId = document.getElementById('pieza-edit-id').value;
+  const nombre = document.getElementById('pieza-nombre').value.trim();
+  if(!nombre){ showToast('Ingresá un nombre','error'); return; }
   const obj={
-    id:uid(),
-    nombre:document.getElementById('pieza-nombre').value.trim(),
-    proyectoId:document.getElementById('pieza-proyecto').value,
-    materialId:document.getElementById('pieza-material').value,
-    escala:document.getElementById('pieza-escala').value||'1:10',
-    tiempo:document.getElementById('pieza-tiempo').value,
-    estado:document.getElementById('pieza-estado').value,
-    gramos:parseInt(document.getElementById('pieza-gramos').value)||0,
-    notas:document.getElementById('pieza-notas').value,
-    fecha:new Date().toISOString()
+    id: editId||uid(),
+    nombre,
+    codigo:   document.getElementById('pieza-codigo').value||'',
+    escala:   document.getElementById('pieza-escala').value||'1:10',
+    boquilla: document.getElementById('pieza-boquilla').value||'0.4mm',
+    tiempo:   document.getElementById('pieza-tiempo').value||'',
+    gramos:   parseInt(document.getElementById('pieza-gramos').value)||0,
+    placas:   parseInt(document.getElementById('pieza-placas').value)||1,
+    url:      document.getElementById('pieza-url').value||'',
+    notas:    document.getElementById('pieza-notas').value||'',
+    imagen:   document.getElementById('pieza-imagen').value||'',
+    insumos:  _piezaInsumos.map(i=>({...i})),
+    fecha:    new Date().toISOString()
   };
-  if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
-  DB.piezas.push(obj); persist(KEYS.piezas); updateBadges(); closeModal('modal-pieza');
-  clearForm(['pieza-nombre','pieza-tiempo','pieza-gramos','pieza-notas']);
-  logActivity(`Pieza <strong>${obj.nombre}</strong> registrada`);
-  renderSection(currentSection); showToast('Pieza registrada ✓');
+  if(editId){ DB.piezas=DB.piezas.map(p=>p.id===editId?obj:p); }
+  else{ DB.piezas.push(obj); logActivity(`Archivo STL <strong>${obj.nombre}</strong> registrado`); }
+  persist(KEYS.piezas); updateBadges(); closeModal('modal-pieza');
+  renderSection(currentSection); showToast('STL guardado ✓');
 }
 
 function deletePieza(id){
+  if(!confirm('¿Eliminar este archivo STL?')) return;
   DB.piezas=DB.piezas.filter(p=>p.id!==id);
   persist(KEYS.piezas); updateBadges(); renderSection(currentSection);
 }
 
+function editPieza(id){
+  const p=DB.piezas.find(x=>x.id===id); if(!p) return;
+  openPiezaModal(id);
+  document.getElementById('pieza-edit-id').value=p.id;
+  document.getElementById('pieza-modal-title').textContent='Editar Archivo STL';
+  document.getElementById('pieza-save-btn').textContent='Guardar cambios';
+  document.getElementById('pieza-nombre').value=p.nombre||'';
+  document.getElementById('pieza-codigo').value=p.codigo||'';
+  document.getElementById('pieza-escala').value=p.escala||'1:10';
+  document.getElementById('pieza-boquilla').value=p.boquilla||'0.4mm';
+  document.getElementById('pieza-tiempo').value=p.tiempo||'';
+  document.getElementById('pieza-gramos').value=p.gramos||'';
+  document.getElementById('pieza-placas').value=p.placas||1;
+  document.getElementById('pieza-url').value=p.url||'';
+  document.getElementById('pieza-notas').value=p.notas||'';
+  const imgVal=p.imagen||'';
+  document.getElementById('pieza-imagen').value=imgVal;
+  if(imgVal) document.getElementById('pieza-img-preview').innerHTML=`<img src="${imgVal}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+  _piezaInsumos=(p.insumos||[]).map(i=>({...i}));
+  renderPiezaInsumos();
+}
+
 function renderPiezas(){
   const tbody=document.getElementById('piezas-tbody'); if(!tbody) return;
-  const stMap={pendiente:{l:'pendiente',c:'badge-gray'},enCola:{l:'en cola',c:'badge-amber'},'en-cola':{l:'en cola',c:'badge-amber'},imprimiendo:{l:'imprimiendo',c:'badge-teal'},lista:{l:'lista',c:'badge-purple'},fallida:{l:'fallida',c:'badge-coral'}};
-  if(!DB.piezas.length){ tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px">Sin piezas registradas</td></tr>`; return; }
-  tbody.innerHTML=DB.piezas.map(p=>{
-    const mat=DB.materiales.find(m=>m.id===p.materialId);
-    const proy=DB.proyectos.find(pr=>pr.id===p.proyectoId);
-    const st=stMap[p.estado]||{l:p.estado,c:'badge-gray'};
-    return `<tr>
-      <td><strong>${p.nombre}</strong>${p.notas?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${p.notas}</div>`:''}  </td>
-      <td>${proy?proy.nombre:'—'}</td>
-      <td class="mono">${mat?mat.tipo+' '+mat.color:'—'}</td>
-      <td class="mono">${p.escala||'1:10'}</td>
-      <td class="mono">${p.tiempo||'—'}${p.gramos?` / ${p.gramos}g`:''}</td>
-      <td><span class="badge ${st.c}">${st.l}</span></td>
-      <td><button class="btn btn-danger btn-sm" onclick="deletePieza('${p.id}')">✕</button></td>
-    </tr>`;
-  }).join('');
+  if(!DB.piezas.length){
+    tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px">Sin archivos STL registrados</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=DB.piezas.map(p=>`<tr>
+    <td>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${p.imagen?`<img src="${p.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px">🖨️</div>`}
+        <div>
+          <strong>${p.nombre}</strong>
+          ${p.codigo?`<div style="font-size:10px;color:var(--accent);font-family:var(--mono)">${p.codigo}</div>`:''}
+        </div>
+      </div>
+    </td>
+    <td class="mono" style="font-size:12px">${p.escala||'1:10'}</td>
+    <td class="mono" style="font-size:12px">${p.boquilla||'0.4mm'}</td>
+    <td class="mono" style="font-size:12px">${p.tiempo||'—'}${p.gramos?` · ${p.gramos}g`:''}${p.placas>1?` · ${p.placas}x`:''}</td>
+    <td style="font-size:12px">
+      ${(p.insumos||[]).length?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${p.insumos.length} material${p.insumos.length>1?'es':''}</span>`:'—'}
+      ${p.url?`<a href="${p.url}" target="_blank" style="display:block;font-size:10px;color:var(--blue);font-family:var(--mono);text-decoration:none;margin-top:2px">🔗 Descargar</a>`:''}
+    </td>
+    <td>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-ghost btn-sm" onclick="editPieza('${p.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePieza('${p.id}')">✕</button>
+      </div>
+    </td>
+  </tr>`).join('');
 }
+
+
 
 // ════════════════════════════════
 // MANTENIMIENTO
@@ -5187,7 +5461,7 @@ function copiarResumenCosto(){
   const insumos = parseFloat(document.getElementById('calc-insumos')?.value)||0;
   const totalCostos = costoBase*(1+margenError/100)+insumos;
   const precioFinalEl = document.getElementById('calc-total-final');
-  const texto = `📊 RESUMEN DE COSTO — MarcanoTech
+  const texto = `📊 RESUMEN DE COSTO — MarcanoTech 3D
 ${'─'.repeat(35)}
 Material:       ${fmt(costMaterial)}
 Electricidad:   ${fmt(costElec)}
@@ -5197,7 +5471,7 @@ Costo base:     ${fmt(costoBase)}
 Total costos:   ${fmt(totalCostos)}
 PRECIO FINAL:   ${precioFinalEl?.textContent||'—'}
 ${'─'.repeat(35)}
-Generado con MarcanoTech Dashboard`;
+Generado con MarcanoTech 3D Dashboard`;
   navigator.clipboard.writeText(texto).then(()=>showToast('Resumen copiado ✓')).catch(()=>showToast('No se pudo copiar','error'));
 }
 
@@ -5599,7 +5873,7 @@ function openPresupuestoModal(editId=''){
   if(extCont) extCont.style.display='none';
   const desglosar=document.getElementById('presup-desglosar');
   if(desglosar) desglosar.checked=false;
-  document.getElementById('presup-negocio').value='MarcanoTech';
+  document.getElementById('presup-negocio').value='MarcanoTech 3D';
   document.getElementById('presup-fecha').value=new Date().toISOString().split('T')[0];
   const num=nextPresupNumero();
   document.getElementById('presup-numero').value=num;
@@ -5628,7 +5902,7 @@ function savePresupuesto(estado='borrador'){
     moneda:document.getElementById('presup-moneda').value, descuento:desc,
     subtotal, total, destinatario,
     contacto:document.getElementById('presup-contacto').value,
-    negocio:document.getElementById('presup-negocio').value||'MarcanoTech',
+    negocio:document.getElementById('presup-negocio').value||'MarcanoTech 3D',
     validez:document.getElementById('presup-validez').value||'',
     notas:document.getElementById('presup-notas').value,
     desglosar:document.getElementById('presup-desglosar')?.checked||false,
@@ -5659,7 +5933,7 @@ function editPresupuesto(id){
   document.getElementById('presup-descuento').value=p.descuento||'';
   document.getElementById('presup-destinatario').value=p.destinatario||'';
   document.getElementById('presup-contacto').value=p.contacto||'';
-  document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech';
+  document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech 3D';
   document.getElementById('presup-validez').value=p.validez||'';
   document.getElementById('presup-notas').value=p.notas||'';
   _presupItems=p.items&&p.items.length?p.items.map(i=>({...i})):[{id:uid(),desc:'',cant:1,precio:0}];
@@ -5736,7 +6010,7 @@ function renderPresupuestos(filter){
 function buildPresupuestoText(p){
   const items=p.items||[];
   const lineas=items.map(i=>`  • ${i.cant}× ${i.desc}: $${((i.cant||1)*(i.precio||0)).toFixed(2)} ${p.moneda||'USD'}`).join('\n');
-  return `PRESUPUESTO ${p.numero}\n${'─'.repeat(38)}\nFecha: ${p.fecha||'—'}${p.validez?`  |  Válido: ${p.validez} días`:''}\nDE: ${p.negocio||'MarcanoTech'}\nPARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}\n${'─'.repeat(38)}\nÍTEMS:\n${lineas}\n${'─'.repeat(38)}\n${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)}\nDescuento ${p.descuento}%: -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${p.moneda==='USD'&&p.dolarRate?`\n≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS`:''}\n${'─'.repeat(38)}\n${p.notas?'NOTAS:\n'+p.notas+'\n':''}\nMarcanoTech Workshop Dashboard`;
+  return `PRESUPUESTO ${p.numero}\n${'─'.repeat(38)}\nFecha: ${p.fecha||'—'}${p.validez?`  |  Válido: ${p.validez} días`:''}\nDE: ${p.negocio||'MarcanoTech 3D'}\nPARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}\n${'─'.repeat(38)}\nÍTEMS:\n${lineas}\n${'─'.repeat(38)}\n${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)}\nDescuento ${p.descuento}%: -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${p.moneda==='USD'&&p.dolarRate?`\n≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS`:''}\n${'─'.repeat(38)}\n${p.notas?'NOTAS:\n'+p.notas+'\n':''}\nMarcanoTech 3D Workshop Dashboard`;
 }
 
 function exportPresupuestoPDFById(id){
@@ -6055,7 +6329,12 @@ function renderVentas(){
       <td class="mono" style="color:var(--accent);font-weight:700">$${parseFloat(v.total||0).toFixed(2)}</td>
       <td>${v.cliente||'—'}<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${v.canal||''}</div></td>
       <td><span class="badge" style="background:${st.c}22;color:${st.c}">${st.l}</span></td>
-      <td><button class="btn btn-danger btn-sm" onclick="deleteVenta('${v.id}')">✕</button></td>
+      <td>
+        <div style="display:flex;gap:4px">
+          ${v.estado==='pendiente'?`<button class="btn btn-ghost btn-sm" onclick="editVenta('${v.id}')">Editar</button>`:''}
+          <button class="btn btn-danger btn-sm" onclick="deleteVenta('${v.id}')">✕</button>
+        </div>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -6197,7 +6476,7 @@ function nextClienteCodigo(){
 function openClienteModal(editId=''){
   document.getElementById('cliente-edit-id').value='';
   document.getElementById('cliente-modal-title').textContent='Nuevo Cliente / Proveedor';
-  clearForm(['cliente-nombre','cliente-doc-nro','cliente-telefono','cliente-whatsapp','cliente-email','cliente-empresa','cliente-ciudad','cliente-provincia','cliente-direccion','cliente-notas']);
+  clearForm(['cliente-nombre','cliente-doc-nro','cliente-telefono','cliente-whatsapp','cliente-email','cliente-empresa','cliente-ciudad','cliente-provincia','cliente-direccion','cliente-notas','cliente-web']);
   document.getElementById('cliente-tipo').value='cliente';
   document.getElementById('cliente-doc-tipo').value='';
   const codigo=nextClienteCodigo();
@@ -6224,19 +6503,20 @@ function saveCliente(){
     ciudad:document.getElementById('cliente-ciudad').value,
     provincia:document.getElementById('cliente-provincia').value,
     direccion:document.getElementById('cliente-direccion').value,
+    web:document.getElementById('cliente-web').value||'',
     notas:document.getElementById('cliente-notas').value,
     ts:Date.now()
   };
   if(editId){ DB.clientes=DB.clientes.map(c=>c.id===editId?obj:c); }
   else{ DB.clientes.push(obj); logActivity(`Contacto <strong>${obj.nombre}</strong> registrado`); }
-  persist('clientes'); updateBadges(); closeModal('modal-cliente'); renderSection(currentSection);
+  persist(KEYS.clientes); updateBadges(); closeModal('modal-cliente'); renderSection(currentSection);
   showToast('Contacto guardado ✓');
 }
 
 function deleteCliente(id){
   if(!confirm('¿Eliminar este contacto?')) return;
   DB.clientes=DB.clientes.filter(c=>c.id!==id);
-  persist('clientes'); updateBadges(); renderSection(currentSection);
+  persist(KEYS.clientes); updateBadges(); renderSection(currentSection);
 }
 
 function editCliente(id){
@@ -6257,6 +6537,7 @@ function editCliente(id){
   document.getElementById('cliente-ciudad').value=c.ciudad||'';
   document.getElementById('cliente-provincia').value=c.provincia||'';
   document.getElementById('cliente-direccion').value=c.direccion||'';
+  if(document.getElementById('cliente-web')) document.getElementById('cliente-web').value=c.web||'';
   document.getElementById('cliente-notas').value=c.notas||'';
 }
 
@@ -6299,7 +6580,7 @@ function renderClientes(){
       ${c.telefono||c.whatsapp?`<div style="font-size:12px;color:var(--text2);margin-bottom:4px">📞 ${c.telefono||''}${c.whatsapp&&c.whatsapp!==c.telefono?' · 💬 '+c.whatsapp:''}</div>`:''}
       ${c.email?`<div style="font-size:12px;color:var(--text2);margin-bottom:4px">✉️ ${c.email}</div>`:''}
       ${c.ciudad||c.provincia?`<div style="font-size:11px;color:var(--text3);margin-bottom:4px">📍 ${[c.ciudad,c.provincia].filter(Boolean).join(', ')}</div>`:''}
-      ${c.notas?`<div style="font-size:11px;color:var(--text3);background:var(--bg3);padding:6px 8px;border-radius:7px;margin-bottom:8px">${c.notas}</div>`:''}
+      ${c.web?`<a href="${c.web}" target="_blank" style="font-size:11px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🌐 ${c.web}</a>`:''}${c.notas?`<div style="font-size:11px;color:var(--text3);background:var(--bg3);padding:6px 8px;border-radius:7px;margin-bottom:8px">${c.notas}</div>`:''}
       <div style="display:flex;gap:6px;margin-top:8px">
         <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editCliente('${c.id}')">Editar</button>
         ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="background:#25D36622;color:#25D366;border:0.5px solid #25D36644;text-decoration:none">💬</a>`:''}
@@ -6422,8 +6703,74 @@ function filterCalibracion(f, btn){
 }
 
 // ════════════════════════════════
-// COTIZACIONES
+// VENTA — CLIENTE SELECTOR
 // ════════════════════════════════
+let _ventaClienteMode = 'manual';
+
+function setVentaClienteMode(mode){
+  _ventaClienteMode = mode;
+  const manual = document.getElementById('venta-cliente-manual');
+  const existente = document.getElementById('venta-cliente-existente');
+  const btnManual = document.getElementById('venta-cliente-btn-manual');
+  const btnExist = document.getElementById('venta-cliente-btn-existente');
+  if(mode === 'manual'){
+    manual.style.display = ''; existente.style.display = 'none';
+    btnManual.style.background = 'var(--accent)'; btnManual.style.color = '#fff';
+    btnExist.style.background = 'var(--bg3)'; btnExist.style.color = 'var(--text2)';
+    btnManual.style.borderColor = 'var(--accent)'; btnExist.style.borderColor = 'var(--border2)';
+  } else {
+    manual.style.display = 'none'; existente.style.display = '';
+    btnExist.style.background = 'var(--accent)'; btnExist.style.color = '#fff';
+    btnManual.style.background = 'var(--bg3)'; btnManual.style.color = 'var(--text2)';
+    btnExist.style.borderColor = 'var(--accent)'; btnManual.style.borderColor = 'var(--border2)';
+    // Populate cliente select
+    const sel = document.getElementById('venta-cliente-select');
+    if(sel){
+      sel.innerHTML = '<option value="">— Seleccionar cliente —</option>' +
+        DB.clientes.map(c=>`<option value="${c.nombre}">${c.nombre}${c.empresa?' — '+c.empresa:''}</option>`).join('');
+    }
+  }
+}
+
+function onVentaClienteSelect(nombre){
+  document.getElementById('venta-cliente').value = nombre;
+}
+
+function editVenta(id){
+  const v = DB.ventas.find(x=>x.id===id); if(!v) return;
+  if(v.estado !== 'pendiente'){ showToast('Solo se pueden editar ventas pendientes','error'); return; }
+  document.getElementById('venta-edit-id').value = v.id;
+  document.getElementById('venta-producto').value = v.producto||'';
+  document.getElementById('venta-cantidad').value = v.cantidad||1;
+  document.getElementById('venta-precio').value = v.precio||'';
+  document.getElementById('venta-total').value = v.total||'';
+  document.getElementById('venta-cliente').value = v.cliente||'';
+  document.getElementById('venta-fecha').value = v.fecha||'';
+  document.getElementById('venta-canal').value = v.canal||'Directo';
+  document.getElementById('venta-estado').value = v.estado||'pendiente';
+  document.getElementById('venta-notas').value = v.notas||'';
+  setVentaClienteMode('manual');
+  openModal('modal-venta');
+}
+
+// ════════════════════════════════
+// TIMER DISPLAY IN TOPBAR
+// ════════════════════════════════
+function updateTopbarTimer(){
+  const el = document.getElementById('topbar-timer');
+  if(!el) return;
+  if(_timerRunning){
+    const elapsed = Date.now() - _timerStart;
+    const h=Math.floor(elapsed/3600000), m=Math.floor((elapsed%3600000)/60000), s=Math.floor((elapsed%60000)/1000);
+    el.style.display='flex';
+    el.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  } else {
+    el.style.display='none';
+  }
+}
+setInterval(updateTopbarTimer, 1000);
+
+
 function renderCotizaciones(){
   if(!DB.cotizaciones) DB.cotizaciones=[];
   const sr=document.getElementById('cotiz-stats-row');
@@ -6482,13 +6829,13 @@ function renderCotizaciones(){
 function cambiarEstadoCotiz(id,estado){
   if(!estado) return;
   DB.cotizaciones=DB.cotizaciones.map(c=>c.id===id?{...c,estado}:c);
-  persist('cotizaciones'); updateBadges(); renderSection(currentSection);
+  persist(KEYS.cotizaciones); updateBadges(); renderSection(currentSection);
 }
 
 function deleteCotizacion(id){
   if(!confirm('¿Eliminar esta cotización?')) return;
   DB.cotizaciones=DB.cotizaciones.filter(c=>c.id!==id);
-  persist('cotizaciones'); updateBadges(); renderSection(currentSection);
+  persist(KEYS.cotizaciones); updateBadges(); renderSection(currentSection);
 }
 
 function openCotizacionModal(){
@@ -6532,7 +6879,7 @@ function saveCotizacion(){
   if(!DB.cotizaciones) DB.cotizaciones=[];
   if(editId){ DB.cotizaciones=DB.cotizaciones.map(c=>c.id===editId?obj:c); }
   else{ DB.cotizaciones.unshift(obj); logActivity(`Cotización <strong>${obj.titulo}</strong> registrada`); }
-  persist('cotizaciones'); updateBadges(); closeModal('modal-cotizacion');
+  persist(KEYS.cotizaciones); updateBadges(); closeModal('modal-cotizacion');
   renderSection(currentSection); showToast('Cotización guardada ✓');
 }
 
