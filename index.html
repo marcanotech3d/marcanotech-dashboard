@@ -806,7 +806,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <div class="section" id="sec-impresoras">
     <div class="section-row" style="margin-top:0">
       <div class="section-title">Mis impresoras</div>
-      <button class="btn btn-accent btn-sm" onclick="openModal('modal-impresora')">+ Agregar impresora</button>
+      <button class="btn btn-accent btn-sm" onclick="openImpresora()">+ Agregar impresora</button>
     </div>
     <div class="grid-2" id="impresoras-grid"></div>
   </div>
@@ -876,6 +876,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </div>
       <button class="btn btn-accent btn-sm" onclick="openAccesorioModal()">+ Agregar accesorio</button>
     </div>
+    <div class="stats-row" id="accesorios-stats-row" style="margin-bottom:12px"></div>
     <div class="tabs">
       <button class="tab active" onclick="filterAccesorios('todos',this)">Todos</button>
       <button class="tab" onclick="filterAccesorios('Adhesivo',this)">Adhesivos</button>
@@ -901,7 +902,15 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="section-title">Catálogo de productos</div>
       <button class="btn btn-accent btn-sm" onclick="openModal('modal-producto')">+ Nuevo producto</button>
     </div>
-    <div class="grid-4" id="productos-grid"></div>
+    <div class="stats-row" id="productos-stats-row" style="margin-bottom:12px"></div>
+    <div class="panel" style="overflow-x:auto">
+      <table class="data-table" id="productos-table">
+        <thead>
+          <tr><th>SKU</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Precio</th><th>Fab.</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="productos-grid"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- ── PIEZAS ── -->
@@ -910,7 +919,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="section-title">Piezas & archivos STL</div>
       <button class="btn btn-accent btn-sm" onclick="openPiezaModal()">+ Registrar pieza</button>
     </div>
-    <div class="panel">
+    <div class="stats-row" id="piezas-stats-row" style="margin-bottom:12px"></div>
       <table class="data-table">
         <thead>
           <tr><th>Pieza</th><th>Proyecto</th><th>Material</th><th>Escala</th><th>Tiempo est.</th><th>Estado</th><th>Acciones</th></tr>
@@ -1316,7 +1325,15 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <button class="tab" onclick="filterComponentes('radio',this)">Radio</button>
       <button class="tab" onclick="filterComponentes('otro',this)">Otros</button>
     </div>
-    <div class="grid-3" id="componentes-grid"></div>
+    
+    <div class="panel" style="overflow-x:auto">
+      <table class="data-table" id="componentes-table">
+        <thead>
+          <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Estado</th><th>Stock</th><th>Precio</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="componentes-grid"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- ── TIMER ── -->
@@ -1338,7 +1355,12 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:0.5px solid var(--border)">
           <div class="form-group" style="margin-bottom:10px">
             <label class="form-label">Pieza / trabajo</label>
-            <input class="form-input" id="timer-nombre" placeholder="ej: Chasis Touring v2.3">
+            <div style="display:flex;gap:6px">
+              <input class="form-input" id="timer-nombre" placeholder="ej: Chasis Touring v2.3" style="flex:1">
+              <select class="form-input" id="timer-cola-select" style="width:120px;font-size:11px" onchange="if(this.value){document.getElementById('timer-nombre').value=this.options[this.selectedIndex].text;this.value='';}">
+                <option value="">De cola...</option>
+              </select>
+            </div>
           </div>
           <div class="form-group" style="margin-bottom:10px">
             <label class="form-label">Impresora</label>
@@ -1352,7 +1374,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           </div>
           <div class="form-group" style="margin-bottom:0">
             <label class="form-label">Tiempo estimado (minutos)</label>
-            <input class="form-input" type="number" id="timer-estimado" placeholder="ej: 180">
+            <div style="display:flex;gap:6px;align-items:center">
+              <input class="form-input" type="number" id="timer-estimado" placeholder="ej: 180" style="flex:1">
+              <button type="button" onclick="timerAutoEstimado()" class="btn btn-ghost btn-sm" title="Calcular desde STLs del proyecto">⟳ Auto</button>
+            </div>
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px">O calculá automático desde el proyecto seleccionado</div>
           </div>
         </div>
       </div>
@@ -1508,6 +1534,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Estado</label>
         <select class="form-input" id="proy-estado">
+          <option value="pendiente">Pendiente</option>
           <option value="diseño">Diseño</option>
           <option value="imprimiendo">Imprimiendo</option>
           <option value="pausa">En pausa</option>
@@ -1819,11 +1846,10 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <!-- Tiempo impresión + Gramos filamento -->
     <div style="background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
       <div style="font-size:11px;color:var(--navy-l, var(--accent));font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🖨️ Datos de fabricación</div>
-      <div class="form-row" style="margin-bottom:0">
+      <div class="form-row" style="margin-bottom:10px">
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Tiempo de impresión</label>
           <input class="form-input" id="prod-tiempo" placeholder="ej: 3h 20m">
-          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">Útil para cotizar y planificar</div>
         </div>
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Consumo de filamento (g)</label>
@@ -1831,8 +1857,27 @@ select.form-input option{background:var(--bg3);color:var(--text);}
             <input class="form-input" type="number" id="prod-gramos" placeholder="ej: 85" step="1" min="0" style="padding-right:32px">
             <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-family:var(--mono)">g</span>
           </div>
-          <div id="prod-gramos-costo" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
         </div>
+      </div>
+      <div class="form-row" style="margin-bottom:10px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Altura de capa (mm)</label>
+          <input class="form-input" type="number" id="prod-layer" placeholder="ej: 0.20" step="0.01" min="0.05" max="1.0">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Paredes</label>
+          <input class="form-input" type="number" id="prod-paredes" placeholder="ej: 3" step="1" min="1">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Relleno (%)</label>
+          <input class="form-input" type="number" id="prod-relleno" placeholder="ej: 20" step="5" min="0" max="100">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Archivo STL vinculado</label>
+        <select class="form-input" id="prod-stl-ref">
+          <option value="">Sin STL vinculado</option>
+        </select>
       </div>
     </div>
 
@@ -1969,8 +2014,17 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
     <!-- STL list from project -->
     <div id="cola-stl-section" style="display:none;background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">
-        🖨️ Archivos STL del proyecto
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase">
+          🖨️ Archivos STL del proyecto
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Capa unificada:</span>
+          <input type="number" id="cola-layer-unified" step="0.01" min="0.05" max="1.0" placeholder="auto"
+            style="width:72px;font-size:11px;font-family:var(--mono);background:var(--bg3);border:0.5px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--text)"
+            oninput="document.getElementById('cola-layer').value=this.value">
+          <span style="font-size:10px;color:var(--text3)">mm</span>
+        </div>
       </div>
       <div id="cola-stl-list"></div>
     </div>
@@ -2053,6 +2107,10 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <option value="1.0mm">1.0 mm — Estructural</option>
           <option value="Acero">Acero endurecido (CF)</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Altura de capa (mm)</label>
+        <input class="form-input" type="number" id="pieza-layer" placeholder="ej: 0.20" step="0.01" min="0.05" max="1.0">
       </div>
     </div>
 
@@ -3061,10 +3119,21 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v2.0',
+  version: 'v2.1',
   fecha: '2026-04-25',
   nombre: 'Marcano Tech',
   changelog: [
+    { v:'v2.1', fecha:'2026-04-25', cambios:[
+      'Impresoras: botón Agregar abre formulario vacío correctamente',
+      'Proyectos: campo kg/g estimados desde STLs, estado Pendiente agregado',
+      'Cola: campo proyecto con valor Ninguno por defecto, capa unificada desde STLs',
+      'STL/Piezas: campo Altura de Capa, stats por escala en encabezado',
+      'Tiempo de Impresión: pieza desde cola, tiempo auto desde proyecto',
+      'Accesorios: stats por categoría en encabezado',
+      'Componentes: vista cambiada a lista/tabla',
+      'Productos: stats por categoría, vista lista, campos capa/paredes/relleno/STL',
+      'Clientes/Proveedores: separados en bloques Clientes y Proveedores',
+    ]},
     { v:'v2.0', fecha:'2026-04-25', cambios:[
       'Impresoras: título diferenciado Agregar vs Editar impresora',
       'Impresoras: fecha de vencimiento de garantía se guarda y restaura correctamente',
@@ -3786,7 +3855,7 @@ function populateModalSelects(modalId){
   const impOpts = DB.impresoras.map(i=>`<option value="${i.id}">${i.nombre}</option>`).join('') || '<option value="">Sin impresoras</option>';
   const today=new Date().toISOString().split('T')[0];
   if(modalId==='modal-cola'){
-    document.getElementById('cola-proyecto').innerHTML=proyOpts;
+    document.getElementById('cola-proyecto').innerHTML='<option value="">Ninguno</option>'+DB.proyectos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
     document.getElementById('cola-stl-section').style.display='none';
     // Auto-trigger STL list if a project is pre-selected
     const colaProy = document.getElementById('cola-proyecto');
@@ -4056,6 +4125,9 @@ function renderTimer(){
   const sel = document.getElementById('timer-proyecto');
   if(sel) sel.innerHTML = '<option value="">Sin proyecto</option>' +
     DB.proyectos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+  const colaSel = document.getElementById('timer-cola-select');
+  if(colaSel) colaSel.innerHTML = '<option value="">De cola...</option>' +
+    DB.cola.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
   const impSel = document.getElementById('timer-impresora');
   if(impSel) impSel.innerHTML = '<option value="">Sin asignar</option>' +
     DB.impresoras.map(i=>`<option value="${i.id}">${i.nombre}</option>`).join('');
@@ -4079,6 +4151,16 @@ function renderTimerHistorial(){
     </div>`).join('');
 }
 
+function timerAutoEstimado(){
+  const proyId = document.getElementById('timer-proyecto')?.value;
+  if(!proyId){ showToast('Seleccioná un proyecto primero','error'); return; }
+  const proy = DB.proyectos.find(p=>p.id===proyId); if(!proy) return;
+  function parseMin(str){ if(!str) return 0; let m=0; const h=str.match(/(\d+)\s*h/i); if(h) m+=parseInt(h[1])*60; const mn=str.match(/(\d+)\s*m/i); if(mn) m+=parseInt(mn[1]); return m; }
+  const totalMin = (proy.insumos||[]).filter(i=>i.tipo==='stl').reduce((acc,i)=>{
+    const p=DB.piezas.find(x=>x.id===i.refId); return acc+(p?parseMin(p.tiempo)*(i.cantidad||1):0);},0);
+  if(totalMin>0){ document.getElementById('timer-estimado').value=totalMin; showToast(`${totalMin} minutos desde STLs`); }
+  else showToast('Sin STLs con tiempo registrado','error');
+}
 function timerStart(){
   if(_timerRunning) return;
   _timerRunning = true;
@@ -4442,6 +4524,7 @@ function renderProyectos(filter='todos'){
             <div class="project-footer">
               <span class="badge ${ec.cls}">${ec.label}</span>
               <span class="project-time">${p.tiempo||'—'}</span>
+              ${(()=>{const stls=(p.insumos||[]).filter(i=>i.tipo==='stl');const totalG=stls.reduce((a,i)=>{const pz=DB.piezas.find(x=>x.id===i.refId);return a+(pz?parseFloat(pz.gramos||0)*(i.cantidad||1):0);},0);return totalG>0?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${totalG}g</span>`:''})()}
               <button onclick="event.stopPropagation();deleteProyecto('${p.id}')" style="background:rgba(224,26,0,0.1);border:none;border-radius:5px;padding:3px 8px;color:var(--ferrari);cursor:pointer;font-size:11px;margin-left:auto">Eliminar</button>
             </div>
           </div>
@@ -4911,6 +4994,10 @@ function saveProducto(){
     imagen:document.getElementById('prod-imagen').value||'',
     tiempo:document.getElementById('prod-tiempo')?.value||'',
     gramos:parseFloat(document.getElementById('prod-gramos')?.value)||0,
+    layer:parseFloat(document.getElementById('prod-layer')?.value)||0,
+    paredes:parseInt(document.getElementById('prod-paredes')?.value)||0,
+    relleno:parseInt(document.getElementById('prod-relleno')?.value)||0,
+    stlRef:document.getElementById('prod-stl-ref')?.value||'',
     sku:document.getElementById('prod-sku').value||'—',
     precio:parseFloat(document.getElementById('prod-precio').value)||0,
     stock:parseInt(document.getElementById('prod-stock').value)||0,
@@ -4934,28 +5021,51 @@ function deleteProducto(id){
 }
 
 function renderProductos(){
+  const sr=document.getElementById('productos-stats-row');
+  if(sr){
+    const cats=['Kit completo','Body / Carrocería','Suspensión','Ruedas / Neumáticos','Hardware / Tech','Accesorios','Personalizado / Premium','Decoración / Home','Otro'];
+    const total=DB.productos.length;
+    const sinStock=DB.productos.filter(p=>parseInt(p.stock||0)===0).length;
+    sr.innerHTML=`<div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${total}</div><div class="stat-delta neutral">productos</div></div>`+
+      cats.map(cat=>{const n=DB.productos.filter(p=>p.categoria===cat).length;return n>0?`<div class="stat-card"><div class="stat-label">${cat.split('/')[0].trim()}</div><div class="stat-value">${n}</div><div class="stat-delta neutral">ítems</div></div>`:''}).join('')+
+      (sinStock>0?`<div class="stat-card"><div class="stat-label">Sin stock</div><div class="stat-value" style="color:var(--amber)">${sinStock}</div><div class="stat-delta neutral">reponer</div></div>`:'');
+  }
   const grid=document.getElementById('productos-grid'); if(!grid) return;
-  if(!DB.productos.length){ grid.innerHTML=`<div class="add-card" style="grid-column:1/-1" onclick="openModal('modal-producto')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Agregar primer producto</span></div>`; return; }
-  grid.innerHTML=DB.productos.map(p=>{
-    const sc=p.stock===0?'stock-out':p.stock<=2?'stock-low':'stock-ok';
-    const sl=p.stock===0?'agotado':p.stock<=2?`${p.stock} (bajo)`:`${p.stock} en stock`;
-    return `<div class="product-card" onclick="editProducto('${p.id}')">
-      <div style="display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:start">
-        <div style="height:70px;overflow:hidden;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center">${p.imagen?`<img src="${p.imagen}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:28px">${p.emoji||'📦'}</span>`}</div>
-        <div>
-          <div class="prod-name">${p.nombre}</div>
-          <div class="prod-sku">${p.sku}</div>
-          <div class="prod-price">$${parseFloat(p.precio||0).toFixed(2)} <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">${usdToArs(p.precio)?Math.round(usdToArs(p.precio)).toLocaleString("es-AR")+' ARS':''}</span></div>
-          <div class="prod-stock ${sc}">● ${sl}</div>
-          ${p.tiempo||p.gramos?`<div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
-            ${p.tiempo?`<span style="font-size:9px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:2px 6px;border-radius:4px">⏱ ${p.tiempo}</span>`:''}
-            ${p.gramos?`<span style="font-size:9px;color:var(--text3);font-family:var(--mono);background:var(--bg3);padding:2px 6px;border-radius:4px">🔴 ${p.gramos}g</span>`:''}
-          </div>`:''}
+  if(!DB.productos.length){
+    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="openModal('modal-producto')">Sin productos — <span style="color:var(--accent)">+ Agregar</span></div></td></tr>`;
+    return;
+  }
+  const stColors2={ok:'var(--teal)',bajo:'var(--amber)',vacio:'var(--coral)'};
+  grid.innerHTML = DB.productos.map(p=>{
+    const stock=parseInt(p.stock||0);
+    const sc = stock>5?'var(--teal)':stock>0?'var(--amber)':'var(--coral)';
+    const arsStr = p.precio ? (window._dolar?`$${Math.round(parseFloat(p.precio)*window._dolar).toLocaleString('es-AR')} ARS / `:'') + `US$${parseFloat(p.precio).toFixed(2)}` : '—';
+    const fabInfo = [p.tiempo?`⏱ ${p.tiempo}`:'', p.gramos?`${p.gramos}g`:''].filter(Boolean).join(' · ');
+    return `<tr>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${p.sku||'—'}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${p.imagen?`<img src="${p.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">${p.emoji||'📦'}</div>`}
+          <div style="min-width:0;flex:1">
+            <strong style="font-size:12px;display:block">${p.nombre}</strong>
+            ${p.descripcion?`<span style="font-size:10px;color:var(--text3);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">${p.descripcion}</span>`:''}
+          </div>
         </div>
-      </div>
-    </div>`;
-  }).join('')+`<div class="add-card" onclick="openModal('modal-producto')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo producto</span></div>`;
+      </td>
+      <td><span class="badge badge-gray" style="font-size:10px">${p.categoria||'—'}</span></td>
+      <td style="font-family:var(--mono);font-size:12px;color:${sc};font-weight:700">${stock}</td>
+      <td style="font-size:12px;font-family:var(--mono)">${arsStr}</td>
+      <td style="font-size:11px;color:var(--text3);font-family:var(--mono)">${fabInfo||'—'}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm" onclick="editProducto('${p.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProducto('${p.id}')">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
 }
+
 
 function editProducto(id){
   const p=DB.productos.find(x=>x.id===id); if(!p) return;
@@ -4969,6 +5079,11 @@ function editProducto(id){
   document.getElementById('prod-descripcion').value=p.descripcion;
   if(document.getElementById('prod-tiempo')) document.getElementById('prod-tiempo').value=p.tiempo||'';
   if(document.getElementById('prod-gramos')) document.getElementById('prod-gramos').value=p.gramos||'';
+  if(document.getElementById('prod-layer')) document.getElementById('prod-layer').value=p.layer||'';
+  if(document.getElementById('prod-paredes')) document.getElementById('prod-paredes').value=p.paredes||'';
+  if(document.getElementById('prod-relleno')) document.getElementById('prod-relleno').value=p.relleno||'';
+  const stlSel=document.getElementById('prod-stl-ref');
+  if(stlSel){ stlSel.innerHTML='<option value="">Sin STL vinculado</option>'+DB.piezas.map(pz=>`<option value="${pz.id}" ${p.stlRef===pz.id?'selected':''}>${pz.nombre}</option>`).join(''); }
   const imgValProd = p.imagen||'';
   document.getElementById('prod-imagen').value = imgValProd;
   if(imgValProd){ document.getElementById('prod-img-preview').innerHTML=`<img src="${imgValProd}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
@@ -5068,6 +5183,18 @@ function renderImpresoras(){
 }
 
 
+function openImpresora(){
+  document.getElementById('impresora-edit-id').value='';
+  document.getElementById('imp-modal-title').textContent='Agregar impresora';
+  clearForm(['imp-nombre','imp-marca','imp-volumen','imp-horas','imp-fecha','imp-notas','imp-garantia']);
+  document.getElementById('imp-garantia-dias').textContent='';
+  document.getElementById('imp-imagen').value='';
+  const prev=document.getElementById('imp-img-preview');
+  if(prev) prev.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargar</span>';
+  document.getElementById('imp-estado').value='activa';
+  document.getElementById('imp-tecnologia').value='FDM';
+  openModal('modal-impresora');
+}
 function editImpresora(id){
   const i=DB.impresoras.find(x=>x.id===id); if(!i) return;
   document.getElementById('impresora-edit-id').value=i.id;
@@ -5129,6 +5256,13 @@ function onColaProyectoChange(proyId){
   // Auto-fill time from project
   if(proy.tiempoAutoSTL && !document.getElementById('cola-tiempo').value){
     document.getElementById('cola-tiempo').value = proy.tiempoAutoSTL;
+  }
+  // Unified layer: most common layer among STLs (or smallest)
+  const layers = stlInsumos.map(i=>{const p=DB.piezas.find(x=>x.id===i.refId);return p&&p.layer?parseFloat(p.layer):0;}).filter(l=>l>0);
+  if(layers.length){
+    const unified = Math.min(...layers);
+    const lu = document.getElementById('cola-layer-unified');
+    if(lu && !lu.value) { lu.value=unified; document.getElementById('cola-layer').value=unified; }
   }
 }
 
@@ -5295,6 +5429,7 @@ function savePieza(){
     placas:   parseInt(document.getElementById('pieza-placas').value)||1,
     url:      document.getElementById('pieza-url').value||'',
     notas:    document.getElementById('pieza-notas').value||'',
+    layer:    parseFloat(document.getElementById('pieza-layer')?.value)||0,
     imagen:   document.getElementById('pieza-imagen').value||'',
     insumos:  _piezaInsumos.map(i=>({...i})),
     fecha:    new Date().toISOString()
@@ -5325,6 +5460,7 @@ function editPieza(id){
   document.getElementById('pieza-gramos').value=p.gramos||'';
   document.getElementById('pieza-placas').value=p.placas||1;
   document.getElementById('pieza-url').value=p.url||'';
+  if(document.getElementById('pieza-layer')) document.getElementById('pieza-layer').value=p.layer||'';
   document.getElementById('pieza-notas').value=p.notas||'';
   const imgVal=p.imagen||'';
   document.getElementById('pieza-imagen').value=imgVal;
@@ -5334,6 +5470,13 @@ function editPieza(id){
 }
 
 function renderPiezas(){
+  const sr=document.getElementById('piezas-stats-row');
+  if(sr){
+    const escalas=['1:8','1:10','1:12','1:18','1:24','Otro'];
+    const total=DB.piezas.length;
+    sr.innerHTML=`<div class="stat-card"><div class="stat-label">Total STL</div><div class="stat-value">${total}</div><div class="stat-delta neutral">registrados</div></div>`+
+      escalas.map(e=>{const n=DB.piezas.filter(p=>(p.escala||'1:10')===e).length;return n>0?`<div class="stat-card"><div class="stat-label">Escala ${e}</div><div class="stat-value">${n}</div><div class="stat-delta neutral">archivos</div></div>`:''}).join('');
+  }
   const tbody=document.getElementById('piezas-tbody'); if(!tbody) return;
   if(!DB.piezas.length){
     tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px;font-family:var(--mono);font-size:12px">Sin archivos STL registrados</td></tr>`;
@@ -6384,6 +6527,17 @@ function filterAccesorios(f, btn){
 }
 
 function renderAccesorios(){
+  // Stats by category
+  const sr = document.getElementById('accesorios-stats-row');
+  if(sr){
+    const cats=['Adhesivo','Herramienta','Consumible','Repuesto','Electrónica','Otro'];
+    const total = DB.accesorios.length;
+    const bajo = DB.accesorios.filter(a=>a.stockMin>0&&a.stock<a.stockMin).length;
+    sr.innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${total}</div><div class="stat-delta neutral">registrados</div></div>
+      ${cats.map(cat=>{const n=DB.accesorios.filter(a=>a.categoria===cat).length;return n>0?`<div class="stat-card"><div class="stat-label">${cat}</div><div class="stat-value">${n}</div><div class="stat-delta neutral">ítems</div></div>`:''}).join('')}
+      ${bajo>0?`<div class="stat-card"><div class="stat-label">Stock bajo</div><div class="stat-value" style="color:var(--amber)">${bajo}</div><div class="stat-delta neutral">reponer</div></div>`:''}`;
+  }
   const f = _filtroAccesorios||'todos';
   let list = f==='todos' ? DB.accesorios : DB.accesorios.filter(a=>a.categoria===f);
   const tbody = document.getElementById('accesorios-tbody');
@@ -6688,39 +6842,36 @@ function renderComponentes(filter){
   const list = _f==='todos'?DB.componentes:DB.componentes.filter(c=>c.categoria===_f);
   const grid = document.getElementById('componentes-grid'); if(!grid) return;
   if(!list.length){
-    grid.innerHTML=`<div class="add-card" style="grid-column:1/-1;min-height:140px" onclick="resetComponenteForm();openModal('modal-componente')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg><span>Agregar primer componente</span></div>`;
+    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="resetComponenteForm();openModal('modal-componente')">Sin componentes — <span style="color:var(--accent)">+ Agregar</span></div></td></tr>`;
     return;
   }
-  const compEmojis2={motor:'⚡',esc:'🔧',servo:'🔩',bateria:'🔋',radio:'📡',otro:'⚙️'};
   const stColors={disponible:'var(--teal)',instalado:'var(--blue)',dañado:'var(--coral)',pedido:'var(--amber)'};
   grid.innerHTML = list.map(c=>{
     const sc = stColors[c.estado]||'var(--text3)';
-    const arsStr = c.precioARS ? `$${parseFloat(c.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : c.precio ? `US$${parseFloat(c.precio||0).toFixed(2)}` : '';
-    return `<div class="panel" style="border:0.5px solid var(--border)">
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
-        <div style="width:48px;height:48px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
-          ${c.imagen?`<img src="${c.imagen}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:22px">${compEmojis2[c.categoria]||'⚙️'}</span>`}
+    const arsStr = c.precioARS ? `$${parseFloat(c.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : c.precio ? `US$${parseFloat(c.precio||0).toFixed(2)}` : '—';
+    return `<tr>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${c.codigo||'—'}</span></td>
+      <td style="max-width:260px">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${c.imagen?`<img src="${c.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">⚙️</div>`}
+          <div style="min-width:0;flex:1">
+            <strong style="font-size:12px;display:block">${c.nombre}</strong>
+            <span style="font-size:10px;color:var(--text3)">${c.marca||''}${c.modelo?' / '+c.modelo:''}</span>
+          </div>
         </div>
-        <div style="flex:1;min-width:0">
-          ${c.codigo?`<div style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);margin-bottom:2px">${c.codigo}</div>`:''}
-          <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3">${c.nombre}</div>
-          <div style="font-size:11px;color:var(--text3)">${c.marca||'—'} ${c.modelo?'/ '+c.modelo:''}</div>
+      </td>
+      <td><span class="badge badge-gray">${c.categoria||'—'}</span></td>
+      <td><span class="badge" style="background:${sc}22;color:${sc}">${c.estado||'—'}</span></td>
+      <td style="font-family:var(--mono);font-size:12px">${c.stock||1}${c.stock>1?' Und':' Und'}</td>
+      <td style="font-size:12px;font-family:var(--mono)">${arsStr}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm" onclick="editComponente('${c.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteComponente('${c.id}')">✕</button>
         </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">
-        <span class="badge" style="background:${sc}22;color:${sc}">${c.estado}</span>
-        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${c.categoria?.toUpperCase()}</span>
-        ${c.stock>1?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">×${c.stock}</span>`:''}
-      </div>
-      ${c.specs?`<div style="font-size:11px;color:var(--text2);background:var(--bg3);padding:6px 8px;border-radius:7px;margin-bottom:8px;line-height:1.5;max-height:48px;overflow:hidden;text-overflow:ellipsis">${c.specs.substring(0,120)}${c.specs.length>120?'...':''}</div>`:''}
-      ${arsStr?`<div style="font-size:13px;font-weight:700;color:var(--accent);font-family:var(--mono);margin-bottom:6px">${arsStr}</div>`:''}
-      ${c.url?`<a href="${c.url}" target="_blank" style="font-size:10px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">🔗 Ver compra</a>`:''}
-      <div style="display:flex;gap:6px;margin-top:auto">
-        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editComponente('${c.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteComponente('${c.id}')">✕</button>
-      </div>
-    </div>`;
-  }).join('')+`<div class="add-card" onclick="resetComponenteForm();openModal('modal-componente')" style="min-height:120px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo componente</span></div>`;
+      </td>
+    </tr>`;
+  }).join('');
 }
 
 // ════════════════════════════════
@@ -6818,36 +6969,57 @@ function renderClientes(){
     return true;
   });
 
-  const grid=document.getElementById('clientes-grid'); if(!grid) return;
-  if(!list.length){
-    grid.innerHTML=`<div class="add-card" style="grid-column:1/-1;min-height:140px" onclick="openClienteModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Agregar primer contacto</span></div>`;
-    return;
-  }
+  // Split into two lists
   const tipoColors={cliente:'var(--teal)',proveedor:'var(--blue)',ambos:'var(--purple)'};
   const tipoLabels={cliente:'Cliente',proveedor:'Proveedor',ambos:'Cliente y Proveedor'};
-  grid.innerHTML=list.map(c=>{
+  const clientes = list.filter(c=>c.tipo==='cliente'||c.tipo==='ambos');
+  const proveedores = list.filter(c=>c.tipo==='proveedor'||c.tipo==='ambos');
+  const grid=document.getElementById('clientes-grid'); if(!grid) return;
+
+  function renderContactCard(c){
     const tc=tipoColors[c.tipo]||'var(--text3)';
-    return `<div class="panel" style="border:0.5px solid var(--border)">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
-        <div>
-          <span style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);background:rgba(232,255,71,0.08);padding:2px 7px;border-radius:5px;display:inline-block;margin-bottom:4px">${c.codigo||'—'}</span>
-          <div style="font-size:14px;font-weight:700;color:var(--text)">${c.nombre}</div>
-          ${c.empresa?`<div style="font-size:11px;color:var(--text3)">${c.empresa}</div>`:''}
+    return `<tr>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${c.codigo||'—'}</span></td>
+      <td>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">${c.nombre}</div>
+        ${c.empresa?`<div style="font-size:10px;color:var(--text3)">${c.empresa}</div>`:''}
+      </td>
+      <td style="font-size:12px;color:var(--text2)">${c.telefono||c.whatsapp||'—'}</td>
+      <td style="font-size:12px;color:var(--text2)">${c.email||'—'}</td>
+      <td style="font-size:11px;color:var(--text3)">${[c.ciudad,c.provincia].filter(Boolean).join(', ')||'—'}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="background:#25D36622;color:#25D366;border:0.5px solid #25D36644;text-decoration:none;padding:3px 7px">💬</a>`:''}
+          <button class="btn btn-ghost btn-sm" onclick="editCliente('${c.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCliente('${c.id}')">✕</button>
         </div>
-        <span class="badge" style="background:${tc}22;color:${tc};flex-shrink:0">${tipoLabels[c.tipo]||c.tipo}</span>
+      </td>
+    </tr>`;
+  }
+
+  const headers = '<tr><th>Código</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Ubicación</th><th>Acciones</th></tr>';
+
+  grid.innerHTML = `
+    <div style="margin-bottom:20px">
+      <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        <span>👤 Clientes</span><span style="font-size:11px;font-family:var(--mono);background:rgba(52,211,153,0.1);color:var(--teal);padding:1px 7px;border-radius:10px">${clientes.length}</span>
       </div>
-      ${c.telefono||c.whatsapp?`<div style="font-size:12px;color:var(--text2);margin-bottom:4px">📞 ${c.telefono||''}${c.whatsapp&&c.whatsapp!==c.telefono?' · 💬 '+c.whatsapp:''}</div>`:''}
-      ${c.email?`<div style="font-size:12px;color:var(--text2);margin-bottom:4px">✉️ ${c.email}</div>`:''}
-      ${c.ciudad||c.provincia?`<div style="font-size:11px;color:var(--text3);margin-bottom:4px">📍 ${[c.ciudad,c.provincia].filter(Boolean).join(', ')}</div>`:''}
-      ${c.web?`<a href="${c.web}" target="_blank" style="font-size:11px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🌐 ${c.web}</a>`:''}${c.notas?`<div style="font-size:11px;color:var(--text3);background:var(--bg3);padding:6px 8px;border-radius:7px;margin-bottom:8px">${c.notas}</div>`:''}
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editCliente('${c.id}')">Editar</button>
-        ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="background:#25D36622;color:#25D366;border:0.5px solid #25D36644;text-decoration:none">💬</a>`:''}
-        ${c.email?`<a href="mailto:${c.email}" class="btn btn-sm btn-ghost" style="text-decoration:none">✉️</a>`:''}
-        <button class="btn btn-danger btn-sm" onclick="deleteCliente('${c.id}')">✕</button>
+      <div class="panel" style="overflow-x:auto;padding:0">
+        <table class="data-table"><thead>${headers}</thead><tbody>
+          ${clientes.length ? clientes.map(renderContactCard).join('') : '<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--text3)">Sin clientes registrados</td></tr>'}
+        </tbody></table>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        <span>🏢 Proveedores</span><span style="font-size:11px;font-family:var(--mono);background:rgba(74,127,212,0.1);color:var(--blue);padding:1px 7px;border-radius:10px">${proveedores.length}</span>
+      </div>
+      <div class="panel" style="overflow-x:auto;padding:0">
+        <table class="data-table"><thead>${headers}</thead><tbody>
+          ${proveedores.length ? proveedores.map(renderContactCard).join('') : '<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--text3)">Sin proveedores registrados</td></tr>'}
+        </tbody></table>
       </div>
     </div>`;
-  }).join('')+`<div class="add-card" onclick="openClienteModal()" style="min-height:120px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo contacto</span></div>`;
 }
 
 
