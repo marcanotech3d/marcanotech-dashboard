@@ -1523,6 +1523,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Tiempo estimado</label>
         <input class="form-input" id="proy-tiempo" placeholder="ej: 3h 20m">
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px">Dejá vacío para calcular automáticamente desde los STL agregados</div>
       </div>
     </div>
 
@@ -1926,10 +1927,10 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <input class="form-input" type="date" id="imp-fecha" oninput="calcImpGarantia()">
       </div>
       <div class="form-group">
-        <label class="form-label">Vencimiento de garantía</label>
+        <label class="form-label">Vencimiento de garantía <span style="font-size:10px;color:var(--text3)">(se calcula automático)</span></label>
         <div style="display:flex;gap:8px;align-items:center">
-          <input class="form-input" type="date" id="imp-garantia" style="flex:1" readonly style="background:var(--bg3)">
-          <div id="imp-garantia-dias" style="font-size:11px;font-family:var(--mono);color:var(--teal);white-space:nowrap;min-width:80px"></div>
+          <input class="form-input" type="date" id="imp-garantia" style="flex:1;background:var(--bg3);color:var(--text2)">
+          <div id="imp-garantia-dias" style="font-size:11px;font-family:var(--mono);color:var(--teal);white-space:nowrap;min-width:90px"></div>
         </div>
       </div>
       <div class="form-group">
@@ -1952,22 +1953,25 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 
 <!-- Cola -->
 <div class="modal-overlay" id="modal-cola">
-  <div class="modal">
+  <div class="modal" style="width:520px;max-height:92vh;overflow-y:auto">
     <div class="modal-title">Agregar a cola de impresión</div>
     <div class="form-group">
-      <label class="form-label">Nombre de la pieza</label>
+      <label class="form-label">Nombre de la pieza <span style="color:var(--coral)">*</span></label>
       <input class="form-input" id="cola-nombre" placeholder="ej: Brazo suspensión delantera">
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Proyecto relacionado</label>
-        <select class="form-input" id="cola-proyecto"></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Material</label>
-        <select class="form-input" id="cola-material-select"></select>
-      </div>
+    <div class="form-group">
+      <label class="form-label">Proyecto relacionado</label>
+      <select class="form-input" id="cola-proyecto" onchange="onColaProyectoChange(this.value)"></select>
     </div>
+
+    <!-- STL list from project -->
+    <div id="cola-stl-section" style="display:none;background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">
+        🖨️ Archivos STL del proyecto
+      </div>
+      <div id="cola-stl-list"></div>
+    </div>
+
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Tiempo estimado</label>
@@ -3774,7 +3778,7 @@ function populateModalSelects(modalId){
   const today=new Date().toISOString().split('T')[0];
   if(modalId==='modal-cola'){
     document.getElementById('cola-proyecto').innerHTML=proyOpts;
-    document.getElementById('cola-material-select').innerHTML=matOpts;
+    document.getElementById('cola-stl-section').style.display='none';
   }
   // modal-pieza: no longer needs proyecto/material selects
   if(modalId==='modal-mantenimiento'){
@@ -3858,18 +3862,44 @@ const estadoConfig = {
 
 function saveProyecto(){
   const editId = document.getElementById('proyecto-edit-id').value;
+  const insumos = _proyInsumos.map(i=>({...i}));
+
+  // Auto-calculate total print time from STL insumos
+  function parseMinutes(str){
+    if(!str) return 0;
+    let mins = 0;
+    const h = str.match(/(\d+)\s*h/i); if(h) mins += parseInt(h[1])*60;
+    const m = str.match(/(\d+)\s*m/i); if(m) mins += parseInt(m[1]);
+    return mins;
+  }
+  const stlInsumos = insumos.filter(i=>i.tipo==='stl');
+  let totalMins = 0;
+  stlInsumos.forEach(i=>{
+    const pieza = DB.piezas.find(p=>p.id===i.refId);
+    if(pieza) totalMins += parseMinutes(pieza.tiempo) * (i.cantidad||1);
+  });
+  let tiempoAuto = '';
+  if(totalMins > 0){
+    const h = Math.floor(totalMins/60), m = totalMins%60;
+    tiempoAuto = h > 0 ? `${h}h ${m > 0 ? m+'m' : ''}`.trim() : `${m}m`;
+  }
+  // Use manual time if entered, else auto from STLs
+  const tiempoManual = document.getElementById('proy-tiempo').value.trim();
+  const tiempoFinal = tiempoManual || tiempoAuto;
+
   const obj={
     id: editId||uid(),
     nombre:document.getElementById('proy-nombre').value.trim(),
     emoji:document.getElementById('proy-emoji').value||'🖨️',
     imagen:document.getElementById('proy-imagen').value||'',
-    insumos:_proyInsumos.map(i=>({...i})),
+    insumos,
     tipo:document.getElementById('proy-tipo').value,
     estado:document.getElementById('proy-estado').value,
     material:document.getElementById('proy-material').value,
     progreso:parseInt(document.getElementById('proy-progreso').value)||0,
     notas:document.getElementById('proy-notas').value,
-    tiempo:document.getElementById('proy-tiempo').value,
+    tiempo:tiempoFinal,
+    tiempoAutoSTL: tiempoAuto,
     color:document.getElementById('proy-color').value||'#38d9a9',
     fecha: editId ? (DB.proyectos.find(p=>p.id===editId)||{}).fecha||new Date().toISOString() : new Date().toISOString()
   };
@@ -4249,6 +4279,7 @@ function getInsumoOptions(tipo){
     case 'accesorio':  return DB.accesorios.map(a=>({id:a.id, label:`${a.nombre} (${a.codigo||''})`, unidad:a.unidad||'Und', stock:a.stock}));
     case 'componente': return DB.componentes.map(c=>({id:c.id, label:`${c.nombre} ${c.codigo?'('+c.codigo+')':''}`, unidad:'Und', stock:c.stock}));
     case 'producto':   return DB.productos.map(p=>({id:p.id, label:`${p.nombre} (${p.sku||''})`, unidad:'Und', stock:p.stock}));
+    case 'stl':        return DB.piezas.map(p=>({id:p.id, label:`${p.nombre}${p.codigo?' ['+p.codigo+']':''}${p.tiempo?' · '+p.tiempo:''}`, unidad:'pieza', tiempo:p.tiempo||'', gramos:p.gramos||0}));
     default: return [];
   }
 }
@@ -5024,12 +5055,48 @@ function deleteImpresora(id){
 // ════════════════════════════════
 // COLA
 // ════════════════════════════════
+function onColaProyectoChange(proyId){
+  const sec = document.getElementById('cola-stl-section');
+  const list = document.getElementById('cola-stl-list');
+  if(!sec || !list) return;
+  const proy = DB.proyectos.find(p=>p.id===proyId);
+  if(!proy || !proy.insumos) { sec.style.display='none'; return; }
+  const stlInsumos = proy.insumos.filter(i=>i.tipo==='stl');
+  if(!stlInsumos.length){ sec.style.display='none'; return; }
+  sec.style.display='block';
+  list.innerHTML = stlInsumos.map(ins=>{
+    const pieza = DB.piezas.find(p=>p.id===ins.refId);
+    const nombre = pieza ? pieza.nombre : ins.nombre||'STL sin nombre';
+    const tiempo = pieza ? pieza.tiempo||'—' : '—';
+    const boquilla = pieza ? pieza.boquilla||'' : '';
+    const mats = pieza && pieza.insumos ? pieza.insumos.filter(x=>x.tipo==='material').map(x=>x.nombre).join(', ') : '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--border)">
+      <div style="font-size:12px;flex:1">
+        <div style="font-weight:600;color:var(--text)">${nombre}</div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono)">⏱ ${tiempo}${boquilla?' · '+boquilla:''}${mats?' · '+mats:''}</div>
+      </div>
+      <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">${ins.cantidad>1?'×'+ins.cantidad:''}</span>
+    </div>`;
+  }).join('') || '<div style="font-size:11px;color:var(--text3)">Sin STLs registrados en el proyecto</div>';
+  // Auto-fill time from project
+  if(proy.tiempoAutoSTL && !document.getElementById('cola-tiempo').value){
+    document.getElementById('cola-tiempo').value = proy.tiempoAutoSTL;
+  }
+}
+
 function saveCola(){
+  const proyId = document.getElementById('cola-proyecto').value;
+  const proy = DB.proyectos.find(p=>p.id===proyId);
+  // Build STL list snapshot from project
+  const stlList = proy ? (proy.insumos||[]).filter(i=>i.tipo==='stl').map(i=>{
+    const pieza = DB.piezas.find(p=>p.id===i.refId);
+    return { refId:i.refId, nombre:pieza?pieza.nombre:i.nombre||'', cantidad:i.cantidad||1, impreso:false };
+  }) : [];
   const obj={
     id:uid(),
     nombre:document.getElementById('cola-nombre').value.trim(),
-    proyectoId:document.getElementById('cola-proyecto').value,
-    materialId:document.getElementById('cola-material-select').value,
+    proyectoId:proyId,
+    stlList,
     tiempo:document.getElementById('cola-tiempo').value,
     layer:document.getElementById('cola-layer').value,
     prioridad:document.getElementById('cola-prioridad').value,
@@ -5040,6 +5107,13 @@ function saveCola(){
   clearForm(['cola-nombre','cola-tiempo','cola-layer']);
   logActivity(`Pieza <strong>${obj.nombre}</strong> agregada a la cola`);
   renderSection(currentSection); showToast('Agregado a la cola ✓');
+}
+
+function toggleColaSTL(colaId, stlIdx){
+  const item = DB.cola.find(c=>c.id===colaId); if(!item||!item.stlList) return;
+  item.stlList[stlIdx].impreso = !item.stlList[stlIdx].impreso;
+  persist(KEYS.cola);
+  renderSection(currentSection);
 }
 
 function deleteCola(id){
@@ -5055,21 +5129,52 @@ function renderCola(){
   }
   const priColors={normal:'var(--text3)',alta:'var(--amber)',urgente:'var(--coral)'};
   list.innerHTML=DB.cola.map((c,i)=>{
-    const mat=DB.materiales.find(m=>m.id===c.materialId);
     const proy=DB.proyectos.find(p=>p.id===c.proyectoId);
     const pc=priColors[c.prioridad]||'var(--text3)';
-    return `<div class="queue-item">
-      <div class="queue-num" style="color:${pc}">${String(i+1).padStart(2,'0')}</div>
-      <div>
-        <div class="queue-name">${c.nombre}</div>
-        <div class="queue-meta">${mat?mat.tipo+' '+mat.color:'—'} ${c.layer?'· '+c.layer+'mm':''} ${proy?'· '+proy.nombre:''}</div>
+    const stlList = c.stlList||[];
+    const stlDone = stlList.filter(s=>s.impreso).length;
+    const stlTotal = stlList.length;
+    const stlPct = stlTotal > 0 ? Math.round(stlDone/stlTotal*100) : null;
+
+    const stlHtml = stlList.length ? `
+      <div style="margin-top:8px;background:var(--bg3);border-radius:8px;padding:8px 10px">
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;display:flex;justify-content:space-between">
+          <span>STLs a imprimir</span>
+          <span style="color:${stlDone===stlTotal?'var(--teal)':'var(--text3)'}">
+            ${stlDone}/${stlTotal} listos
+          </span>
+        </div>
+        ${stlList.map((s,idx)=>`
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer" onclick="toggleColaSTL('${c.id}',${idx})">
+            <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid ${s.impreso?'var(--teal)':'var(--border2)'};
+              background:${s.impreso?'var(--teal)':'transparent'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              ${s.impreso?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':''}
+            </div>
+            <span style="font-size:12px;color:var(--text);${s.impreso?'text-decoration:line-through;opacity:0.5':''}">
+              ${s.nombre||'STL'}${s.cantidad>1?' ×'+s.cantidad:''}
+            </span>
+          </div>`).join('')}
+        ${stlPct!==null?`<div style="margin-top:6px;height:3px;background:var(--border);border-radius:2px">
+          <div style="height:100%;width:${stlPct}%;background:var(--teal);border-radius:2px;transition:width 0.3s"></div>
+        </div>`:''}
+      </div>` : '';
+
+    return `<div class="queue-item" style="flex-direction:column;align-items:stretch;gap:6px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="queue-num" style="color:${pc}">${String(i+1).padStart(2,'0')}</div>
+        <div style="flex:1">
+          <div class="queue-name">${c.nombre}</div>
+          <div class="queue-meta">${proy?'📁 '+proy.nombre:''} ${c.layer?'· '+c.layer+'mm':''}</div>
+        </div>
+        <span class="badge" style="font-size:9px;background:${pc}22;color:${pc}">${c.prioridad}</span>
+        <div class="queue-time">${c.tiempo||'—'}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteCola('${c.id}')">✕</button>
       </div>
-      <span class="badge" style="font-size:9px;background:${pc}22;color:${pc}">${c.prioridad}</span>
-      <div class="queue-time">${c.tiempo||'—'}</div>
-      <button class="btn btn-danger btn-sm" onclick="deleteCola('${c.id}')">✕</button>
+      ${stlHtml}
     </div>`;
   }).join('');
 }
+
 
 // ════════════════════════════════
 // PIEZAS
@@ -5101,6 +5206,7 @@ function renderPiezaInsumos(){
         <option value="material" ${ins.tipo==='material'?'selected':''}>⬡ Material</option>
         <option value="accesorio" ${ins.tipo==='accesorio'?'selected':''}>🔩 Accesorio</option>
         <option value="componente" ${ins.tipo==='componente'?'selected':''}>⚡ Componente</option>
+        <option value="stl" ${ins.tipo==='stl'?'selected':''}>🖨️ Archivo STL</option>
         <option value="libre" ${ins.tipo==='libre'?'selected':''}>✏️ Libre</option>
       </select>
       ${ins.tipo==='libre'
