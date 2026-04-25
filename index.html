@@ -1261,7 +1261,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0f0f11" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
         <div>
-          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px">MarcanoTech 3D</div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px" id="acercade-app-name">Marcano Tech</div>
           <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard</div>
         </div>
         <div style="margin-left:auto;text-align:right">
@@ -1269,9 +1269,6 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="version-fecha-main">2026-04-21</div>
         </div>
       </div>
-
-      <!-- Stats rápidas -->
-      <div class="stats-row" style="margin-bottom:24px" id="acercade-stats"></div>
 
       <!-- Changelog -->
       <div style="margin-bottom:8px;font-size:14px;font-weight:700;color:var(--text)">Historial de versiones</div>
@@ -1325,7 +1322,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <!-- ── TIMER ── -->
   <div class="section" id="sec-timer">
     <div class="section-row" style="margin-top:0">
-      <div class="section-title">Timer de impresión</div>
+      <div class="section-title">Tiempo de Impresión</div>
     </div>
     <div class="grid-2">
       <div class="panel" style="text-align:center;padding:32px 24px">
@@ -1342,6 +1339,12 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div class="form-group" style="margin-bottom:10px">
             <label class="form-label">Pieza / trabajo</label>
             <input class="form-input" id="timer-nombre" placeholder="ej: Chasis Touring v2.3">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label class="form-label">Impresora</label>
+            <select class="form-input" id="timer-impresora">
+              <option value="">Sin asignar</option>
+            </select>
           </div>
           <div class="form-group" style="margin-bottom:10px">
             <label class="form-label">Proyecto</label>
@@ -3058,61 +3061,67 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v1.9',
-  fecha: '2026-04-24',
+  version: 'v2.0',
+  fecha: '2026-04-25',
+  nombre: 'Marcano Tech',
   changelog: [
+    { v:'v2.0', fecha:'2026-04-25', cambios:[
+      'Impresoras: título diferenciado Agregar vs Editar impresora',
+      'Impresoras: fecha de vencimiento de garantía se guarda y restaura correctamente',
+      'Tiempo de Impresión: renombrado a español, campo impresora agregado al timer',
+      'Tiempo de Impresión: historial permite eliminar registros individuales',
+      'Cola de impresión: lista de STLs del proyecto visible al seleccionar proyecto',
+      'Proyectos: botón Eliminar proyecto disponible en cada card',
+      'Acerca de: título corregido a "Marcano Tech", estadísticas eliminadas, solo historial de versiones',
+    ]},
+    { v:'v1.9', fecha:'2026-04-25', cambios:[
+      'STL como tipo de insumo en proyectos',
+      'Tiempo estimado auto-calculado desde STLs del proyecto',
+      'Cola de impresión: lista de STLs con checklist (marcar como impreso)',
+      'Cola: campo Material eliminado (ya está en cada STL)',
+      'Impresoras: garantía calculada automáticamente (+1 año desde adquisición)',
+      'Acerca de: nombre actualizado a Marcano Tech',
+      'Fix: balance de divs en sidebar (espacio gigante eliminado)',
+      'Fix: logos como img base64 en lugar de SVG inline',
+    ]},
+    { v:'v1.8', fecha:'2026-04-23', cambios:[
+      'Productos: campos tiempo de impresión y gramos de filamento',
+      'Proyectos: selector visual de color con nombres (paleta de 20 colores)',
+      'Cotizaciones: nueva sección con sincronización Firebase',
+      'Archivos STL: modal rediseñado con foto, código, boquilla, placas, materiales, URL, editable',
+      'Clientes/Proveedores: campo URL web, sincronización Firebase corregida',
+      'Ventas: selector cliente existente, edición en estado Pendiente',
+      'Timer: visualización activa en topbar',
+    ]},
     { v:'v1.7', fecha:'2026-04-21', cambios:[
       'Pantallas Materiales y Componentes rediseñadas como grilla de cards',
       'Sección Clientes / Proveedores con CRUD completo',
       'Modales de Filamento, Accesorio y Componente con precios ARS/USD y URL de compra',
-      'Colores nuevos: Translúcido Naranja, Translúcido Amarillo, Gris Claro',
-      'Variantes TPU 95A / 98A / 90A / 85A en listado de materiales',
-      'Selector de marca de filamentos conocidos (Polymaker, eSun, Sunlu, etc.)',
       'Navegación móvil rediseñada: sidebar deslizante + topbar móvil',
       'Renombrado y reordenado del menú completo',
-      'Fix: updateSidebarPrinterSelect, renderAccesorios y funciones faltantes',
     ]},
     { v:'v1.6', fecha:'2026-04-21', cambios:[
-      'Calculadora de costos v2: moneda, perfiles, impresora, filamentos múltiples, diseño, posprocesado, ganancia con multiplicador, comisiones externas',
-      'Sección Presupuestos: ítems dinámicos, cotizaciones extra, envío WhatsApp/Email, PDF',
+      'Calculadora de costos con moneda, perfiles, filamentos múltiples, ganancia',
+      'Sección Presupuestos: ítems dinámicos, envío WhatsApp/Email',
       'Sección Calibración de filamentos con perfiles completos',
-      'Imagen en Accesorios y Componentes RC',
-      'Código auto-incremental en Componentes RC',
-      'Cards horizontales (imagen izq + info der) en Proyectos y Productos',
       'Tipo de cambio USD/ARS en tiempo real vía dolarapi.com',
       'Selector de impresora en sidebar con estado en vivo',
-      'Tema claro / oscuro / automático',
-      'Fuente Inter para mejor legibilidad',
     ]},
     { v:'v1.5', fecha:'2026-04-20', cambios:[
       'Fix crítico sync Firebase: unificación de claves localStorage',
-      'Fix race condition: once() para carga inicial + listener inteligente',
-      'Fix sanitizeForFirebase: elimina undefined antes de escribir',
       'Imagen en Proyectos, Productos, Impresoras',
       'Código auto IMP-001 en impresoras con selector de fabricante',
-      'Escala con select en Piezas/STL',
       'Accesorios: imagen, unidad de medida, código MT3-0001',
-      'Firebase Storage preparado para imágenes cross-device',
     ]},
-    { v:'v1.4', fecha:'2026-04-20', cambios:[
-      'Ventas con registro, historial y stats',
-      'Componentes RC con filtros por categoría',
-      'Timer de impresión con progreso y ETA',
-      'Gráficos de consumo, inventario, ventas por mes',
-      'Alertas automáticas de stock bajo',
-      'Login con Google + Firebase Auth',
-      'Sync Firebase Realtime Database',
-      'GitHub Pages hosting',
-    ]},
-    { v:'v1.0-v1.3', fecha:'2026-04-19', cambios:[
+    { v:'v1.0–v1.4', fecha:'2026-04-19', cambios:[
       'Dashboard inicial con proyectos, materiales, impresoras',
       'Cola de impresión, piezas/STL, mantenimiento',
-      'Catálogo de productos, estadísticas',
-      'Modal de filamentos mejorado con slider y dropdowns',
-      'Modo oscuro base',
+      'Timer de impresión con progreso y ETA',
+      'Login con Google + Firebase Auth + Sync Realtime Database',
+      'GitHub Pages hosting',
     ]},
   ]
-};
+}
 
 const KEYS = {
   proyectos:'proyectos', materiales:'materiales', productos:'productos',
@@ -3799,6 +3808,7 @@ function populateModalSelects(modalId){
       document.getElementById('imp-codigo').value=nextCode;
       document.getElementById('imp-codigo-display').textContent=nextCode;
       document.getElementById('imp-modal-title').textContent='Agregar impresora';
+      if(document.getElementById('impresora-edit-id')) document.getElementById('impresora-edit-id').value='';
       document.getElementById('imp-img-preview').innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Cargar</span>';
       document.getElementById('imp-imagen').value='';
     }
@@ -4046,6 +4056,9 @@ function renderTimer(){
   const sel = document.getElementById('timer-proyecto');
   if(sel) sel.innerHTML = '<option value="">Sin proyecto</option>' +
     DB.proyectos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+  const impSel = document.getElementById('timer-impresora');
+  if(impSel) impSel.innerHTML = '<option value="">Sin asignar</option>' +
+    DB.impresoras.map(i=>`<option value="${i.id}">${i.nombre}</option>`).join('');
   renderTimerHistorial();
 }
 
@@ -4055,12 +4068,14 @@ function renderTimerHistorial(){
   if(!DB.timerHistorial||!DB.timerHistorial.length){
     el.innerHTML='<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:12px 0">Sin registros aún</div>'; return;
   }
-  el.innerHTML = DB.timerHistorial.slice(0,10).map(h=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:12px">
-      <div><div style="color:var(--text);font-weight:600">${h.nombre||'Sin nombre'}</div>
-        <div style="color:var(--text3);font-size:10px;font-family:var(--mono)">${h.fecha||''}</div>
+  el.innerHTML = DB.timerHistorial.slice(0,20).map(h=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:12px;gap:8px">
+      <div style="flex:1;min-width:0">
+        <div style="color:var(--text);font-weight:600">${h.nombre||'Sin nombre'}</div>
+        <div style="color:var(--text3);font-size:10px;font-family:var(--mono)">${h.impresora?'🖨️ '+h.impresora+' · ':''}${h.fecha||''}</div>
       </div>
-      <span style="font-family:var(--mono);color:var(--accent);font-weight:700">${h.tiempo||'—'}</span>
+      <span style="font-family:var(--mono);color:var(--accent);font-weight:700;flex-shrink:0">${h.tiempo||'—'}</span>
+      <button onclick="deleteTimerEntry('${h.id}')" style="background:rgba(224,26,0,0.1);border:none;border-radius:5px;padding:3px 7px;color:var(--ferrari);cursor:pointer;font-size:11px;flex-shrink:0">✕</button>
     </div>`).join('');
 }
 
@@ -4103,6 +4118,11 @@ function timerReset(){
   document.getElementById('btn-timer-finish').style.display='none';
 }
 
+function deleteTimerEntry(id){
+  DB.timerHistorial = DB.timerHistorial.filter(h=>h.id!==id);
+  persist(KEYS.timerHistorial);
+  renderTimerHistorial();
+}
 function timerFinish(){
   if(!_timerRunning&&!_timerPaused) return;
   clearInterval(_timerInterval);
@@ -4111,7 +4131,10 @@ function timerFinish(){
   const h=Math.floor(elapsed/3600000), m=Math.floor((elapsed%3600000)/60000), s=Math.floor((elapsed%60000)/1000);
   const tiempo=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const nombre=document.getElementById('timer-nombre')?.value||'Trabajo';
-  const entry={id:uid(),nombre,tiempo,fecha:new Date().toLocaleDateString('es-AR'),ts:Date.now()};
+  const impresora = DB.impresoras.find(i=>i.id===document.getElementById('timer-impresora')?.value);
+  const entry={id:uid(),nombre,tiempo,
+    impresora:impresora?impresora.nombre:'',
+    fecha:new Date().toLocaleDateString('es-AR'),ts:Date.now()};
   DB.timerHistorial.unshift(entry);
   if(DB.timerHistorial.length>20) DB.timerHistorial=DB.timerHistorial.slice(0,20);
   persist('timerHistorial');
@@ -4124,6 +4147,14 @@ function timerFinish(){
 // ════════════════════════════════
 // IMPRESORA — WARRANTY CALC
 // ════════════════════════════════
+function calcImpGarantiaFromValue(garantiaDate){
+  const diasEl = document.getElementById('imp-garantia-dias');
+  if(!diasEl||!garantiaDate) return;
+  const diff = Math.ceil((new Date(garantiaDate)-new Date())/86400000);
+  if(diff>60){diasEl.textContent=diff+' días restantes';diasEl.style.color='var(--teal)';}
+  else if(diff>0){diasEl.textContent='⚠️ '+diff+' días restantes';diasEl.style.color='var(--amber)';}
+  else{diasEl.textContent='✗ Garantía vencida';diasEl.style.color='var(--ferrari)';}
+}
 function calcImpGarantia(){
   const fecha = document.getElementById('imp-fecha')?.value;
   const garantiaEl = document.getElementById('imp-garantia');
@@ -4411,12 +4442,20 @@ function renderProyectos(filter='todos'){
             <div class="project-footer">
               <span class="badge ${ec.cls}">${ec.label}</span>
               <span class="project-time">${p.tiempo||'—'}</span>
+              <button onclick="event.stopPropagation();deleteProyecto('${p.id}')" style="background:rgba(224,26,0,0.1);border:none;border-radius:5px;padding:3px 8px;color:var(--ferrari);cursor:pointer;font-size:11px;margin-left:auto">Eliminar</button>
             </div>
           </div>
         </div>`;
       }).join('')+`<div class="add-card" onclick="openModal('modal-proyecto')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nuevo proyecto</span></div>`;
 }
 
+function deleteProyecto(id){
+  if(!confirm('¿Eliminar este proyecto? Esta acción no se puede deshacer.')) return;
+  DB.proyectos=DB.proyectos.filter(p=>p.id!==id);
+  persistWithStorage('proyectos', DB.proyectos);
+  updateBadges(); renderSection(currentSection);
+  showToast('Proyecto eliminado');
+}
 function editProyecto(id){
   const p=DB.proyectos.find(x=>x.id===id); if(!p) return;
   document.getElementById('proyecto-edit-id').value=p.id;
@@ -5032,6 +5071,7 @@ function renderImpresoras(){
 function editImpresora(id){
   const i=DB.impresoras.find(x=>x.id===id); if(!i) return;
   document.getElementById('impresora-edit-id').value=i.id;
+  document.getElementById('imp-modal-title').textContent='Editar impresora';
   document.getElementById('imp-nombre').value=i.nombre;
   document.getElementById('imp-marca').value=i.marca==='—'?'':i.marca;
   document.getElementById('imp-volumen').value=i.volumen==='—'?'':i.volumen;
@@ -5040,6 +5080,10 @@ function editImpresora(id){
   document.getElementById('imp-fecha').value=i.fecha||'';
   document.getElementById('imp-tecnologia').value=i.tecnologia||'FDM';
   document.getElementById('imp-notas').value=i.notas||'';
+  if(document.getElementById('imp-garantia')) {
+    document.getElementById('imp-garantia').value=i.garantia||'';
+    if(i.garantia) calcImpGarantiaFromValue(i.garantia);
+  }
   document.getElementById('imp-imagen').value=i.imagen||'';
   document.getElementById('imp-codigo').value=i.codigo||'';
   document.getElementById('imp-codigo-display').textContent=i.codigo||'IMP-???';
@@ -6385,17 +6429,12 @@ function renderAccesorios(){
 // ════════════════════════════════
 function renderAcercaDe(){
   const vb = document.getElementById('version-badge-main');
+  const vn = document.getElementById('acercade-app-name'); if(vn) vn.textContent = APP_VERSION.nombre||'Marcano Tech';
   const vf = document.getElementById('version-fecha-main');
   if(vb) vb.textContent = APP_VERSION.version;
   if(vf) vf.textContent = APP_VERSION.fecha;
-  const vn = document.getElementById('acercade-app-name');
-  if(vn) vn.textContent = APP_VERSION.nombre||'Marcano Tech';
-  const st = document.getElementById('acercade-stats');
-  if(st) st.innerHTML=`
-    <div class="stat-card"><div class="stat-label">Proyectos</div><div class="stat-value">${DB.proyectos.length}</div></div>
-    <div class="stat-card"><div class="stat-label">Materiales</div><div class="stat-value">${DB.materiales.length}</div></div>
-    <div class="stat-card"><div class="stat-label">Presupuestos</div><div class="stat-value">${DB.presupuestos.length}</div></div>
-    <div class="stat-card"><div class="stat-label">Calibración</div><div class="stat-value">${DB.calibracion.length}</div></div>`;
+
+  // stats removed
   const cl = document.getElementById('changelog-list');
   if(!cl) return;
   cl.innerHTML = APP_VERSION.changelog.map((ver,i)=>`
