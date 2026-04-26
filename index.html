@@ -75,7 +75,7 @@ input,select,textarea{font-family:var(--font);}
 .printer-info span{font-size:10px;color:var(--text3);font-family:var(--mono);}
 
 /* ─── MAIN ─── */
-.main{background:var(--bg);overflow-y:auto;min-width:0;overflow-x:hidden;}
+.main{background:var(--bg);overflow-y:auto;min-width:0;overflow-x:hidden;width:100%;box-sizing:border-box;}
 .topbar{
   padding:16px 24px;border-bottom:0.5px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
@@ -107,8 +107,8 @@ input,select,textarea{font-family:var(--font);}
 .notif-dot{position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--coral);}
 
 /* ─── SECTIONS ─── */
-.section{display:none;padding:20px 24px 40px;}
-.section.active{display:block;}
+.section{display:none;padding:20px 24px 40px;width:100%;box-sizing:border-box;}
+.section.active{display:block;width:100%;box-sizing:border-box;}
 .section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;margin-top:24px;}
 .section-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.2px;border-left:3px solid var(--ferrari);padding-left:10px;}
 .section-action{font-size:11px;color:var(--accent);cursor:pointer;font-family:var(--mono);background:none;border:none;padding:0;}
@@ -917,9 +917,10 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <button class="btn btn-accent btn-sm" onclick="openPiezaModal()">+ Registrar pieza</button>
     </div>
     <div class="stats-row" id="piezas-stats-row" style="margin-bottom:12px"></div>
+    <div class="panel" style="overflow-x:auto;padding:0">
       <table class="data-table">
         <thead>
-          <tr><th>Pieza</th><th>Proyecto</th><th>Material</th><th>Escala</th><th>Tiempo est.</th><th>Estado</th><th>Acciones</th></tr>
+          <tr><th>Nombre / Código</th><th>Escala</th><th>Boquilla</th><th>Tiempo / Gramos</th><th>Materiales / URL</th><th>Acciones</th></tr>
         </thead>
         <tbody id="piezas-tbody"></tbody>
       </table>
@@ -2596,21 +2597,21 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-row">
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Velocidad impresión</label>
-          <input class="form-input" type="number" id="cal-vel-impresion" placeholder="ej: 150">
+          <input class="form-input" type="text" id="cal-vel-impresion" placeholder="ej: 150 o 60-100">
         </div>
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Primera capa</label>
-          <input class="form-input" type="number" id="cal-vel-primera" placeholder="ej: 30">
+          <input class="form-input" type="text" id="cal-vel-primera" placeholder="ej: 30 o 25-35">
         </div>
       </div>
       <div class="form-row" style="margin-top:10px">
         <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Perímetros</label>
-          <input class="form-input" type="number" id="cal-vel-perimetros" placeholder="ej: 120">
+          <label class="form-label">Perímetros (Inner Wall)</label>
+          <input class="form-input" type="text" id="cal-vel-perimetros" placeholder="ej: 120 o 80-120">
         </div>
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Relleno (infill)</label>
-          <input class="form-input" type="number" id="cal-vel-relleno" placeholder="ej: 200">
+          <input class="form-input" type="text" id="cal-vel-relleno" placeholder="ej: 200 o 150-200">
         </div>
       </div>
     </div>
@@ -2638,11 +2639,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-row" style="margin-top:10px">
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Retracción (mm)</label>
-          <input class="form-input" type="number" id="cal-retraccion" placeholder="ej: 0.5" step="0.1">
+          <input class="form-input" type="text" id="cal-retraccion" placeholder="ej: 0.5 o 0.4-0.8">
         </div>
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Velocidad retracción (mm/s)</label>
-          <input class="form-input" type="number" id="cal-vel-retraccion" placeholder="ej: 35">
+          <input class="form-input" type="text" id="cal-vel-retraccion" placeholder="ej: 35 o 30-45">
         </div>
       </div>
     </div>
@@ -2651,7 +2652,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Ventilador capa (%)</label>
-        <input class="form-input" type="number" id="cal-fan" placeholder="ej: 100" min="0" max="100">
+        <input class="form-input" type="text" id="cal-fan" placeholder="ej: 100 o 50-100">
       </div>
       <div class="form-group">
         <label class="form-label">Cámara cerrada</label>
@@ -3119,10 +3120,16 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v2.1',
+  version: 'v2.2',
   fecha: '2026-04-25',
   nombre: 'Marcano Tech',
   changelog: [
+    { v:'v2.2', fecha:'2026-04-25', cambios:[
+      'Fix crítico: sec-piezas tenía </div> extra que rompía el layout de todas las secciones siguientes',
+      'Calibración: campos de velocidad, retracción y ventilador aceptan rangos (ej: 60-100)',
+      'Calibración: título Perímetros renombrado a Perímetros (Inner Wall)',
+      'Calibración: resumen muestra rangos con formato X/Y igual que boquilla',
+    ]},
     { v:'v2.1', fecha:'2026-04-25', cambios:[
       'Impresoras: botón Agregar abre formulario vacío correctamente',
       'Proyectos: campo kg/g estimados desde STLs, estado Pendiente agregado',
@@ -7358,15 +7365,15 @@ function renderCalibracion(filter='todos'){
         </div>
         <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">VELOCIDAD</div>
-          <div style="font-size:13px;font-weight:700;color:var(--blue)">${c.velImpresion||'—'} <span style="font-size:10px;color:var(--text3)">mm/s</span></div>
+          <div style="font-size:13px;font-weight:700;color:var(--blue)">${(c.velImpresion||'—').replace('-','/')} <span style="font-size:10px;color:var(--text3)">mm/s</span></div>
         </div>
         <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">RETRACCIÓN</div>
-          <div style="font-size:13px;font-weight:700;color:var(--purple)">${c.retraccion||'—'} <span style="font-size:10px;color:var(--text3)">mm @ ${c.velRetraccion||'—'}</span></div>
+          <div style="font-size:13px;font-weight:700;color:var(--purple)">${(c.retraccion||'—').replace('-','/')} <span style="font-size:10px;color:var(--text3)">mm @ ${(c.velRetraccion||'—').replace('-','/')}</span></div>
         </div>
         <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">VENTILADOR</div>
-          <div style="font-size:13px;font-weight:700;color:var(--teal)">${c.fan||'—'}<span style="font-size:10px;color:var(--text3)">%</span></div>
+          <div style="font-size:13px;font-weight:700;color:var(--teal)">${(c.fan||'—').replace('-','/')}<span style="font-size:10px;color:var(--text3)">%</span></div>
         </div>
         <div style="background:var(--bg3);border-radius:8px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px">FLOW / CÁMARA</div>
@@ -7375,7 +7382,7 @@ function renderCalibracion(filter='todos'){
       </div>
       <!-- Velocidades extra -->
       <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">
-        1ª capa: ${c.velPrimera||'—'} mm/s · Perímetros: ${c.velPerimetros||'—'} mm/s · Relleno: ${c.velRelleno||'—'} mm/s
+        1ª capa: ${(c.velPrimera||'—').replace('-','/')} mm/s · Perímetros (IW): ${(c.velPerimetros||'—').replace('-','/')} mm/s · Relleno: ${(c.velRelleno||'—').replace('-','/')} mm/s
       </div>
       ${c.notas?`<div style="font-size:11px;color:var(--text2);background:var(--bg3);padding:8px 10px;border-radius:8px;border-left:3px solid var(--accent);margin-bottom:8px;line-height:1.5">${c.notas}</div>`:''}
       <!-- Fecha + acciones -->
