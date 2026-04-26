@@ -1386,14 +1386,13 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div style="margin-top:8px">
             <div style="display:flex;justify-content:space-between;margin-bottom:6px">
               <span style="font-size:12px;color:var(--text2)">Completado</span>
-              <span style="font-size:12px;font-family:var(--mono);color:var(--accent)" id="timer-pct-label">0%</span>
+              <span style="font-size:12px;font-family:var(--mono);color:var(--accent)" id="timer-pct">0%</span>
             </div>
             <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
               <div id="timer-progress-bar" style="height:100%;width:0%;background:var(--accent);border-radius:4px;transition:width 1s"></div>
             </div>
-            <div style="display:flex;justify-content:space-between;margin-top:8px">
+            <div style="margin-top:8px">
               <span style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="timer-eta">Tiempo restante: —</span>
-              <span style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="timer-finish-at">Fin estimado: —</span>
             </div>
           </div>
         </div>
@@ -4182,7 +4181,31 @@ function timerStart(){
     if(disp) disp.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     const est = parseInt(document.getElementById('timer-estimado')?.value)||0;
     const bar = document.getElementById('timer-progress-bar');
-    if(bar&&est>0) bar.style.width=Math.min(100,Math.round((elapsed/60000/est)*100))+'%';
+    const eta = document.getElementById('timer-eta');
+    const pctEl = document.getElementById('timer-pct');
+    if(est>0){
+      const pct = Math.min(100, Math.round((elapsed/60000/est)*100));
+      if(bar) bar.style.width = pct+'%';
+      if(pctEl) pctEl.textContent = pct+'%';
+      const remainMs = Math.max(0, est*60000 - elapsed);
+      if(eta){
+        if(remainMs===0){
+          eta.textContent = 'Tiempo restante: Completado';
+          eta.style.color = 'var(--teal)';
+        } else {
+          const rh=Math.floor(remainMs/3600000), rm=Math.floor((remainMs%3600000)/60000), rs=Math.floor((remainMs%60000)/1000);
+          const finMs = Date.now() + remainMs;
+          const fin = new Date(finMs);
+          const finStr = `${String(fin.getHours()).padStart(2,'0')}:${String(fin.getMinutes()).padStart(2,'0')}`;
+          eta.textContent = `Tiempo restante: ${rh>0?rh+'h ':''} ${rm}m ${rs}s — Fin estimado: ${finStr}`;
+          eta.style.color = '';
+        }
+      }
+    } else {
+      if(bar) bar.style.width='0%';
+      if(eta) eta.textContent='Tiempo restante: — (ingresá tiempo estimado)';
+      if(pctEl) pctEl.textContent='—';
+    }
   },1000);
 }
 
@@ -4202,6 +4225,10 @@ function timerReset(){
   if(disp) disp.textContent='00:00:00';
   const bar=document.getElementById('timer-progress-bar');
   if(bar) bar.style.width='0%';
+  const pct=document.getElementById('timer-pct');
+  if(pct) pct.textContent='0%';
+  const eta=document.getElementById('timer-eta');
+  if(eta){ eta.textContent='Tiempo restante: —'; eta.style.color=''; }
   document.getElementById('btn-timer-start').style.display='';
   document.getElementById('btn-timer-pause').style.display='none';
   document.getElementById('btn-timer-finish').style.display='none';
