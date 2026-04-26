@@ -1379,12 +1379,18 @@ select.form-input option{background:var(--bg3);color:var(--text);}
             <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px">O calculá automático desde el proyecto seleccionado</div>
           </div>
           <div class="form-group" style="margin-bottom:0">
-            <label class="form-label">Gramos de filamento usados (g)</label>
+            <label class="form-label">Material utilizado</label>
+            <select class="form-input" id="timer-material-id">
+              <option value="">Sin material / No descontar</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Gramos consumidos (g)</label>
             <div style="position:relative">
               <input class="form-input" type="number" id="timer-estimado-gramos" placeholder="ej: 85" min="0" style="padding-right:28px">
               <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-family:var(--mono)">g</span>
             </div>
-            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px">Se descontará del stock del material al finalizar</div>
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px">Se descuenta del stock al finalizar</div>
           </div>
         </div>
       </div>
@@ -3127,10 +3133,15 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v2.3',
+  version: 'v2.4',
   fecha: '2026-04-26',
   nombre: 'Marcano Tech',
   changelog: [
+    { v:'v2.4', fecha:'2026-04-26', cambios:[
+      'Timer: selector de material directo para descontar stock al finalizar',
+      'Timer: descuento de gramos persistido en Firebase y reflejado en todas las secciones',
+      'Historial timer: muestra nombre del material y gramos consumidos',
+    ]},
     { v:'v2.3', fecha:'2026-04-26', cambios:[
       'Color de marca: Rojo #cc0000 → Naranja #f97316 en todo el dashboard',
       'Timer: descuenta gramos de filamento del stock al finalizar impresión',
@@ -4160,8 +4171,12 @@ function renderTimer(){
   if(impSel){
     impSel.innerHTML = '<option value="">Sin asignar</option>' +
       DB.impresoras.map(i=>`<option value="${i.id}">${i.nombre}</option>`).join('');
-    // Auto-select if only one printer
     if(!impSel.value && DB.impresoras.length===1) impSel.value = DB.impresoras[0].id;
+  }
+  const matSel = document.getElementById('timer-material-id');
+  if(matSel){
+    matSel.innerHTML = '<option value="">Sin material / No descontar</option>' +
+      DB.materiales.map(m=>`<option value="${m.id}">${m.tipo} ${m.color} — ${m.marca||''} (${parseFloat(m.stock||0).toFixed(0)}g stock)</option>`).join('');
   }
   renderTimerHistorial();
 }
@@ -4257,6 +4272,8 @@ function timerReset(){
   if(eta){ eta.textContent='Tiempo restante: —'; eta.style.color=''; }
   const gramos=document.getElementById('timer-estimado-gramos');
   if(gramos) gramos.value='';
+  const matSelR=document.getElementById('timer-material-id');
+  if(matSelR) matSelR.value='';
   document.getElementById('btn-timer-start').style.display='';
   document.getElementById('btn-timer-pause').style.display='none';
   document.getElementById('btn-timer-finish').style.display='none';
@@ -4286,43 +4303,27 @@ function timerFinish(){
     updateSidebarPrinterSelect();
   }
 
-  // ── 2. Discount material stock from linked project STLs ──
+  // ── 2. Discount material stock directly from selected material ──
+  const gramosUsados = parseInt(document.getElementById('timer-estimado-gramos')?.value)||0;
+  const matId = document.getElementById('timer-material-id')?.value;
   const proyId = document.getElementById('timer-proyecto')?.value;
   const proy = DB.proyectos.find(p=>p.id===proyId);
-  const gramosUsados = parseInt(document.getElementById('timer-estimado-gramos')?.value)||0;
   let stockLog = '';
-  if(gramosUsados > 0){
-    // Find first material in project STLs and discount
-    const stlInsumos = (proy?.insumos||[]).filter(i=>i.tipo==='stl');
-    // Collect all material refs from those STLs
-    const matCounts = {};
-    stlInsumos.forEach(si=>{
-      const pieza = DB.piezas.find(p=>p.id===si.refId);
-      if(pieza){
-        (pieza.insumos||[]).filter(x=>x.tipo==='material').forEach(mi=>{
-          matCounts[mi.refId] = (matCounts[mi.refId]||0) + (mi.cantidad||0)*(si.cantidad||1);
-        });
-      }
-    });
-    const matIds = Object.keys(matCounts);
-    if(matIds.length > 0){
-      // Distribute gramosUsados proportionally, or apply all to first material
-      const totalG = gramosUsados;
-      matIds.forEach(matId=>{
-        const mat = DB.materiales.find(m=>m.id===matId);
-        if(mat){
-          const share = matIds.length===1 ? totalG : Math.round(totalG * (matCounts[matId]/(Object.values(matCounts).reduce((a,b)=>a+b,0))));
-          mat.stock = Math.max(0, (parseFloat(mat.stock)||0) - share);
-          stockLog += `${mat.tipo} ${mat.color}: -${share}g`;
-        }
-      });
+  if(gramosUsados > 0 && matId){
+    const mat = DB.materiales.find(m=>m.id===matId);
+    if(mat){
+      const antes = parseFloat(mat.stock)||0;
+      mat.stock = Math.max(0, antes - gramosUsados);
+      stockLog = `${mat.tipo} ${mat.color}: -${gramosUsados}g (${antes}g → ${mat.stock}g)`;
       persistWithStorage('materiales', DB.materiales);
     }
   }
 
+  const mat = DB.materiales.find(m=>m.id===matId);
   const entry={id:uid(),nombre,tiempo,
     impresora:impresora?impresora.nombre:'',
     gramosUsados,
+    materialNombre: mat ? `${mat.tipo} ${mat.color}` : '',
     proyectoNombre:proy?proy.nombre:'',
     fecha:new Date().toLocaleDateString('es-AR'),ts:Date.now()};
   DB.timerHistorial.unshift(entry);
@@ -4333,7 +4334,8 @@ function timerFinish(){
   const msg = `Registrado: ${nombre} — ${tiempo}${impresora?' · '+impresora.nombre:''}${stockLog?' · '+stockLog:''}`;
   showToast(msg);
   // Refresh current section to reflect stock changes
-  if(currentSection==='materiales'||currentSection==='dashboard') renderSection(currentSection);
+  const refreshSecs=['materiales','dashboard','graficos','estadisticas','costos'];
+  if(refreshSecs.includes(currentSection)) renderSection(currentSection);
 }
 
 
