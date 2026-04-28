@@ -11,7 +11,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
   /* Brand */
-  --navy:#1a3a6b;--navy-light:#4a7fd4;
+  --navy:#1a3a6b;--navy-light:#f97316;
   --ferrari:#f97316;--ferrari-dim:rgba(249,115,22,0.35);
   --silver:#9eaab8;
   /* Semantic */
@@ -22,7 +22,7 @@
   --bg:#000000;--bg2:#0d0d0f;--bg3:#161618;--bg4:#1e1e22;
   --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.17);
   --text:#f2f2f2;--text2:#8a8a96;--text3:#505058;
-  --accent:#4a7fd4;--accent2:#1a3a6b;--blue:#4a7fd4;
+  --accent:#f97316;--accent2:#1a3a6b;--blue:#f97316;
   --shadow:0 2px 20px rgba(0,0,0,0.7);
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);}
@@ -54,7 +54,7 @@ input,select,textarea{font-family:var(--font);}
   border:none;background:none;width:100%;text-align:left;
 ;position:relative}
 .nav-item:hover{background:rgba(255,255,255,0.05);color:var(--text);}
-.nav-item.active{background:rgba(26,58,107,0.15);color:var(--accent);}
+.nav-item.active{background:rgba(26,58,107,0.15);color:var(--ferrari);}
 .nav-item.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--ferrari);border-radius:0 2px 2px 0;}
 .nav-item svg{width:16px;height:16px;flex-shrink:0;}
 .nav-badge{
@@ -93,7 +93,7 @@ input,select,textarea{font-family:var(--font);}
 .btn{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;transition:all 0.15s;border:none;}
 .btn-ghost{background:var(--bg3);color:var(--text2);border:0.5px solid var(--border2);}
 .btn-ghost:hover{background:var(--bg4);color:var(--text);}
-.btn-accent{background:var(--accent);color:#ffffff;}
+.btn-accent{background:#f97316;color:#ffffff;}
 .btn-accent:hover{background:var(--navy);box-shadow:0 0 0 2px var(--ferrari-dim);}
 .btn-accent:hover{background:var(--accent2);}
 .btn-danger{background:rgba(204,34,0,0.1);color:var(--coral);border:0.5px solid rgba(204,34,0,0.25);}
@@ -111,7 +111,7 @@ input,select,textarea{font-family:var(--font);}
 .section.active{display:block;width:100%;box-sizing:border-box;}
 .section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;margin-top:24px;}
 .section-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.2px;border-left:3px solid var(--ferrari);padding-left:10px;}
-.section-action{font-size:11px;color:var(--accent);cursor:pointer;font-family:var(--mono);background:none;border:none;padding:0;}
+.section-action{font-size:11px;color:var(--ferrari);cursor:pointer;font-family:var(--mono);background:none;border:none;padding:0;}
 .section-action:hover{text-decoration:underline;}
 
 /* ─── STATS ROW ─── */
@@ -204,7 +204,7 @@ input,select,textarea{font-family:var(--font);}
 .prod-emoji{font-size:28px;margin-bottom:8px;}
 .prod-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
 .prod-sku{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;}
-.prod-price{font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.prod-price{font-size:15px;font-weight:700;color:var(--ferrari);margin-bottom:4px;}
 .prod-stock{font-size:10px;font-family:var(--mono);}
 .stock-ok{color:var(--teal);}
 .stock-low{color:var(--amber);}
@@ -265,7 +265,7 @@ input,select,textarea{font-family:var(--font);}
   width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;
   padding:9px 12px;color:var(--text);font-size:13px;outline:none;transition:border-color 0.15s;
 }
-.form-input:focus{border-color:var(--accent);}
+.form-input:focus{border-color:var(--ferrari);}
 .form-input::placeholder{color:var(--text3);}
 select.form-input option{background:var(--bg3);color:var(--text);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -305,13 +305,13 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-height:120px;cursor:pointer;transition:all 0.15s;color:var(--text3);gap:8px;padding:14px;
 }
-.add-card:hover{border-color:var(--accent);color:var(--accent);background:rgba(232,255,71,0.03);}
+.add-card:hover{border-color:var(--ferrari);color:var(--ferrari);background:rgba(232,255,71,0.03);}
 .add-card svg{width:24px;height:24px;}
 .add-card span{font-size:12px;font-family:var(--mono);}
 
 /* ─── COST CALCULATOR ─── */
 .calc-panel{background:var(--bg3);border-radius:var(--r);padding:14px;margin-top:10px;}
-.calc-result{font-size:22px;font-weight:700;color:var(--accent);margin:10px 0 4px;}
+.calc-result{font-size:22px;font-weight:700;color:var(--ferrari);margin:10px 0 4px;}
 .calc-breakdown{font-size:11px;color:var(--text3);font-family:var(--mono);}
 
 /* ─── RESPONSIVE ─── */
@@ -401,11 +401,11 @@ select.form-input option{background:var(--bg3);color:var(--text);}
 }
 .mat-dropdown-item:last-child{border-bottom:none;}
 .mat-dropdown-item:hover{background:rgba(255,255,255,0.05);}
-.mat-dropdown-item.selected{background:rgba(232,255,71,0.08);color:var(--accent);}
+.mat-dropdown-item.selected{background:rgba(232,255,71,0.08);color:var(--ferrari);}
 .mat-dropdown-item .item-name{font-weight:600;}
 .mat-dropdown-item .item-desc{font-size:11px;color:var(--text3);font-family:var(--mono);}
 .mat-color-swatch-item{width:20px;height:20px;border-radius:50%;flex-shrink:0;border:0.5px solid var(--border2);}
-.mat-checkmark{margin-left:auto;color:var(--accent);font-size:14px;}
+.mat-checkmark{margin-left:auto;color:var(--ferrari);font-size:14px;}
 
 .login-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;}
 .login-screen.hidden{display:none;}
@@ -426,7 +426,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   --bg:#000000;--bg2:#0d0d0f;--bg3:#161618;--bg4:#1e1e22;
   --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.17);
   --text:#f2f2f2;--text2:#8a8a96;--text3:#505058;
-  --accent:#4a7fd4;--accent2:#1a3a6b;--blue:#4a7fd4;
+  --accent:#f97316;--accent2:#1a3a6b;--blue:#f97316;
   --ferrari:#f97316;--ferrari-dim:rgba(249,115,22,0.35);
   --teal:#34d399;--coral:#f97316;--amber:#fbbf24;--purple:#a78bfa;--green:#34d399;
   --shadow:0 2px 20px rgba(0,0,0,0.7);
@@ -436,7 +436,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   --bg:#f5f5f7;--bg2:#ffffff;--bg3:#ebebed;--bg4:#e0e0e4;
   --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);--border3:rgba(0,0,0,0.22);
   --text:#0d0d0f;--text2:#3a3a42;--text3:#6b6b78;
-  --accent:#1a3a6b;--accent2:#152f58;--blue:#1a3a6b;
+  --accent:#f97316;--accent2:#152f58;--blue:#1a3a6b;
   --ferrari:#cc2200;--ferrari-dim:rgba(204,34,0,0.2);
   --teal:#059669;--coral:#cc2200;--amber:#d97706;--purple:#7c3aed;--green:#059669;
   --shadow:0 2px 12px rgba(0,0,0,0.08);
@@ -447,7 +447,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     --bg:#f5f5f7;--bg2:#ffffff;--bg3:#ebebed;--bg4:#e0e0e4;
     --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);--border3:rgba(0,0,0,0.22);
     --text:#0d0d0f;--text2:#3a3a42;--text3:#6b6b78;
-    --accent:#1a3a6b;--accent2:#152f58;--blue:#1a3a6b;
+    --accent:#f97316;--accent2:#152f58;--blue:#1a3a6b;
     --ferrari:#cc2200;--ferrari-dim:rgba(204,34,0,0.2);
     --teal:#059669;--coral:#cc2200;--amber:#d97706;--purple:#7c3aed;--green:#059669;
     --shadow:0 2px 12px rgba(0,0,0,0.08);
@@ -535,7 +535,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNjAwIj48ZwogICAgICAgaWQ9ImcyIj4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6I2UwMWEwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2NjMDAwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDMyMC4zNzAyMSw0MjAuODA4NjcgLTAuMzM4MjcsLTIuOTM5OTEgLTEzLjM2MzE1LC0wLjUzNDUzIC0xMy4zNjMyMywtMC41MzQ1MiB2IC0zLjIwNzE3IC0zLjIwNzE3IGwgMjUuMzkwMTIsLTAuMjg2NjEgYyAyNC41MDM2MSwtMC4yNzY2MSAyNS4zOTAwNSwtMC4zNjA1OSAyNS4zOTAwNSwtMi40MDUzOCAwLC0xLjk4MzkgLTAuNzQ4NTYsLTIuMTE4NzYgLTExLjc1OTU5LC0yLjExODc2IC0xMS41NTgxOSwwIC0xMS43NTk2NSwtMC4wNDIxIC0xMS43NTk2NSwtMi40NTg4MyAwLC00LjQzMDMgLTEuNzk1NDYsLTUuMDI0NTYgLTE1LjE4MDYxLC01LjAyNDU2IGggLTEyLjYxNDg2IHYgLTMuMjA3MTggLTMuMjA3MTYgbCA5LjM1NDIzLC0wLjExNTIyIGMgMzUuNjQ1NjcsLTAuNDM5MDMgNDEuNDI2LC0wLjgyODk2IDQxLjQyNiwtMi43OTQ1NiAwLC0xLjY4Mzc3IC0xLjI5ODY1LC0xLjkzNTUgLTExLjM2NTg0LC0yLjIwMzEyIGwgLTExLjM2NTY0LC0wLjMwMjE1IC0wLjYzNDQ3LC0zLjE3MjI5IC0wLjYzNDQyLC0zLjE3MjI4IGggLTEyLjgxNzg0IGMgLTExLjE4NDI1LDAgLTEyLjk0NzI4LC0wLjI0MTk0IC0xMy44MzM3OCwtMS44OTg0NSAtMC42NDQ1OCwtMS4yMDQzNCAtMC42Mzg5MywtMi41NzI0IDAuMDE0NiwtMy43NDE3IDAuOTMwODIsLTEuNjYzMjIgMy40Nzk5NiwtMS44NDMyNSAyNi4xMDEyMSwtMS44NDMyNSAyNC4zNTcwNCwwIDI1LjA2OTc4LC0wLjA2MDkgMjUuMDY5NzgsLTIuMTM4MSAwLC0yLjAwNzA0IC0wLjcxMjc0LC0yLjEzODEyIC0xMS42MjU5NiwtMi4xMzgxMiBoIC0xMS42MjU5NyBsIC0wLjY0MTQ2LC0zLjIwNzE3IC0wLjY0MTQ1LC0zLjIwNzE2IGggLTEyLjcyNDU2IGMgLTEzLjk0ODA2LDAgLTE2LjQyMDU5LC0wLjkyNTg3IC0xNC4wOTE5OCwtNS4yNzY5NSAxLjE0MjcxLC0yLjEzNSAyLjAxMDYsLTIuMjA2NDUgMjYuODAwNTksLTIuMjA2NDUgMjQuOTA3MTQsMCAyNS42MTk4OCwtMC4wNTk1IDI1LjYxOTg4LC0yLjEzODExIDAsLTEuODU2MTIgLTAuNzEyNzQsLTIuMTM4MTIgLTUuNDAzODUsLTIuMTM4MTIgaCAtNS40MDM5MiBsIDAuMzI1ODUsLTUuMDQzMDYgYyAwLjMxNDAxLC00Ljg2MDk4IDAuNDcwNjIsLTUuMDc3MTMgNC4zMzQ4MiwtNS45ODYwMSBsIDQuMDA4OTIsLTAuOTQyOTQgdiAtMTMuNzkxNTMgLTEzLjc5MTUzIGggOC45NTk2OSA4Ljk1OTc2IGwgLTAuMDcwNiw0LjU0MzQ4IGMgLTAuMDM4NSwyLjQ5ODkyIDAuMDE4Niw4LjY4MzMxIDAuMTI3MjQsMTMuNzQzMDkgbCAwLjE5NzY3LDkuMTk5NTkgMy40NzQ0NCwwLjk5MTE3IGMgMy4yMzQ2NCwwLjkyMjc1IDMuNDk3MywxLjM0ODg0IDMuODA1OTMsNi4xNzM0OCAwLjI4ODExLDQuNTAyODUgMC4wOTQxLDUuMDkxMjEgLTEuNDc5NzgsNC40ODcyNSAtMy4yNTU3MSwtMS4yNDkzMyAtOS4wMDc3OSwwLjQ0NjMyIC05LjAwNzc5LDIuNjU1NDMgMCwxLjg5Mjk4IDEuNDIxNTcsMi4wMTU4MiAyNi40NTkxMywyLjI4NjQgbCAyNi40NTkyOCwwLjI4NTk0IHYgMy4yMDcxNyAzLjIwNzE2IGwgLTEzLjM2MzIzLDAuNTM0NTQgLTEzLjM2MzE1LDAuNTM0NTIgLTAuMzM0OTUsMi45MDQ0MiAtMC4zMzQ4MSwyLjkwNDQzIC0xMS40MTIwOCwwLjMwMjc0IGMgLTkuODI5NzgsMC4yNjA3NyAtMTEuNDYxMjYsMC41NTk0NSAtMTEuNzY2NywyLjE1NDA3IC0wLjMyNzA0LDEuNzA3NDUgMS42MjQ0MywxLjg3MzYxIDI1LjExMDEyLDIuMTM4MTIgbCAyNS40NjQ4LDAuMjg2NzggdiAzLjIwNzE3IDMuMjA3MTcgbCAtMTMuMzYzMjMsMC41MzQ1MyAtMTMuMzYzMTUsMC41MzQ1MyAtMC4zMzg0LDIuOTM5OSAtMC4zMzgyNywyLjkzOTkxIEggMzcyLjM0MzYgYyAtMTAuMTUxNSwwIC0xMS4xNTQwMiwwLjE3ODI2IC0xMS4xNTQwMiwxLjk4MzUyIDAsMi41NTk4MyA3LjU1NzA1LDMuMzQzNjQgMzIuMzM5LDMuMzU0MTYgbCAxNy45MDY2OSwwLjAwNyB2IDMuMTc1MjMgMy4xNzUyNCBsIC0xMy42MzA1MywwLjI5OTE5IC0xMy42MzAzOSwwLjI5OTIxIC0wLjMzNTA4LDMuNDc0NDMgLTAuMzM1MDgsMy40NzQ0MyBoIC0xMS42OTE4MSBjIC0xMC45NDM1OSwwIC0xMS42OTE4MiwwLjEzNTYgLTExLjY5MTgyLDIuMTE4NzcgMCwyLjA0NDc5IDAuODg2MzcsMi4xMjg3NiAyNS4zOTAwNSwyLjQwNTM3IGwgMjUuMzkwMTIsMC4yODY2MSB2IDMuMjA3MTcgMy4yMDcxNyBsIC0xMy42MzA0NywwLjI5OTIxIC0xMy42MzA0NiwwLjI5OTIgdiAzLjE3NTM1IDMuMTc1MjMgaCAtMzEuNDY2MTggLTMxLjQ2NjE5IHoiCiAgICAgICAgIGlkPSJwYXRoMjYiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiMwMDAwMDA7c3Ryb2tlOiNlMDFhMDA7c3Ryb2tlLXdpZHRoOjIuNTtzdHJva2UtZGFzaGFycmF5Om5vbmU7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAzMTAuNjAwOTYsNDY0Ljc0MTQzIGMgLTAuMzk4NzMsLTAuMzk4NzggLTAuNzI1MDQsLTguMjkwNjMgLTAuNzI1MDQsLTE3LjUzNzQyIDAsLTE0LjM0NDQ3IDAuMjQ4MTcsLTE2LjkwNzYgMS42OTA5NCwtMTcuNDYxMjUgMC45MzAwOSwtMC4zNTY5MSAxOS42ODI5NSwtMC42NDg5MSA0MS42NzI5MSwtMC42NDg5MSBoIDM5Ljk4MTgyIGwgMC41OTQ0OCwyLjQwNTM4IGMgMC4zMjY5NywxLjMyMjk1IDAuNDU2NDEsOS4zODA5NyAwLjI4NzY0LDE3LjkwNjY5IGwgLTAuMzA2ODQsMTUuNTAxMzEgLTQxLjIzNTQzLDAuMjc5NjUgYyAtMjIuNjc5NTIsMC4xNTM4IC00MS41NjE3NCwtMC4wNDY2IC00MS45NjA0OCwtMC40NDU0NSB6IgogICAgICAgICBpZD0icGF0aDI1IiAvPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0iZmlsbDojOWVhYWI4O2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZTAxYTAwO3N0cm9rZS13aWR0aDoxLjA2OTA2O3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgIGQ9Ik0gMTk2LjI4MDI2LDQ2MS40MjQ2MSAxNzAuODk4NjUsNDM2LjAyNjM1IFYgMjgxLjgyMzE4IDEyNy42MjAwMSBoIDI0LjMyNDIyIDI0LjMyNDM0IGwgNjUuNzQwNDUsNjUuNzQ2OTYgYyAzNi4xNTcxNSwzNi4xNjA4MiA2Ni4yODQxNSw2NS43NDY5NSA2Ni45NDg2Niw2NS43NDY5NSAwLjY2NDUxLDAgMzAuNDUzMDUsLTI5LjU4NjEzIDY2LjE5NjUyLC02NS43NDY5NSBsIDY0Ljk4ODEsLTY1Ljc0Njk2IGggMjQuNDA5MzMgMjQuNDA5MzkgdiAxNTQuMjE5NyAxNTQuMjE5NzIgbCAtMjUuNjU3NDIsMjUuNjQwNjQgLTI1LjY1NzM1LDI1LjY0MDY0IFYgMzQ1LjYxMDAzIGMgMCwtNzcuOTUxODcgLTAuMzM5OTMsLTE0Mi4wNzA2IC0wLjc1NTM0LC0xNDIuNDg2MDUgLTAuNDE1NDEsLTAuNDE1NDUgLTI2LjE1Mjk3LDI0LjYzODg1IC01Ny4xOTQ1MSw1NS42NzYyMyBsIC01Ni40MzkwOSw1Ni40MzE1OSB2IC01LjAyNTc4IGMgMCwtNC44MjY1MyAtMC4xMzc4MSwtNS4wNTExIC0zLjQ3NDQ0LC01LjY2MzkzIC0xLjkxMDk0LC0wLjM1MDk3IC04LjI4NTIyLC0wLjQ5MzAzIC0xNC4xNjUwMSwtMC4zMTU3IGwgLTEwLjY5MDU3LDAuMzIyNDIgLTAuNTYxMzgsNS4zNDUyOCAtMC41NjEzMyw1LjM0NTI4IC01Ni41ODEyOCwtNTYuMzU1NTEgYyAtMzEuMTE5NzUsLTMwLjk5NTU0IC01Ni43MTk3NiwtNTYuMjE3MDEgLTU2Ljg4OTA2LC01Ni4wNDc3MyAtMC4xNjkyNCwwLjE2OTI4IC0wLjMyMzMyLDY0LjEzNTU2IC0wLjM0MjI2LDE0Mi4xNDcyNyAtMC4wMTkzLDc4LjAxMTcyIC0wLjM4ODU2LDE0MS44Mzk0OSAtMC44MjE0NSwxNDEuODM5NDkgLTAuNDMyOTUsMCAtMTIuMjA4OTUsLTExLjQyOTIyIC0yNi4xNjg5MSwtMjUuMzk4MjggeiIKICAgICAgICAgaWQ9InBhdGgyNCIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDtzdHJva2U6I2UwMWEwMDtzdHJva2Utd2lkdGg6Mi41O3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDMyMi43OTUzNiw0ODIuOTMwNjggYyAtMy4yNTg2OSwtMy43MDIxNiAtNC4zNjY5OSwtNS44NzI2NiAtNC4zNjY5OSwtOC41NTI0NSB2IC0zLjU5MTE4IGggMzMuNjc1MjcgMzMuNjc1MjYgdiAzLjMyNjA2IGMgMCwyLjMyOTA4IC0xLjMxMTY4LDQuODkyNjkgLTQuMzc1ODMsOC41NTI0NSBsIC00LjM3NTc2LDUuMjI2MzggaCAtMjQuOTMyNDUgLTI0LjkzMjM4IHoiCiAgICAgICAgIGlkPSJwYXRoMjMiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiNlMDFhMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNmZjAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAzNDQuMzIwMjgsNTEwLjA3NDg2IGMgLTMuMDg0MDgsLTUuNDM4ODMgLTYuNjEwNjIsLTExLjQ1MjI3IC03LjgzNjcyLC0xMy4zNjMyMSBsIC0yLjIyOTI3LC0zLjQ3NDQyIGggMTguMTgxMjMgMTguMTgxMzEgbCAtNS4xOTc5NSw4LjgxOTcxIGMgLTIuODU4NzYsNC44NTA4NCAtNi40MTEwMSwxMC44NjQyOCAtNy44OTM5MiwxMy4zNjMyIC00LjM1NDg5LDcuMzM5MDIgLTYuNTA1NzYsNi40NjgzNCAtMTMuMjA0NjgsLTUuMzQ1MjggeiIKICAgICAgICAgaWQ9InBhdGgyMiIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDtzdHJva2U6I2UwMWEwMDtzdHJva2Utd2lkdGg6Mi41O3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDMwMC4yOTY5Nyw1NDAuODYxNTggYyAtMC43MDg0MywtMC44NTM3MyAtMS4xMjE4NCwtMi40MTcyMyAtMC45MTgzOSwtMy40NzQ0MyAwLjM0Nzk3LC0xLjgwOTAzIDMuMzU4NzYsLTEuOTUzNjkgNTEuMTM1NzEsLTIuNDU2NzQgMjcuOTIxMTgsLTAuMjkzOTkgNTEuODI1NiwtMC4zODM3OCA1My4xMjA3MywtMC4xOTk1MyAyLjgxNTcxLDAuNDAwNTUgNC4yMTYxNiwzLjk1ODMgMi40MTMzMyw2LjEzMDY0IC0xLjkzMTY4LDIuMzI3NTkgLTEwMy44MTk1OCwyLjMyNzY0IC0xMDUuNzUxMzgsNmUtNSB6IgogICAgICAgICBpZD0icGF0aDIxIiAvPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0iZmlsbDojMDAwMDAwO3N0cm9rZTojZTAxYTAwO3N0cm9rZS13aWR0aDoyLjU7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgIGQ9Im0gMjc4LjQxNTEyLDU1OC45MDc4MSBjIC0yLjA2NTIzLC0yLjA2NTE0IC0yLjE0NTI5LC00LjA4NjQxIC0wLjIyNTEyLC01LjY3OTk2IDEuMDU3MDcsLTAuODc3MzEgMjEuNTg3NTEsLTEuMTMyMjcgNzUuMTAxMiwtMC45MzI2OCBsIDczLjY0NjM5LDAuMjc0NjcgMC4zNjg3NiwyLjYxMjc0IGMgMC43NzUzNCw1LjQ5Mjg3IDEuOTk3MzIsNS40MDUxOCAtNzUuMzMwNjksNS40MDUxOCAtNjMuOTIwNjYsMCAtNzIuMDY2NjEsLTAuMTg2MDQgLTczLjU2MDU0LC0xLjY3OTk1IHoiCiAgICAgICAgIGlkPSJwYXRoMjAiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDYiCiAgICAgICAgIGQ9Im0gNTg0LjA4ODg1LDY3Ljc1Mjg1MSB2IC02Ljk0ODg2NCBsIC03LjA5ODMyLC0wLjMxMzQxOCAtNy4wOTgzMSwtMC4zMTM0MjUgLTMuODU5NDksNi45MDE0NjkgYyAtMi4xMjI3NiwzLjc5NTgxMyAtMy44NTk0OSw3LjIwMDkzNCAtMy44NTk0OSw3LjU2Njk0OSAwLDAuMzY2MDIyIDQuOTMwOTcsMC41MjgzOTIgMTAuOTU3ODEsMC4zNjA4MjYgbCAxMC45NTc4LC0wLjMwNDY3NCB6IgogICAgICAgICBpZD0icGF0aDE5IiAvPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0iZmlsbDojMDAwMDAwO3N0cm9rZS13aWR0aDoxLjA2OTA2IgogICAgICAgICBkPSJtIDE0MC45NjUwNyw3NC41Mjg5MDYgYyAwLC0wLjM4OTA0NSAtMS43OTUxOSwtMy43NzYwMTMgLTMuOTg5MTksLTcuNTI2NTk4IGwgLTMuOTg5MDUsLTYuODE5MjUgLTYuOTY4NzUsMC4zMTA0NjggLTYuOTY4NjgsMC4zMTA0NjEgLTAuMzI3OTcsNS43NTIzODcgYyAtMC41MDIwNiw4LjgwMzcwNCAtMC42NjYzMSw4LjY3OTg3MiAxMS41MTk1Miw4LjY3OTg3MiA1Ljg5ODIsMCAxMC43MjQxMiwtMC4zMTgzMDIgMTAuNzI0MTIsLTAuNzA3MzQgeiIKICAgICAgICAgaWQ9InBhdGgxOCIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzllYWFiODtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2UwMWEwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJNIDY3LjY5NDQyMSw1NjkuOTQyIEMgNjcuNDE1MTU1LDU2OS4yMDcwMiA2Ny4zMDk5NzQsNDU3LjUwMTI1IDY3LjQ2MDczNiwzMjEuNzA2OTYgTCA2Ny43MzQ3NTMsNzQuODA4MjI1IDgwLjA5Njc5MSw5MC4yNTYyODYgYyA2Ljc5OTE4NSw4LjQ5NjQyNiAxNi4wNTg2NzEsMjAuMTI1ODE0IDIwLjU3Njc0OSwyNS44NDMwNjQgbCA4LjIxNDcyLDEwLjM5NDk4IDAuMjY5ODMsMjE4LjkxNzU3IDAuMjY5ODMsMjE4LjkxNzU2IDIuOTM5OSwwLjMzODI3IDIuOTM5ODksMC4zMzgyNyBWIDM0My4yMDM4NCAxMjEuNDAxNjcgbCAtNC42MDcxOCwtNS43MTA1NCBDIDEwOC4xNjY1NCwxMTIuNTUwMzMgOTYuMzY2NjIyLDk3LjM0NjMxNyA4NC40Nzg0NjQsODEuOTA0NDYyIEwgNjIuODYzNzgzLDUzLjgyODM0NiA2My4xNjExMjIsMzkuMTQyMjEgNjMuNDU4NDYsMjQuNDU2MDc0IGwgMzguMjMzNDEsLTAuMjgwNzczIDM4LjIzMzQxLC0wLjI4MDc4OCA4LjIyMjY5LDEyLjU3NDkzMyBjIDQuNTIyNCw2LjkxNjIwNyA4LjcyNTIxLDEyLjkyODM2NCA5LjMzOTQ5LDEzLjM2MDM0NiAwLjYxNDM0LDAuNDMxOTg4IDMzLjEwODU1LDAuNzk5MzU4IDcyLjIwOTI2LDAuODE2Mzk1IDM5LjEwMDc4LDAuMDE3MDEgNzIuMDU0MzksMC4yOTIwNjkgNzMuMjMwMzIsMC42MTExODEgMS4xNzYsMC4zMTkxMjYgMTAuMDc1ODksOS42OTI0OTEgMTkuNzc3NTYsMjAuODI5NzI4IGwgMTcuNjM5NDUsMjAuMjQ5NTA5IDExLjQ1MDU1LDAuMDAyIDExLjQ1MDU2LDAuMDAyIDE3LjYzNTUzLC0yMC4xODAxNjggYyA5LjY5OTYxLC0xMS4wOTkxMDUgMTguNDE3MTEsLTIwLjQ4MDA3MSAxOS4zNzIxOCwtMjAuODQ2NTk4IDAuOTU1MiwtMC4zNjY0OCAzMy44NDU1NiwtMC42NjYzNyA3My4wODk2NSwtMC42NjYzNyBoIDcxLjM1MyBsIDIuMTI1MDksLTIuNDA1Mzc5IGMgMS4xNjg2OSwtMS4zMjI5NiA1LjM1NTAyLC03LjM0MjQ2IDkuMzAyODEsLTEzLjM3NjY3IGwgNy4xNzc4NSwtMTAuOTcxMjk5IDM4LjE4OTI5LDAuMjgwNzM0IDM4LjE4OTIzLDAuMjgwNzM0IDAuMjk2MDEsMTQuNDg3MzY4IDAuMjk2MDEsMTQuNDg3MzY3IC0xMi42Mzc5MiwxNi41MTUyNjMgYyAtNi45NTA4MSw5LjA4MzM5NSAtMTguNzUxMjYsMjQuMzkzOTc3IC0yNi4yMjMxOSwzNC4wMjM1MDMgbCAtMTMuNTg1MjgsMTcuNTA4MjEgMC4yNjk4MywyMjEuNDI1ODQgMC4yNjk4MywyMjEuNDI1ODMgMi45Mzk4OSwwLjMzODI3IDIuOTM5OSwwLjMzODI2IFYgMzQ1Ljc2NTE5IDEyNi41MjQ5NSBsIDE0LjYwODc5LC0xOC40Mjg1MSBDIDYxNi44ODg0NCw5Ny45NjA3NDEgNjI2LjE0OTE5LDg2LjM0MDM2MSA2MjkuNDMzLDgyLjI3MzM0NyBsIDUuOTcwNTYsLTcuMzk0NTY1IDAuMjczODgsMjQ2Ljg2MzE2OCBjIDAuMTUwNzcsMTM1Ljc3NDcyIDAuMDQ1OCwyNDcuNDY0NDggLTAuMjMzNjgsMjQ4LjE5OTQ2IC0wLjM4ODUsMS4wMjI3MyAtNy4xNjM4MywxLjMzNjMyIC0yOC44NzEyNywxLjMzNjMyIEggNTc4LjIwOTA2IFYgMzMxLjgwOTE1IDkyLjM0MDU1MiBIIDQ5MC45NjcxNSA0MDMuNzI1MTggTCAzOTAuNjc4MywxMDUuOTcxMDMgYyAtNy4xNzU3Miw3LjQ5Njc2IC0xNS45NDgwNCwxNi43ODM1OCAtMTkuNDk0MTEsMjAuNjM3MzcgbCAtNi40NDcyOSw3LjAwNjkyIC0wLjYxNjAxLDEwLjMyNDc5IGMgLTAuMzM4NzMsNS42Nzg2NSAtMC45MjQ1NywxMC44MjQwOSAtMS4zMDE3MSwxMS40MzQzMSAtMC4zOTg5MywwLjY0NTQ0IC01LjEwMDg2LDEuMTA5NTIgLTExLjI0MTE5LDEuMTA5NTIgLTEyLjIzOTM4LDAgLTExLjI2MTg1LDEuMDU1NDkgLTEyLjM3NjkyLC0xMy4zNjMyIC0wLjg3MjI4LC0xMS4yNzk1MiAwLjg1OTI2LC04LjcyOTM2IC0yMi42ODMzLC0zMy40MDgwMSBMIDI5OS45NDUzNSw5Mi4zNDA1NTIgSCAyMTIuNDM3MiAxMjQuOTI5MTkgViAzMzEuODA5MTUgNTcxLjI3NzczIEggOTYuNTY1Njg5IGMgLTIxLjcwNzQzNywwIC0yOC40ODI3NjgsLTAuMzEzNTkgLTI4Ljg3MTI2OCwtMS4zMzYzMiB6IgogICAgICAgICBpZD0icGF0aDE3IiAvPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0iZmlsbDojMDAwMDAwO3N0cm9rZTojZTAxYTAwO3N0cm9rZS13aWR0aDoyLjU7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgIGQ9Im0gMjU1LjE4MDg2LDU3Ni45NDk3IGMgLTAuNTgzMDUsLTAuNzAyNiAtMC45MDI3OCwtMi4zODYzNiAtMC43MTA2OSwtMy43NDE2OSBsIDAuMzQ5MzYsLTIuNDY0MjIgaCA5Ny44MTg2NSA5Ny44MTg2NSBsIDAuMzM4OCwyLjk0NTk5IGMgMC4xOTg0LDEuNzI0MzIgLTAuMjQ0OTIsMy4xNjM2NCAtMS4wNjkwOSwzLjQ3MDg1IC0wLjc3NDI4LDAuMjg4NjcgLTQ0LjYyNTQzLDAuNjQ2NzQgLTk3LjQ0NjgzLDAuNzk1NzEgLTczLjQ0NjU5LDAuMjA3MTMgLTk2LjI4ODIzLC0wLjAyOTcgLTk3LjA5ODg1LC0xLjAwNjY0IHoiCiAgICAgICAgIGlkPSJwYXRoMTYiIC8+CiAgICA8L2c+PC9zdmc+" style="height:28px;width:auto;flex-shrink:0;display:block" alt="MarcanoTech">
     <div>
       <div class="logo-text"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgMTUwIj48ZwogICAgICAgaWQ9ImcyIgogICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwtNTkwLjMyMjU4KSI+CiAgICAgIDxwYXRoCiAgICAgICAgIGlkPSJwYXRoMTQiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM5ZWFhYjg7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNlMDFhMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSA2NTEuNDM5NDUsNjA2LjUzNTE2IGMgLTIwLjE4ODQ1LDAuMjg0ODggLTIyLjgxNTgsMC41MzIzNyAtMjYuMDgwMDcsMi40NTUwNyAtNy40ODczNSw0LjQxMDE5IC04LjA5MDQ3LDYuMjE2MzIgLTguNDcyNjYsMjUuMzc2OTYgLTAuMjc5NiwxNC4wMTcwNSAtMC4wMTU4LDE4LjA2ODgzIDEuNDE5OTIsMjEuODI4MTIgMS44MTIzNCw0Ljc0NTc0IDUuOTAxMjQsOC40NjY3NSAxMC45OTQxNCwxMC4wMDE5NiAxLjU5MjY3LDAuNDgwMDkgMTIuMjk1MSwwLjkxMjI5IDIzLjc4MzIsMC45NjI4OSAxOS42MzYxNywwLjA4NjQgMjEuMTcyMzUsLTAuMDUxMiAyNS42NDg0NCwtMi4zMTI1IDIuNjE4NzcsLTEuMzIyOTggNS44NDgwMiwtNC4wMzkyMiA3LjE3NTc4LC02LjAzNzExIDIuMjcxNjYsLTMuNDE4MzEgMi40MTQwNywtNC43MTc2MSAyLjQxNDA3LC0yMi4wMjUzOSAwLC0xNy4zMDc4MSAtMC4xNDI0MSwtMTguNjA3MDQgLTIuNDE0MDcsLTIyLjAyNTM5IC0xLjMyNzc2LC0xLjk5NzkgLTQuNTc1NjksLTQuNzM3NyAtNy4yMTY3OSwtNi4wODc4OSAtNC42MjY3MiwtMi4zNjUyNSAtNS42MjE3OSwtMi40NDE5NSAtMjcuMjUxOTYsLTIuMTM2NzIgeiBtIDEuNDY2OCwxMy42Nzk2OCBjIDEyLjQ4NDE2LDAgMTguMjcwNDgsMC4zODc2NyAxOS4xNjYwMiwxLjI4MzIxIDAuODY3MjMsMC44NjcyMyAxLjI4MzIsNS44MiAxLjI4MzIsMTUuMjg3MTEgMCw5LjQ2NzA3IC0wLjQxNTk3LDE0LjQxOTg4IC0xLjI4MzIsMTUuMjg3MTEgLTAuODk1NTQsMC44OTU1NSAtNi42ODE4NiwxLjI4MzIgLTE5LjE2NjAyLDEuMjgzMiAtMTQuODMyNjQsMCAtMTguMTcxMTgsLTAuMjg2MzkgLTE5LjU2NDQ1LC0xLjY3OTY5IC0yLjQ1NjE4LC0yLjQ1NjIgLTIuNDU2MTgsLTI3LjMyNTA5IDAsLTI5Ljc4MTI1IDEuMzkzMjcsLTEuMzkzMzQgNC43MzE4MSwtMS42Nzk2OSAxOS41NjQ0NSwtMS42Nzk2OSB6IiAvPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0iZmlsbDojOWVhYWI4O2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZTAxYTAwO3N0cm9rZS13aWR0aDoxLjA2OTA2O3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgIGQ9Ik0gNTIzLjY4NzIxLDYzNi43ODQ5MSBWIDYwNi4zMTY4IGggNy40MjYwOSA3LjQyNjE1IGwgMTkuNTY3NTMsMTguOTUyNzggYyAxMC43NjIxMywxMC40MjQwNCAxOS43Mjc5MywxOS4zMjM5MSAxOS45MjM4NywxOS43Nzc1NiAwLjE5NTk1LDAuNDUzNjEgMC43OTcyNywwLjgyNDcyIDEuMzM2MzMsMC44MjQ3MiAwLjU1ODUzLDAgMC45Nzk5OSwtOC41MDM4NCAwLjk3OTk5LC0xOS43Nzc1MiBWIDYwNi4zMTY4IGggNy40ODMzNiA3LjQ4MzQzIHYgMzAuNDY4MTEgMzAuNDY4MDcgbCAtNy4yMTYxMiwtMC4wMzE3IC03LjIxNjEyLC0wLjAzMTcgTCA1NTkuNzY3ODMsNjQ2LjgwMTggNTM4LjY1NCw2MjYuNDE0MDQgdiAyMC40MTk0MyAyMC40MTk0MSBoIC03LjQ4MzQzIC03LjQ4MzM2IHoiCiAgICAgICAgIGlkPSJwYXRoMTMiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiM5ZWFhYjg7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNlMDFhMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSA0MTguODIyMjcsNjY1LjM4MjE1IGMgMC41NzU4MSwtMS4wMjg5OCA4LjY3NDg0LC0xNC42MTkzNCAxNy45OTc5MiwtMzAuMjAwODIgbCAxNi45NTA4OCwtMjguMzMwMDEgNy40Mjk4OCwtMC4yODAwNSA3LjQyOTgsLTAuMjgwMDMgMTQuOTY2ODYsMjUuMzAxMDkgYyA4LjIzMTczLDEzLjkxNTU5IDE2LjMyOTM3LDI3LjYzMTk4IDE3Ljk5NDg2LDMwLjQ4MDg1IGwgMy4wMjgxNCw1LjE3OTggaCAtOC41ODMyMiAtOC41ODMyMiBsIC0xMi42MTg5MSwtMjEuMzU5ODMgYyAtNi45NDA0NCwtMTEuNzQ3OSAtMTMuMDk5OSwtMjEuMjE0NjkgLTEzLjY4Nzg3LC0yMS4wMzcyNyAtMC41ODc5NiwwLjE3NzQzIC02Ljc0Mjg0LDkuNzg5MzQgLTEzLjY3NzUsMjEuMzU5ODUgbCAtMTIuNjA4MzUsMjEuMDM3MjUgaCAtOC41NDMxNSBjIC03LjgyMjM2LDAgLTguNDU0NzEsLTAuMTU3ODIgLTcuNDk2MTIsLTEuODcwODMgeiIKICAgICAgICAgaWQ9InBhdGgxMiIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzllYWFiODtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2UwMWEwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDMzNi4wNjc4Miw2NjYuMTE1NzkgYyAtMy44OTg2MiwtMS4xNDc5NSAtOC44NjAwMiwtNS42MDk4MyAtMTAuMjIyMzMsLTkuMTkzMTMgLTAuNTUxNDksLTEuNDUwNjQgLTEuMDAyNzgsLTEwLjg0Nzk2IC0xLjAwMjc4LC0yMC44ODI5NSAwLC0yMC40MDQ1MiAwLjY5MTQ5LC0yMi44NDEwNyA3LjY3Njc4LC0yNy4wNTAyOCAzLjI4MDEsLTEuOTc2NTEgNS43OTA1NiwtMi4xNjQwMSAzMy4yMTQ2NywtMi40ODA4IGwgMjkuNjY2MjgsLTAuMzQyNyB2IDcuMDI0MjggNy4wMjQzMSBoIC0yNi41MTI1NiBjIC0xOS4xOTU1OCwwIC0yNi44NjY3MSwwLjM1NDA1IC0yNy43OTU0NywxLjI4Mjg3IC0xLjc4MTE3LDEuNzgxMTIgLTEuNzgxMTcsMjguNzkzOTIgMCwzMC41NzUgMC45Mjg3NiwwLjkyODgyIDguNTk5ODksMS4yODI4OCAyNy43OTU0NywxLjI4Mjg4IGggMjYuNTEyNTYgdiA2Ljk0ODg0IDYuOTQ4ODcgbCAtMjguMDYyNzEsLTAuMDk2NCBjIC0xNS40MzQ0OSwtMC4wNTMgLTI5LjUwNTk0LC0wLjUyMTM4IC0zMS4yNjk5MSwtMS4wNDA4MSB6IgogICAgICAgICBpZD0icGF0aDExIiAvPgogICAgICA8cGF0aAogICAgICAgICBpZD0icGF0aDkiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM5ZWFhYjg7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNlMDFhMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAyMjUuNDE5OTIsNjA2LjE2OTkyIHYgMzAuNTQxMDIgMzAuNTQyOTcgaCA3LjQ4NDM4IDcuNDgyNDIgdiAtMTAuMTU2MjUgLTEwLjE1NjI1IGwgOS44ODg2NywtMC4wMTU2IDkuODg4NjcsLTAuMDEzNyA5LjYyMzA1LDEwLjI0MjE5IDkuNjIxMDksMTAuMjQyMTggOS44NjcxOSwtMC4zMzk4NCA5Ljg2OTE0LC0wLjMzNzg5IC05LjAzNzExLC05LjA4Nzg5IGMgLTQuOTcwMTcsLTQuOTk3ODUgLTkuMDUwNSwtOS4zOTM5OSAtOS4wNjY0LC05Ljc2OTUzIC0wLjAxNjMsLTAuMzc1NTQgMS43NTgzMywtMS4wMTc4MiAzLjk0MzM2LC0xLjQyNzc0IDkuMjI1MiwtMS43MzA2OSAxMy4xMzI4MSwtNy42NDQ2OSAxMy4xMzI4MSwtMTkuODc2OTUgMCwtOS4yNzEyOSAtMS45ODk5NSwtMTMuOTYyMzUgLTcuMzMwMDgsLTE3LjI4MzIgLTMuNzczODQsLTIuMzQ2OCAtNC44NTI0OSwtMi40MzM2MiAtMzQuNjMwODYsLTIuNzYzNjcgeiBtIDE0Ljk2NjgsMTQuMDQ0OTIgaCAyMC4xODE2NCBjIDIyLjc5MjE0LDAgMjIuOTI3NjEsMC4wNDY3IDIyLjM3ODkxLDcuNjcxODggbCAtMC4zMzIwNCw0LjYyMTA5IC0yMS4xMTMyOCwwLjI5MTAyIC0yMS4xMTUyMywwLjI4OTA2IHYgLTYuNDM1NTUgeiIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzllYWFiODtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2UwMWEwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDExOS41ODM5NCw2NjYuNjg1MzkgYyAwLC0wLjMxMjE5IDcuOTk3NzEsLTE0LjAyMjgzIDE3Ljc3MjYsLTMwLjQ2ODEgbCAxNy43NzI4LC0yOS45MDA0OSBoIDcuMjMwODggNy4yMzA3NCBsIDE3Ljc1ODc4LDI5Ljc5NzA4IGMgOS43NjczMiwxNi4zODgzOSAxNy43NTg3MiwzMC4wOTkwMSAxNy43NTg3MiwzMC40NjgwNyAwLDAuMzY5MDUgLTMuNTg1MDEsMC42NzEwMyAtNy45NjY2MiwwLjY3MTAzIGggLTcuOTY2NjEgbCAtMy4wNDUwMSwtNC41NDM1IGMgLTEuNjc0OCwtMi40OTg5MyAtNy41Mjg2MSwtMTIuMTIwNCAtMTMuMDA4NjcsLTIxLjM4MTExIC01LjQ4MDE0LC05LjI2MDY4IC0xMC4zMzU5NSwtMTYuODM3NjEgLTEwLjc5MDgzLC0xNi44Mzc2MSAtMC40NTUwMSwwIC02LjQ4NTM3LDkuNjIxNDkgLTEzLjQwMDksMjEuMzgxMSBsIC0xMi41NzM2LDIxLjM4MTEyIGggLTguMzg2MiBjIC00LjYxMjMxLDAgLTguMzg2MDgsLTAuMjU1NDIgLTguMzg2MDgsLTAuNTY3NTkgeiIKICAgICAgICAgaWQ9InBhdGg4IiAvPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0iZmlsbDojOWVhYWI4O2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZTAxYTAwO3N0cm9rZS13aWR0aDoxLjA2OTA2O3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgIGQ9Ik0gMTQuODE2NDA5LDYzNi43ODQ5MSBWIDYwNi4zMTY4IGggNy4yNDEzMDUgNy4yNDEzMDUgbCAxMy4zMzU3ODEsMTUuMDM1NTkgMTMuMzM1ODQ3LDE1LjAzNTU3IDMuMTEwNTkyLC0zLjU0MzI1IGMgMS43MTA4MDksLTEuOTQ4NzQgNy43MjUzNTIsLTguNzE0MDggMTMuMzY1NDgyLC0xNS4wMzQwNCBsIDEwLjI1NDc1NSwtMTEuNDkwODMgNy4yMTYxMjMsLTEwZS00IDcuMjE2MTg5LC0wLjAwMiB2IDMwLjQ2ODA4IDMwLjQ2ODExIGggLTYuOTQ4ODgzIC02Ljk0ODg4NCBsIC0wLjA5NzI3LC0xMi41NjEzOCBjIC0wLjEzMzI4OCwtMTcuMjg3NTIgLTAuNDMwMjk0LC0yNC42Nzg5MyAtMS4wMTI2MTIsLTI1LjIwMTkgLTAuMjcxNzU4LC0wLjI0NDEzIC01Ljc2NjE3NCw1LjI2NjI5IC0xMi4yMDk2MTYsMTIuMjQ1MzggLTguMTUyNTg5LDguODMwMzkgLTEyLjQzMjUzNiwxMi42ODkzOCAtMTQuMDczNTc4LDEyLjY4OTM4IC0xLjY0MjU3MSwwIC01Ljg2MDQ1OSwtMy44MTExMSAtMTMuOTAyMDIsLTEyLjU2MTQgLTYuMzQ5MDksLTYuOTA4NzYgLTExLjkyMjU3NiwtMTIuNzIxNzcgLTEyLjM4NTQ5MywtMTIuOTE3NzUgLTAuNDYyOTg1LC0wLjE5NjAxIC0wLjg0MTcxNyw4LjM0MzA4IC0wLjg0MTcxNywxOC45NzU3MyB2IDE5LjMzMjA5IEggMjEuNzY0ODkzIDE0LjgxNjAxIFoiCiAgICAgICAgIGlkPSJwYXRoNyIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6I2UwMWEwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2ZmMDAwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDUxMi45OTY2NSw3MDQuNjY5OTIgYyAwLC0yLjEyMDcgMC43MTI2MSwtMi4xMzgwNCA4Ny42NjI1NiwtMi4xMzgwNCA4Ni45NDk4NywwIDg3LjY2MjYyLDAuMDE3MyA4Ny42NjI2MiwyLjEzODA0IDAsMi4xMjA3NyAtMC43MTI3NSwyLjEzODEyIC04Ny42NjI2MiwyLjEzODEyIC04Ni45NDk5NSwwIC04Ny42NjI1NiwtMC4wMTczIC04Ny42NjI1NiwtMi4xMzgxMiB6IgogICAgICAgICBpZD0icGF0aDYiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiNlMDFhMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNmZjAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAxNC44MTY0MDksNzA0LjY2OTkyIGMgMCwtMi4xMjA3IDAuNzEyNjgyLC0yLjEzODA0IDg3LjY2MjYzMSwtMi4xMzgwNCA4Ni45NDk4OCwwIDg3LjY2MjYzLDAuMDE3MyA4Ny42NjI2MywyLjEzODA0IDAsMi4xMjA3NyAtMC43MTI3NSwyLjEzODEyIC04Ny42NjI2MywyLjEzODEyIC04Ni45NDk5NDksMCAtODcuNjYyNjMyLC0wLjAxNzMgLTg3LjY2MjYzMSwtMi4xMzgxMiB6IgogICAgICAgICBpZD0icGF0aDUiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiNlMDFhMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNmZjAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAyOTcuMDQ3MjQsNzA0LjEzNTQ1IHYgLTE2LjU3MDQzIGggMTcuNDU0MjcgMTcuNDU0MjcgbCAtMC40NjYxNywzLjE3NjExIC0wLjQ2NjExLDMuMTc2MSAtMTMuNTEzNzIsMC4yOTgzNCAtMTMuNTEzNjUsMC4yOTgzMyAtMC4zMzgzNCwyLjkzOTkgLTAuMzM4MjYsMi45Mzk5IGggMTEuMjk2MDcgMTEuMjk2MiB2IDMuMTY5NzkgMy4xNjk4IGwgLTEwLjk1Nzg3LDAuMzA0NjQgLTEwLjk1NzgsMC4zMDQ2NSB2IDMuMjA3MiAzLjIwNzE0IGwgMTQuMTc5NTYsMC4yOTg0IDE0LjE3OTYyLDAuMjk4MzQgLTAuMjQyMDYsMy4xNzYxIC0wLjI0MTk5LDMuMTc2MDQgaCAtMTcuNDEyMDcgLTE3LjQxMTk1IHoiCiAgICAgICAgIGlkPSJwYXRoNCIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6I2UwMWEwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2ZmMDAwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDQ3NS4zNjE3LDcyMC45NDQ5NCBjIC0yLjc0OTEzLC0wLjM1MzQ5IC0yLjkwNjE0LC0wLjY5NTU0IC0zLjIwNzIsLTYuOTg3MDMgbCAtMC4zMTY1NCwtNi42MTUzMyAtMTAuOTU3ODcsLTAuMzA0NjUgLTEwLjk1NzgxLC0wLjMwNDY0IHYgNi45ODYyMiA2Ljk4NjI5IGggLTMuNzQxNjggLTMuNzQxNjggdiAtMTYuNTcwMzUgLTE2LjU3MDQzIGggMy43NDE2OCAzLjc0MTY4IHYgNi40MTQ0MSA2LjQxNDI3IGggMTEuMjI1MTEgMTEuMjI1MTEgdiAtNi40MTQyNyBjIDAsLTYuMzkwNzYgMC4wMTIsLTYuNDE0NDEgMy4xNTQ4NSwtNi40MTQ0MSBoIDMuMTU0OTEgbCAwLjMxOTUzLDE2LjY3NDU0IGMgMC4xNzU3NCw5LjE3MTA1IDAuMDc5MSwxNi43NjUxOCAtMC4yMTQ5NSwxNi44NzU4MSAtMC4yOTQwMiwwLjExMDY5IC0xLjgzNTM5LDAuMDMzOSAtMy40MjUxNCwtMC4xNzA0MyB6IgogICAgICAgICBpZD0icGF0aDMiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiNlMDFhMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNmZjAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAzNzMuNDg0ODMsNzE5LjYzNjcxIC0zLjIwNzIsLTEuNjAzNTYgLTAuMywtMTMuMDYzMyBjIC0wLjQxMDc2LC0xNy44OTIzMyAtMC45NTgxOSwtMTcuNDA0ODMgMTkuNTQzMDEsLTE3LjQwNDgzIGggMTUuNTAxMjcgdiAzLjE3NjE3IDMuMTc2MTEgbCAtMTQuMTY0OTQsMC4yOTgzNCAtMTQuMTY1LDAuMjk4MjYgLTAuMzIxNzksNy40NjEwNCBjIC0wLjU1ODY3LDEyLjk1OTcxIC0xLjMzMDM1LDEyLjMxNjUyIDE0Ljc3NDM2LDEyLjMxNjUyIGggMTMuODc3MzcgdiAzLjE0Nzc0IDMuMTQ3NzMgbCAtMTQuMTY0OTQsMC4zMjY3MSBjIC0xMC45NjM3MSwwLjI1MjgyIC0xNC44ODk5OCwtMC4wMzU5IC0xNy4zNzIxNCwtMS4yNzY5MyB6IgogICAgICAgICBpZD0icGF0aDIiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIHN0eWxlPSJmaWxsOiNlMDFhMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNmZjAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgICAgZD0ibSAyNDEuMTg5MDcsNzIwLjkwMjAxIC0yLjkzOTksLTAuMzM4MjYgdiAtMTMuMjkyMiAtMTMuMjkyMTIgaCAtNy40ODMzNiAtNy40ODM0MyB2IC0zLjIwNzIxIC0zLjIwNzIgaCAxNy45ODg4MiAxNy45ODg3NCBsIC0wLjQ3MDY5LDMuMjA3MiBjIC0wLjQ2NjQ0LDMuMTc3ODQgLTAuNTMyODgsMy4yMDcyMSAtNy4yNjcyMiwzLjIwNzIxIGggLTYuNzk2NTMgbCAtMC4yOTgyNiwxMy42MzAzOSAtMC4yOTgyNywxMy42MzA1MyB6IgogICAgICAgICBpZD0icGF0aDEiIC8+CiAgICA8L2c+PC9zdmc+" style="height:14px;width:auto;flex-shrink:0;display:block" alt="MarcanoTech"></div>
-      <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.9</span></div>
+      <div class="logo-sub">Workshop Dashboard <span id="logo-version" style="background:rgba(232,255,71,0.15);color:var(--ferrari);font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px">v1.9</span></div>
     </div>
   </div>
   <nav class="nav">
@@ -686,7 +686,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </div>
       <div>
         <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.2">MarcanoTech 3D</div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--accent);padding:1px 5px;border-radius:3px">v1.9</span></div>
+        <div style="font-size:9px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard <span style="background:rgba(232,255,71,0.15);color:var(--ferrari);padding:1px 5px;border-radius:3px">v1.9</span></div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -707,7 +707,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div id="topbar-timer" onclick="showSection('timer',null)" style="display:none;align-items:center;gap:5px;padding:5px 10px;background:rgba(249,115,22,0.12);border:0.5px solid rgba(249,115,22,0.3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--ferrari);cursor:pointer;animation:pulse 2s infinite"></div>
       <button class="btn btn-sm" title="Nueva cotización" onclick="openModal('modal-cotizacion-web')" style="background:rgba(37,211,102,0.1);color:#25D366;border:0.5px solid rgba(37,211,102,0.25)">💬 Cotización</button>
       <button class="btn btn-ghost btn-sm" id="topbar-add-btn" onclick="openAddModal()">+ Agregar</button>
-      <button class="btn btn-accent btn-sm" onclick="showSection('estadisticas',null)">Ver estadísticas</button>
+      <button class="btn btn-sm" style="background:#f97316;color:#fff;border:none" onclick="showSection('estadisticas',null)">Ver estadísticas</button>
       <div id="sync-status" style="display:flex;align-items:center;gap:5px;padding:6px 10px;background:var(--bg3);border-radius:8px;border:0.5px solid var(--border);cursor:help">
         <span style="width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block"></span>
         <span style="font-size:10px;font-family:var(--mono);color:var(--text3)">Local</span>
@@ -1272,7 +1272,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">Workshop Dashboard</div>
         </div>
         <div style="margin-left:auto;text-align:right">
-          <div style="font-size:28px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="version-badge-main">v1.7</div>
+          <div style="font-size:28px;font-weight:700;color:var(--ferrari);font-family:var(--mono)" id="version-badge-main">v1.7</div>
           <div style="font-size:10px;color:var(--text3);font-family:var(--mono)" id="version-fecha-main">2026-04-21</div>
         </div>
       </div>
@@ -1342,7 +1342,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="grid-2">
       <div class="panel" style="text-align:center;padding:32px 24px">
         <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">TIEMPO TRANSCURRIDO</div>
-        <div id="timer-display" style="font-size:56px;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:2px;margin-bottom:4px">00:00:00</div>
+        <div id="timer-display" style="font-size:56px;font-weight:700;color:var(--ferrari);font-family:var(--mono);letter-spacing:2px;margin-bottom:4px">00:00:00</div>
         <div id="timer-pieza-label" style="font-size:13px;color:var(--text3);margin-bottom:24px">Sin trabajo activo</div>
         <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px">
           <button class="btn btn-accent" id="btn-timer-start" onclick="timerStart()">▶ Iniciar</button>
@@ -1400,7 +1400,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div style="margin-top:8px">
             <div style="display:flex;justify-content:space-between;margin-bottom:6px">
               <span style="font-size:12px;color:var(--text2)">Completado</span>
-              <span style="font-size:12px;font-family:var(--mono);color:var(--accent)" id="timer-pct">0%</span>
+              <span style="font-size:12px;font-family:var(--mono);color:var(--ferrari)" id="timer-pct">0%</span>
             </div>
             <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
               <div id="timer-progress-bar" style="height:100%;width:0%;background:var(--accent);border-radius:4px;transition:width 1s"></div>
@@ -1464,9 +1464,19 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   <!-- ── GRÁFICOS ── -->
   <div class="section" id="sec-graficos">
     <div class="section-row" style="margin-top:0">
-      <div class="section-title">Gráficos & consumo de filamento</div>
+      <div class="section-title">Consumo de Material</div>
     </div>
     <div class="stats-row" id="graficos-stats" style="margin-bottom:20px"></div>
+
+    <!-- Historial de consumo desde timer -->
+    <div class="panel" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="panel-title" style="margin:0">Historial de consumo (impresiones registradas)</div>
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">Desde Tiempo de Impresión</span>
+      </div>
+      <div id="consumo-historial-list"></div>
+    </div>
+
     <div class="grid-2" style="margin-bottom:16px">
       <div class="panel">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
@@ -1858,7 +1868,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
 
     <!-- Tiempo impresión + Gramos filamento -->
-    <div style="background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
       <div style="font-size:11px;color:var(--navy-l, var(--accent));font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🖨️ Datos de fabricación</div>
       <div class="form-row" style="margin-bottom:10px">
         <div class="form-group" style="margin-bottom:0">
@@ -1931,7 +1941,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
         <div class="form-group" style="margin:0">
           <label class="form-label">Código ID</label>
           <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="imp-codigo-display">IMP-001</span>
+            <span style="font-family:var(--mono);font-size:12px;color:var(--ferrari);font-weight:700" id="imp-codigo-display">IMP-001</span>
             <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
           </div>
           <input type="hidden" id="imp-codigo">
@@ -2027,9 +2037,9 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
 
     <!-- STL list from project -->
-    <div id="cola-stl-section" style="display:none;background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+    <div id="cola-stl-section" style="display:none;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:700;color:var(--accent);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase">
+        <div style="font-size:11px;font-weight:700;color:var(--ferrari);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase">
           🖨️ Archivos STL del proyecto
         </div>
         <div style="display:flex;align-items:center;gap:6px">
@@ -2146,7 +2156,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     </div>
 
     <!-- MATERIALES RECOMENDADOS -->
-    <div style="background:rgba(74,127,212,0.06);border:1px solid rgba(74,127,212,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div>
           <div style="font-size:12px;font-weight:700;color:var(--text)">Materiales recomendados</div>
@@ -2250,7 +2260,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       </div>
       <div class="form-group">
         <label class="form-label">Total ($)</label>
-        <input class="form-input" id="venta-total" readonly style="color:var(--accent);font-weight:700" placeholder="0.00">
+        <input class="form-input" id="venta-total" readonly style="color:var(--ferrari);font-weight:700" placeholder="0.00">
       </div>
     </div>
     <!-- CLIENTE: toggle manual / existente -->
@@ -2318,7 +2328,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div style="flex:1">
         <label class="form-label">Código RC</label>
         <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
-          <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="comp-codigo-display">ELC-0001</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ferrari);font-weight:700" id="comp-codigo-display">ELC-0001</span>
           <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
         </div>
         <input type="hidden" id="comp-codigo-val">
@@ -2441,7 +2451,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div style="flex:1">
         <label class="form-label">Código de referencia</label>
         <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
-          <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600" id="acc-codigo-display">MT3-0001</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ferrari);font-weight:600" id="acc-codigo-display">MT3-0001</span>
           <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
         </div>
         <input type="hidden" id="acc-codigo">
@@ -2723,7 +2733,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Número</label>
         <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
-          <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="presup-num-display">PRES-0001</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ferrari);font-weight:700" id="presup-num-display">PRES-0001</span>
           <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
         </div>
         <input type="hidden" id="presup-numero">
@@ -2786,7 +2796,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:0.5px solid var(--border)">
         <span style="font-size:14px;font-weight:700;color:var(--text)">TOTAL</span>
         <div style="text-align:right">
-          <div style="font-size:20px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="presup-total-display">$0.00</div>
+          <div style="font-size:20px;font-weight:700;color:var(--ferrari);font-family:var(--mono)" id="presup-total-display">$0.00</div>
           <div style="font-size:11px;color:var(--text3);font-family:var(--mono)" id="presup-total-ars"></div>
         </div>
       </div>
@@ -2924,7 +2934,49 @@ select.form-input option{background:var(--bg3);color:var(--text);}
   </div>
 </div>
 
-<!-- Cliente / Proveedor -->
+<!-- Timer edit -->
+<div class="modal-overlay" id="modal-timer-edit">
+  <div class="modal" style="width:440px">
+    <div class="modal-title">Editar registro de impresión</div>
+    <input type="hidden" id="tedit-id">
+    <div class="form-group">
+      <label class="form-label">Nombre / Trabajo</label>
+      <input class="form-input" id="tedit-nombre" placeholder="ej: Chasis Touring v2">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Tiempo real (hh:mm:ss)</label>
+        <input class="form-input" id="tedit-tiempo" placeholder="ej: 03:25:00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" id="tedit-fecha" placeholder="ej: 25/04/2026">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Material utilizado</label>
+      <select class="form-input" id="tedit-material">
+        <option value="">Sin material</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Gramos consumidos (g)</label>
+        <input class="form-input" type="number" id="tedit-gramos" placeholder="ej: 85" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Impresora</label>
+        <input class="form-input" id="tedit-impresora" placeholder="ej: Bambu P2S">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-timer-edit')">Cancelar</button>
+      <button class="btn btn-accent" onclick="saveTimerEntry()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cliente / Proveedor (modal-cliente) -->
 <div class="modal-overlay" id="modal-cliente">
   <div class="modal" style="width:520px;max-height:92vh;overflow-y:auto">
     <div class="modal-title" id="cliente-modal-title">Nuevo Cliente / Proveedor</div>
@@ -2935,7 +2987,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
       <div class="form-group">
         <label class="form-label">Código</label>
         <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:9px 12px">
-          <span style="font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700" id="cliente-codigo-display">CLI-0001</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ferrari);font-weight:700" id="cliente-codigo-display">CLI-0001</span>
           <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">(auto)</span>
         </div>
         <input type="hidden" id="cliente-codigo">
@@ -3133,10 +3185,17 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v2.4',
+  version: 'v2.5',
   fecha: '2026-04-26',
   nombre: 'Marcano Tech',
   changelog: [
+    { v:'v2.5', fecha:'2026-04-26', cambios:[
+      'Color: todo el azul (#4a7fd4, --blue, --accent) cambiado a naranja #f97316',
+      'Timer historial: muestra tiempo, material, gramos, proyecto e impresora',
+      'Timer historial: botón editar para corregir registros',
+      'Consumo de Material: historial de consumo desde registros de impresión',
+      'Consumo de Material: totales por material y tabla detallada',
+    ]},
     { v:'v2.4', fecha:'2026-04-26', cambios:[
       'Timer: selector de material directo para descontar stock al finalizar',
       'Timer: descuento de gramos persistido en Firebase y reflejado en todas las secciones',
@@ -4097,6 +4156,48 @@ function resetImgPreview(previewId, hiddenId){
 // GRAFICOS / CONSUMO DE MATERIAL
 // ════════════════════════════════
 function renderGraficos(){
+  // ── Consumo historial from timer ──
+  const consumoEl = document.getElementById('consumo-historial-list');
+  if(consumoEl){
+    const entries = DB.timerHistorial.filter(h=>h.gramosUsados>0);
+    if(!entries.length){
+      consumoEl.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">Sin registros de consumo. Finaliza impresiones con material y gramos para ver aquí.</div>`;
+    } else {
+      const totalG = entries.reduce((a,h)=>a+(h.gramosUsados||0),0);
+      consumoEl.innerHTML = `
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <div class="stat-card" style="flex:1"><div class="stat-label">Total consumido</div><div class="stat-value" style="color:var(--ferrari)">${totalG}g</div><div class="stat-delta neutral">${(totalG/1000).toFixed(2)} kg</div></div>
+          <div class="stat-card" style="flex:1"><div class="stat-label">Impresiones</div><div class="stat-value">${entries.length}</div><div class="stat-delta neutral">con material</div></div>
+          <div class="stat-card" style="flex:1"><div class="stat-label">Promedio</div><div class="stat-value">${Math.round(totalG/entries.length)}g</div><div class="stat-delta neutral">por impresión</div></div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Fecha</th><th>Trabajo</th><th>Material</th><th>Gramos</th><th>Impresora</th><th>Tiempo</th></tr></thead>
+          <tbody>${entries.map(h=>`<tr>
+            <td style="font-family:var(--mono);font-size:11px">${h.fecha||'—'}</td>
+            <td style="font-size:12px;font-weight:600">${h.nombre||'—'}</td>
+            <td style="font-size:12px;color:var(--ferrari)">${h.materialNombre||'—'}</td>
+            <td style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--amber)">${h.gramosUsados}g</td>
+            <td style="font-size:11px;color:var(--text3)">${h.impresora||'—'}</td>
+            <td style="font-family:var(--mono);font-size:11px">${h.tiempo||'—'}</td>
+          </tr>`).join('')}</tbody>
+        </table>`;
+
+      // Also show per-material totals
+      const byMat = {};
+      entries.forEach(h=>{
+        const k = h.materialNombre||'Sin material';
+        byMat[k] = (byMat[k]||0) + (h.gramosUsados||0);
+      });
+      const matSummary = Object.entries(byMat).sort((a,b)=>b[1]-a[1]).map(([name,g])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)">
+          <span style="font-size:12px;color:var(--text)">${name}</span>
+          <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ferrari)">${g}g</span>
+        </div>`).join('');
+      const matEl = document.getElementById('graf-materiales');
+      if(matEl) matEl.innerHTML = matSummary || '<div style="color:var(--text3);font-size:12px">Sin datos</div>';
+    }
+  }
+
   const stats = document.getElementById('graficos-stats');
   if(stats){
     const totalKg = DB.materiales.reduce((a,m)=>a+(m.total||0),0)/1000;
@@ -4188,13 +4289,24 @@ function renderTimerHistorial(){
     el.innerHTML='<div style="font-size:12px;color:var(--text3);font-family:var(--mono);padding:12px 0">Sin registros aún</div>'; return;
   }
   el.innerHTML = DB.timerHistorial.slice(0,20).map(h=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:12px;gap:8px">
-      <div style="flex:1;min-width:0">
-        <div style="color:var(--text);font-weight:600">${h.nombre||'Sin nombre'}</div>
-        <div style="color:var(--text3);font-size:10px;font-family:var(--mono)">${h.impresora?'🖨️ '+h.impresora+' · ':''}${h.fecha||''}</div>
+    <div style="padding:10px 0;border-bottom:0.5px solid var(--border)">
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="color:var(--text);font-weight:600;font-size:13px">${h.nombre||'Sin nombre'}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+            <span style="font-family:var(--mono);color:var(--ferrari);font-weight:700;font-size:14px">${h.tiempo||'—'}</span>
+            ${h.impresora?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">🖨️ ${h.impresora}</span>`:''}
+            ${h.materialNombre?`<span style="font-size:10px;color:var(--ferrari);font-family:var(--mono)">⬡ ${h.materialNombre}</span>`:''}
+            ${h.gramosUsados>0?`<span style="font-size:10px;color:var(--amber);font-family:var(--mono);font-weight:700">🔴 ${h.gramosUsados}g</span>`:''}
+            ${h.proyectoNombre?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">📁 ${h.proyectoNombre}</span>`:''}
+            <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">📅 ${h.fecha||'—'}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <button onclick="editTimerEntry('${h.id}')" style="background:rgba(249,115,22,0.08);border:none;border-radius:5px;padding:3px 7px;color:var(--ferrari);cursor:pointer;font-size:11px">✏️</button>
+          <button onclick="deleteTimerEntry('${h.id}')" style="background:rgba(249,115,22,0.08);border:none;border-radius:5px;padding:3px 7px;color:var(--ferrari);cursor:pointer;font-size:11px">✕</button>
+        </div>
       </div>
-      <span style="font-family:var(--mono);color:var(--accent);font-weight:700;flex-shrink:0">${h.tiempo||'—'}</span>
-      <button onclick="deleteTimerEntry('${h.id}')" style="background:rgba(249,115,22,0.1);border:none;border-radius:5px;padding:3px 7px;color:var(--ferrari);cursor:pointer;font-size:11px;flex-shrink:0">✕</button>
     </div>`).join('');
 }
 
@@ -4277,6 +4389,48 @@ function timerReset(){
   document.getElementById('btn-timer-start').style.display='';
   document.getElementById('btn-timer-pause').style.display='none';
   document.getElementById('btn-timer-finish').style.display='none';
+}
+
+function editTimerEntry(id){
+  const h = DB.timerHistorial.find(x=>x.id===id); if(!h) return;
+  document.getElementById('tedit-id').value = id;
+  document.getElementById('tedit-nombre').value = h.nombre||'';
+  document.getElementById('tedit-tiempo').value = h.tiempo||'';
+  document.getElementById('tedit-gramos').value = h.gramosUsados||'';
+  document.getElementById('tedit-impresora').value = h.impresora||'';
+  document.getElementById('tedit-fecha').value = h.fecha||'';
+  // Populate material select
+  const sel = document.getElementById('tedit-material');
+  if(sel){
+    sel.innerHTML = '<option value="">Sin material</option>' +
+      DB.materiales.map(m=>`<option value="${m.id}" ${h.materialId===m.id?'selected':''}>${m.tipo} ${m.color}</option>`).join('');
+    if(h.materialNombre){
+      const opt = [...sel.options].find(o=>o.text.includes(h.materialNombre.split(' ')[0]));
+      if(opt) opt.selected=true;
+    }
+  }
+  openModal('modal-timer-edit');
+}
+
+function saveTimerEntry(){
+  const id = document.getElementById('tedit-id').value;
+  const idx = DB.timerHistorial.findIndex(x=>x.id===id); if(idx<0) return;
+  const matSel = document.getElementById('tedit-material');
+  const mat = DB.materiales.find(m=>m.id===matSel?.value);
+  DB.timerHistorial[idx] = {
+    ...DB.timerHistorial[idx],
+    nombre: document.getElementById('tedit-nombre').value,
+    tiempo: document.getElementById('tedit-tiempo').value,
+    gramosUsados: parseInt(document.getElementById('tedit-gramos').value)||0,
+    impresora: document.getElementById('tedit-impresora').value,
+    fecha: document.getElementById('tedit-fecha').value,
+    materialId: mat?.id||'',
+    materialNombre: mat ? `${mat.tipo} ${mat.color}` : DB.timerHistorial[idx].materialNombre||'',
+  };
+  persist(KEYS.timerHistorial);
+  closeModal('modal-timer-edit');
+  renderTimerHistorial();
+  showToast('Registro actualizado ✓');
 }
 
 function deleteTimerEntry(id){
@@ -4422,7 +4576,7 @@ function renderMantGuide(){
 
 
 const PROY_COLORES = [
-  {hex:'#38d9a9',label:'Teal'},     {hex:'#4a7fd4',label:'Azul claro'},
+  {hex:'#38d9a9',label:'Teal'},     {hex:'#f97316',label:'Azul claro'},
   {hex:'#f97316',label:'Ferrari'},  {hex:'#fbbf24',label:'Ámbar'},
   {hex:'#a78bfa',label:'Violeta'},  {hex:'#f97316',label:'Naranja'},
   {hex:'#34d399',label:'Verde'},    {hex:'#f472b6',label:'Rosa'},
@@ -5145,7 +5299,7 @@ function renderProductos(){
   }
   const grid=document.getElementById('productos-grid'); if(!grid) return;
   if(!DB.productos.length){
-    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="openModal('modal-producto')">Sin productos — <span style="color:var(--accent)">+ Agregar</span></div></td></tr>`;
+    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="openModal('modal-producto')">Sin productos — <span style="color:var(--ferrari)">+ Agregar</span></div></td></tr>`;
     return;
   }
   const stColors2={ok:'var(--teal)',bajo:'var(--amber)',vacio:'var(--coral)'};
@@ -5155,7 +5309,7 @@ function renderProductos(){
     const arsStr = p.precio ? (window._dolar?`$${Math.round(parseFloat(p.precio)*window._dolar).toLocaleString('es-AR')} ARS / `:'') + `US$${parseFloat(p.precio).toFixed(2)}` : '—';
     const fabInfo = [p.tiempo?`⏱ ${p.tiempo}`:'', p.gramos?`${p.gramos}g`:''].filter(Boolean).join(' · ');
     return `<tr>
-      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${p.sku||'—'}</span></td>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--ferrari);font-weight:700">${p.sku||'—'}</span></td>
       <td>
         <div style="display:flex;align-items:center;gap:8px">
           ${p.imagen?`<img src="${p.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">${p.emoji||'📦'}</div>`}
@@ -5267,7 +5421,7 @@ function renderImpresoras(){
         <div class="printer-card-v2-img">
           ${imgContent}
           <div class="printer-card-v2-imginfo">
-            <div style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--accent);margin-bottom:3px">${i.codigo||'—'}</div>
+            <div style="font-size:10px;font-family:var(--mono);font-weight:700;color:var(--ferrari);margin-bottom:3px">${i.codigo||'—'}</div>
             <div style="font-size:14px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;text-shadow:0 1px 4px rgba(0,0,0,0.6)">${i.nombre}</div>
             <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:var(--mono);background:${sc}44;color:${sc};border:0.5px solid ${sc}88">${sl}</span>
           </div>
@@ -5601,7 +5755,7 @@ function renderPiezas(){
         ${p.imagen?`<img src="${p.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px">🖨️</div>`}
         <div>
           <strong>${p.nombre}</strong>
-          ${p.codigo?`<div style="font-size:10px;color:var(--accent);font-family:var(--mono)">${p.codigo}</div>`:''}
+          ${p.codigo?`<div style="font-size:10px;color:var(--ferrari);font-family:var(--mono)">${p.codigo}</div>`:''}
         </div>
       </div>
     </td>
@@ -6272,7 +6426,7 @@ function renderMateriales(){
       <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px">
         <div style="height:100%;width:${pct}%;background:${c};border-radius:3px"></div>
       </div>
-      ${arsStr?`<div style="font-size:12px;font-weight:700;color:var(--accent);font-family:var(--mono)">${arsStr}</div>`:''}
+      ${arsStr?`<div style="font-size:12px;font-weight:700;color:var(--ferrari);font-family:var(--mono)">${arsStr}</div>`:''}
       ${m.url?`<a href="${m.url}" target="_blank" style="font-size:10px;color:var(--blue);font-family:var(--mono);text-decoration:none;display:block;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 Ver compra</a>`:''}
     </div>`;
   }).join('')+`<div class="add-card" onclick="openMatModal()" style="min-height:120px">
@@ -6502,14 +6656,14 @@ function renderPresupuestos(filter){
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-            <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent)">${p.numero}</span>
+            <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ferrari)">${p.numero}</span>
             <span class="badge" style="background:${sc}22;color:${sc}">${stIcons[p.estado]||''} ${p.estado}</span>
           </div>
           <div style="font-size:14px;font-weight:700;color:var(--text)">${p.destinatario}</div>
           <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${p.negocio||''} · ${p.fecha||'—'}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:20px;font-weight:700;color:var(--accent);font-family:var(--mono)">$${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}</div>
+          <div style="font-size:20px;font-weight:700;color:var(--ferrari);font-family:var(--mono)">$${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}</div>
           <div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${arsStr}${p.items?` · ${p.items.length} ítems`:''}</div>
         </div>
       </div>
@@ -6579,7 +6733,7 @@ function renderPresupItems(){
           <input class="form-input" type="number" value="${item.precio||''}" placeholder="0.00" step="0.01"
             oninput="_presupItems[${i}].precio=parseFloat(this.value)||0;updatePresupTotal()"></div>
         <div style="flex:2"><label class="form-label">Subtotal</label>
-          <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13px;color:var(--accent)">
+          <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13px;color:var(--ferrari)">
             $${((item.cant||1)*(item.precio||0)).toFixed(2)}</div></div>
         ${_presupItems.length>1?`<button onclick="removePresupItem(${i})" style="background:rgba(255,107,91,0.1);border:none;border-radius:8px;padding:9px 10px;color:var(--coral);cursor:pointer">✕</button>`:''}
       </div>
@@ -6657,7 +6811,7 @@ function renderAccesorios(){
   if(!tbody) return;
   if(!list.length){
     tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text3)">
-      <div style="cursor:pointer" onclick="openAccesorioModal()">Sin accesorios — <span style="color:var(--accent)">+ Agregar</span></div></td></tr>`;
+      <div style="cursor:pointer" onclick="openAccesorioModal()">Sin accesorios — <span style="color:var(--ferrari)">+ Agregar</span></div></td></tr>`;
     return;
   }
   const stColors={ok:'var(--teal)',bajo:'var(--amber)',vacio:'var(--coral)'};
@@ -6667,7 +6821,7 @@ function renderAccesorios(){
     const sc = stColors[st];
     const arsStr = a.precioARS ? `$${parseFloat(a.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : a.precio ? `US$${parseFloat(a.precio||0).toFixed(2)}` : '—';
     return `<tr>
-      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${a.codigo||'—'}</span></td>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--ferrari);font-weight:700">${a.codigo||'—'}</span></td>
       <td style="max-width:260px">
         <div style="display:flex;align-items:center;gap:8px">
           ${a.imagen?`<img src="${a.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>`}
@@ -6710,7 +6864,7 @@ function renderAcercaDe(){
         onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
         <div style="display:flex;align-items:center;gap:10px">
           <span style="font-size:15px;font-weight:700;font-family:var(--mono);color:${i===0?'var(--accent)':'var(--text)'}">${ver.v}</span>
-          ${i===0?`<span style="background:rgba(232,255,71,0.15);color:var(--accent);font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-weight:700">ACTUAL</span>`:''}
+          ${i===0?`<span style="background:rgba(232,255,71,0.15);color:var(--ferrari);font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-weight:700">ACTUAL</span>`:''}
         </div>
         <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${ver.fecha}</span>
       </div>
@@ -6852,7 +7006,7 @@ function renderVentas(){
       <td><strong>${v.producto}</strong>${v.notas?`<div style="font-size:10px;color:var(--text3)">${v.notas}</div>`:''}</td>
       <td class="mono">${v.cantidad}</td>
       <td class="mono">$${parseFloat(v.precio||0).toFixed(2)}</td>
-      <td class="mono" style="color:var(--accent);font-weight:700">$${parseFloat(v.total||0).toFixed(2)}</td>
+      <td class="mono" style="color:var(--ferrari);font-weight:700">$${parseFloat(v.total||0).toFixed(2)}</td>
       <td>${v.cliente||'—'}<div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${v.canal||''}</div></td>
       <td><span class="badge" style="background:${st.c}22;color:${st.c}">${st.l}</span></td>
       <td>
@@ -6955,7 +7109,7 @@ function renderComponentes(filter){
   const list = _f==='todos'?DB.componentes:DB.componentes.filter(c=>c.categoria===_f);
   const grid = document.getElementById('componentes-grid'); if(!grid) return;
   if(!list.length){
-    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="resetComponenteForm();openModal('modal-componente')">Sin componentes — <span style="color:var(--accent)">+ Agregar</span></div></td></tr>`;
+    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="resetComponenteForm();openModal('modal-componente')">Sin componentes — <span style="color:var(--ferrari)">+ Agregar</span></div></td></tr>`;
     return;
   }
   const stColors={disponible:'var(--teal)',instalado:'var(--blue)',dañado:'var(--coral)',pedido:'var(--amber)'};
@@ -6963,7 +7117,7 @@ function renderComponentes(filter){
     const sc = stColors[c.estado]||'var(--text3)';
     const arsStr = c.precioARS ? `$${parseFloat(c.precioARS).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : c.precio ? `US$${parseFloat(c.precio||0).toFixed(2)}` : '—';
     return `<tr>
-      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${c.codigo||'—'}</span></td>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--ferrari);font-weight:700">${c.codigo||'—'}</span></td>
       <td style="max-width:260px">
         <div style="display:flex;align-items:center;gap:8px">
           ${c.imagen?`<img src="${c.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">⚙️</div>`}
@@ -7092,7 +7246,7 @@ function renderClientes(){
   function renderContactCard(c){
     const tc=tipoColors[c.tipo]||'var(--text3)';
     return `<tr>
-      <td><span style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${c.codigo||'—'}</span></td>
+      <td><span style="font-family:var(--mono);font-size:11px;color:var(--ferrari);font-weight:700">${c.codigo||'—'}</span></td>
       <td>
         <div style="font-size:13px;font-weight:700;color:var(--text)">${c.nombre}</div>
         ${c.empresa?`<div style="font-size:10px;color:var(--text3)">${c.empresa}</div>`:''}
@@ -7125,7 +7279,7 @@ function renderClientes(){
     </div>
     <div>
       <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px">
-        <span>🏢 Proveedores</span><span style="font-size:11px;font-family:var(--mono);background:rgba(74,127,212,0.1);color:var(--blue);padding:1px 7px;border-radius:10px">${proveedores.length}</span>
+        <span>🏢 Proveedores</span><span style="font-size:11px;font-family:var(--mono);background:rgba(249,115,22,0.1);color:var(--blue);padding:1px 7px;border-radius:10px">${proveedores.length}</span>
       </div>
       <div class="panel" style="overflow-x:auto;padding:0">
         <table class="data-table"><thead>${headers}</thead><tbody>
