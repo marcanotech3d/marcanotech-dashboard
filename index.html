@@ -1387,7 +1387,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
           <div class="form-group" style="margin-bottom:0">
             <label class="form-label">Gramos consumidos (g)</label>
             <div style="position:relative">
-              <input class="form-input" type="number" id="timer-estimado-gramos" placeholder="ej: 85" min="0" style="padding-right:28px">
+              <input class="form-input" type="number" id="timer-estimado-gramos" placeholder="ej: 6.78" min="0" step="0.01" style="padding-right:28px">
               <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text3);font-family:var(--mono)">g</span>
             </div>
             <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:2px">Se descuenta del stock al finalizar</div>
@@ -2962,7 +2962,7 @@ select.form-input option{background:var(--bg3);color:var(--text);}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Gramos consumidos (g)</label>
-        <input class="form-input" type="number" id="tedit-gramos" placeholder="ej: 85" min="0">
+        <input class="form-input" type="number" id="tedit-gramos" placeholder="ej: 6.78" min="0" step="0.01">
       </div>
       <div class="form-group">
         <label class="form-label">Impresora</label>
@@ -3185,10 +3185,15 @@ let fbRef = null;
 // APP VERSION
 // ════════════════════════════════
 const APP_VERSION = {
-  version: 'v2.5',
+  version: 'v2.6',
   fecha: '2026-04-26',
   nombre: 'Marcano Tech',
   changelog: [
+    { v:'v2.6', fecha:'2026-04-26', cambios:[
+      'Timer: gramos consumidos soporta decimales (ej: 6.78g)',
+      'Timer: todos los campos de gramos usan parseFloat y muestran 2 decimales',
+      'Stock: descuento de gramos preserva precisión decimal',
+    ]},
     { v:'v2.5', fecha:'2026-04-26', cambios:[
       'Color: todo el azul (#4a7fd4, --blue, --accent) cambiado a naranja #f97316',
       'Timer historial: muestra tiempo, material, gramos, proyecto e impresora',
@@ -4163,12 +4168,12 @@ function renderGraficos(){
     if(!entries.length){
       consumoEl.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">Sin registros de consumo. Finaliza impresiones con material y gramos para ver aquí.</div>`;
     } else {
-      const totalG = entries.reduce((a,h)=>a+(h.gramosUsados||0),0);
+      const totalG = entries.reduce((a,h)=>a+parseFloat(h.gramosUsados||0),0);
       consumoEl.innerHTML = `
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-          <div class="stat-card" style="flex:1"><div class="stat-label">Total consumido</div><div class="stat-value" style="color:var(--ferrari)">${totalG}g</div><div class="stat-delta neutral">${(totalG/1000).toFixed(2)} kg</div></div>
+          <div class="stat-card" style="flex:1"><div class="stat-label">Total consumido</div><div class="stat-value" style="color:var(--ferrari)">${totalG.toFixed(2)}g</div><div class="stat-delta neutral">${(totalG/1000).toFixed(2)} kg</div></div>
           <div class="stat-card" style="flex:1"><div class="stat-label">Impresiones</div><div class="stat-value">${entries.length}</div><div class="stat-delta neutral">con material</div></div>
-          <div class="stat-card" style="flex:1"><div class="stat-label">Promedio</div><div class="stat-value">${Math.round(totalG/entries.length)}g</div><div class="stat-delta neutral">por impresión</div></div>
+          <div class="stat-card" style="flex:1"><div class="stat-label">Promedio</div><div class="stat-value">${(totalG/entries.length).toFixed(2)}g</div><div class="stat-delta neutral">por impresión</div></div>
         </div>
         <table class="data-table">
           <thead><tr><th>Fecha</th><th>Trabajo</th><th>Material</th><th>Gramos</th><th>Impresora</th><th>Tiempo</th></tr></thead>
@@ -4176,7 +4181,7 @@ function renderGraficos(){
             <td style="font-family:var(--mono);font-size:11px">${h.fecha||'—'}</td>
             <td style="font-size:12px;font-weight:600">${h.nombre||'—'}</td>
             <td style="font-size:12px;color:var(--ferrari)">${h.materialNombre||'—'}</td>
-            <td style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--amber)">${h.gramosUsados}g</td>
+            <td style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--amber)">${parseFloat(h.gramosUsados||0).toFixed(2)}g</td>
             <td style="font-size:11px;color:var(--text3)">${h.impresora||'—'}</td>
             <td style="font-family:var(--mono);font-size:11px">${h.tiempo||'—'}</td>
           </tr>`).join('')}</tbody>
@@ -4191,7 +4196,7 @@ function renderGraficos(){
       const matSummary = Object.entries(byMat).sort((a,b)=>b[1]-a[1]).map(([name,g])=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)">
           <span style="font-size:12px;color:var(--text)">${name}</span>
-          <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ferrari)">${g}g</span>
+          <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ferrari)">${parseFloat(g||0).toFixed(2)}g</span>
         </div>`).join('');
       const matEl = document.getElementById('graf-materiales');
       if(matEl) matEl.innerHTML = matSummary || '<div style="color:var(--text3);font-size:12px">Sin datos</div>';
@@ -4297,7 +4302,7 @@ function renderTimerHistorial(){
             <span style="font-family:var(--mono);color:var(--ferrari);font-weight:700;font-size:14px">${h.tiempo||'—'}</span>
             ${h.impresora?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">🖨️ ${h.impresora}</span>`:''}
             ${h.materialNombre?`<span style="font-size:10px;color:var(--ferrari);font-family:var(--mono)">⬡ ${h.materialNombre}</span>`:''}
-            ${h.gramosUsados>0?`<span style="font-size:10px;color:var(--amber);font-family:var(--mono);font-weight:700">🔴 ${h.gramosUsados}g</span>`:''}
+            ${h.gramosUsados>0?`<span style="font-size:10px;color:var(--amber);font-family:var(--mono);font-weight:700">🔴 ${parseFloat(h.gramosUsados||0).toFixed(2)}g</span>`:''}
             ${h.proyectoNombre?`<span style="font-size:10px;color:var(--text3);font-family:var(--mono)">📁 ${h.proyectoNombre}</span>`:''}
             <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">📅 ${h.fecha||'—'}</span>
           </div>
@@ -4421,7 +4426,7 @@ function saveTimerEntry(){
     ...DB.timerHistorial[idx],
     nombre: document.getElementById('tedit-nombre').value,
     tiempo: document.getElementById('tedit-tiempo').value,
-    gramosUsados: parseInt(document.getElementById('tedit-gramos').value)||0,
+    gramosUsados: parseFloat(document.getElementById('tedit-gramos').value)||0,
     impresora: document.getElementById('tedit-impresora').value,
     fecha: document.getElementById('tedit-fecha').value,
     materialId: mat?.id||'',
@@ -4458,7 +4463,7 @@ function timerFinish(){
   }
 
   // ── 2. Discount material stock directly from selected material ──
-  const gramosUsados = parseInt(document.getElementById('timer-estimado-gramos')?.value)||0;
+  const gramosUsados = parseFloat(document.getElementById('timer-estimado-gramos')?.value)||0;
   const matId = document.getElementById('timer-material-id')?.value;
   const proyId = document.getElementById('timer-proyecto')?.value;
   const proy = DB.proyectos.find(p=>p.id===proyId);
@@ -4467,7 +4472,7 @@ function timerFinish(){
     const mat = DB.materiales.find(m=>m.id===matId);
     if(mat){
       const antes = parseFloat(mat.stock)||0;
-      mat.stock = Math.max(0, antes - gramosUsados);
+      mat.stock = Math.max(0, parseFloat((antes - gramosUsados).toFixed(2)));
       stockLog = `${mat.tipo} ${mat.color}: -${gramosUsados}g (${antes}g → ${mat.stock}g)`;
       persistWithStorage('materiales', DB.materiales);
     }
@@ -4576,21 +4581,22 @@ function renderMantGuide(){
 
 
 const PROY_COLORES = [
-  {hex:'#38d9a9',label:'Teal'},     {hex:'#f97316',label:'Azul claro'},
-  {hex:'#f97316',label:'Ferrari'},  {hex:'#fbbf24',label:'Ámbar'},
-  {hex:'#a78bfa',label:'Violeta'},  {hex:'#f97316',label:'Naranja'},
-  {hex:'#34d399',label:'Verde'},    {hex:'#f472b6',label:'Rosa'},
-  {hex:'#9eaab8',label:'Plateado'}, {hex:'#ffffff',label:'Blanco'},
-  {hex:'#0d0d0f',label:'Negro'},    {hex:'#1a3a6b',label:'Navy'},
-  {hex:'#78716c',label:'Gris'},     {hex:'#ec4899',label:'Fucsia'},
-  {hex:'#06b6d4',label:'Cyan'},     {hex:'#84cc16',label:'Lima'},
-  {hex:'#f97316',label:'Rojo'},     {hex:'#b0b8c4',label:'Gris Plata'},
-  {hex:'#d97706',label:'Marrón'},   {hex:'#0ea5e9',label:'Celeste'},
+  {hex:'#38d9a9',label:'Teal'},       {hex:'#4a7fd4',label:'Azul claro'},
+  {hex:'#cc0000',label:'Ferrari'},    {hex:'#fbbf24',label:'Ámbar'},
+  {hex:'#a78bfa',label:'Violeta'},    {hex:'#f97316',label:'Naranja'},
+  {hex:'#34d399',label:'Verde'},      {hex:'#f472b6',label:'Rosa'},
+  {hex:'#9eaab8',label:'Plateado'},   {hex:'#ffffff',label:'Blanco'},
+  {hex:'#0d0d0f',label:'Negro'},      {hex:'#1a3a6b',label:'Navy'},
+  {hex:'#78716c',label:'Gris'},       {hex:'#ec4899',label:'Fucsia'},
+  {hex:'#06b6d4',label:'Cyan'},       {hex:'#84cc16',label:'Lima'},
+  {hex:'#e01a00',label:'Rojo'},       {hex:'#b0b8c4',label:'Gris Plata'},
+  {hex:'#d97706',label:'Marrón'},     {hex:'#0ea5e9',label:'Celeste'},
+  {hex:'#8b5cf6',label:'Morado'},     {hex:'#10b981',label:'Esmeralda'},
 ];
 
 function buildProyColorDropdown(){
   const dd = document.getElementById('proy-color-dropdown');
-  if(!dd || dd.children.length > 0) return;
+  if(!dd) return;
   dd.style.display = 'flex';
   dd.innerHTML = PROY_COLORES.map(c=>`
     <div onclick="selectProyColor('${c.hex}','${c.label}')"
@@ -5692,7 +5698,7 @@ function savePieza(){
     escala:   document.getElementById('pieza-escala').value||'1:10',
     boquilla: document.getElementById('pieza-boquilla').value||'0.4mm',
     tiempo:   document.getElementById('pieza-tiempo').value||'',
-    gramos:   parseInt(document.getElementById('pieza-gramos').value)||0,
+    gramos:   parseFloat(document.getElementById('pieza-gramos').value)||0,
     placas:   parseInt(document.getElementById('pieza-placas').value)||1,
     url:      document.getElementById('pieza-url').value||'',
     notas:    document.getElementById('pieza-notas').value||'',
