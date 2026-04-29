@@ -4061,6 +4061,11 @@ function showSection(id, navEl){
   else { addBtn.style.display='none'; }
   currentSection = id;
   renderSection(id);
+  // Cargar portal clientes al entrar
+  if (id === 'portalclientes') {
+    if (Object.keys(_portalUsersCache).length === 0) loadPortalUsers();
+    else renderPortalUsers();
+  }
   // Close mobile menu on navigation
   if(window.innerWidth <= 900) closeMobileMenu();
 }
@@ -8251,19 +8256,7 @@ function deletePortalItem(tipo, kid) {
     .catch(e => showToast('Error: ' + e.message, true));
 }
 
-// ── Hook en showSection para cargar portal automáticamente ──
-const _origShowSection = showSection;
-function showSection(id, el) {
-  _origShowSection(id, el);
-  if (id === 'portalclientes') {
-    // Si el cache está vacío, cargar
-    if (Object.keys(_portalUsersCache).length === 0) {
-      loadPortalUsers();
-    } else {
-      renderPortalUsers();
-    }
-  }
-}
+
 
 // ── Helper escHtml (puede ya existir en el dashboard — lo definimos como fallback) ──
 if (typeof escHtml === 'undefined') {
